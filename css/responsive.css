@@ -1,0 +1,762 @@
+/* ============================================
+   COGIT — Responsive Styles
+   Desktop, Laptop, Tablet, Mobile breakpoints
+   ============================================ */
+
+/* ── Laptop (≤1200px) ── */
+
+@media (max-width: 1200px) {
+  /* Header */
+  .nav {
+    display: none;
+  }
+
+  .header-cta {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .menu-overlay {
+    display: block;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+  }
+
+  .hero-inner {
+    gap: var(--space-10);
+  }
+
+  .footer-top {
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .impact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .challenge-grid {
+    gap: var(--space-4);
+  }
+
+  /* Configurator */
+  .cfg-wrapper {
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-6);
+  }
+
+  .cfg-services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Tablet (≤992px) ── */
+
+@media (max-width: 992px) {
+  /* Hero */
+  .hero {
+    min-height: auto;
+    padding-top: 120px;
+    padding-bottom: var(--space-16);
+  }
+
+  .hero-inner {
+    min-height: auto;
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-8);
+    padding: var(--space-10) 0;
+  }
+
+  .hero-content {
+    width: 100%;
+    align-items: center;
+  }
+
+  .hero-content h1 {
+    padding-right: 0 !important;
+  }
+
+  .hero-interactive-container {
+    width: 100%;
+    margin-top: var(--space-4);
+    min-height: auto;
+  }
+
+  .hero-ctas {
+    justify-content: center !important;
+  }
+
+  .hero-visual {
+    display: block;
+  }
+  
+  .hero-card-saas, .hero-card-mvp {
+    display: none;
+  }
+
+  .hero-card-site     { top: 70%; left: -5%; opacity: 0.08; transform: scale(0.85); }
+  .hero-card-sistema  { top: 10%; right: -5%; opacity: 0.10; transform: scale(0.85); }
+  .hero-card-automacao{ top: 80%; right: 0%; opacity: 0.06; transform: scale(0.85); }
+
+  .hero-connections-svg {
+    opacity: 0.5;
+  }
+
+  .mobile-break {
+    display: block !important;
+  }
+
+
+
+  .hero-support-line {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+  }
+
+  .hero-subtitle {
+    max-width: 100%;
+  }
+
+  /* Challenge */
+  .challenge-grid {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Grids */
+  .solutions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cases-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .impact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Configurator */
+  .cfg-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .cfg-summary {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 50;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .cfg-summary-items {
+    display: none;
+  }
+
+  .cfg-summary-title {
+    display: none;
+  }
+
+  .cfg-summary-total {
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cfg-summary-empty {
+    display: none;
+  }
+
+  .cfg-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cfg-addons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cfg-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cfg-main {
+    margin-bottom: 80px; /* Space for fixed summary */
+  }
+
+  /* Process */
+  .process-wrapper {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+
+  .process-steps-container {
+    padding-bottom: var(--space-12);
+  }
+
+  .process-visual-container {
+    position: relative;
+    top: 0;
+    height: 400px;
+    min-height: auto;
+  }
+
+  .process-step {
+    opacity: 1;
+    transform: none;
+    grid-template-columns: 48px 1fr;
+  }
+
+  /* Custom plan banner */
+  .custom-plan-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--space-8);
+  }
+
+  .custom-plan-banner p {
+    max-width: 100%;
+  }
+
+  /* Solutions transition grid */
+  .solutions-transition .grid-2,
+  .process-transition .grid-2 {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .solutions-transition .grid-2 div:last-child,
+  .process-transition .grid-2 div:last-child {
+    text-align: center;
+    align-items: center !important;
+  }
+
+  /* Footer */
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  /* Sections */
+  .section {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+
+  .section-lg {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+  }
+}
+
+
+/* ── Mobile (≤768px) ── */
+
+@media (max-width: 768px) {
+  /* Hero */
+  .hero {
+    padding-top: 100px;
+    padding-bottom: var(--space-12);
+  }
+
+  .hero h1 {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .hero-ctas .btn,
+  .orientation-block .btn,
+  .solutions-transition .btn,
+  .process-transition .btn {
+    width: 100%;
+    max-width: 420px;
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  .hero-capacities {
+    gap: var(--space-2);
+    font-size: 11px;
+  }
+
+  .hero-services {
+    justify-content: center;
+  }
+
+  /* Grids */
+  .solutions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .impact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Configurator */
+  .cfg-main {
+    padding: var(--space-6);
+  }
+
+  .cfg-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+
+  .cfg-level-options {
+    grid-template-columns: 1fr;
+  }
+
+  .cfg-step-title {
+    font-size: var(--text-xl);
+  }
+
+  .cfg-estimate-value {
+    font-size: var(--text-3xl);
+  }
+
+  .cfg-result {
+    padding: var(--space-5);
+  }
+
+  /* Process */
+  .process-step {
+    grid-template-columns: 48px 1fr;
+    gap: var(--space-4);
+  }
+
+  .process-step-number {
+    width: 44px;
+    height: 44px;
+    font-size: var(--text-base);
+  }
+
+  /* Hero Interactive Discovery Mobile Polish */
+  .hero-interactive-container {
+    padding: 20px 16px 18px 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .hero-interactive-title {
+    font-size: 1.2rem;
+  }
+
+  .hero-interactive-desc {
+    font-size: 12.5px;
+  }
+
+  .hero-discovery-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .hero-discovery-card {
+    padding: 11px 12px;
+    gap: 6px;
+  }
+
+  .hero-discovery-card-title {
+    font-size: 13px;
+  }
+
+  .hero-discovery-card-desc {
+    font-size: 11px;
+  }
+
+  .hero-selected-pills-bar {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .hero-svc-name {
+    font-size: 13.5px;
+  }
+
+  .hero-objective-card {
+    min-height: 84px;
+    padding: 14px 12px;
+    gap: 6px;
+  }
+
+  .hero-objective-text {
+    font-size: 14.5px;
+  }
+
+  .hero-objective-price {
+    font-size: 11px;
+    padding: 2px 7px;
+  }
+
+  .hero-summary-box {
+    padding: 14px 14px;
+    gap: 8px;
+  }
+
+  .hero-summary-sub-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .hero-discovery-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    text-align: center;
+    padding-top: 12px;
+  }
+
+  .hero-discovery-counter {
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .btn-hero-back {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 18px;
+  }
+
+  .btn-hero-montar {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 13.5px;
+  }
+
+  /* Form */
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Section headers */
+  .section-header {
+    margin-bottom: var(--space-10);
+  }
+
+  /* Footer */
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  .footer-bottom-links {
+    justify-content: center;
+  }
+
+  /* Sections */
+  .section {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+
+  .section-lg {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+
+  /* CTA Final */
+  .cta-final h2 {
+    font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl));
+  }
+
+  .cta-final-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-final-buttons .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  /* WhatsApp / Contact Hub */
+  .whatsapp-float {
+    bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+    right: var(--space-5);
+  }
+
+  .whatsapp-tooltip {
+    display: none;
+  }
+
+  .whatsapp-popup {
+    width: calc(100vw - 32px);
+    max-width: 380px;
+    right: 0;
+  }
+
+  /* Pricing */
+  .pricing-card {
+    padding: var(--space-8);
+  }
+
+  /* Buttons */
+  .btn-lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--text-sm);
+  }
+}
+
+
+/* ── Small Mobile (≤480px) ── */
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.625rem;
+  }
+
+  .service-card {
+    padding: var(--space-6);
+  }
+
+  .faq-question {
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--text-sm);
+  }
+
+  .faq-answer-inner {
+    padding: 0 var(--space-5) var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .cfg-services-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cfg-service-card {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .cfg-service-card-name {
+    font-size: var(--text-xs);
+  }
+
+  .challenge-card {
+    padding: var(--space-6);
+  }
+}
+
+
+/* ── Mobile Fixed CTA (≤992px) ── */
+
+@media (max-width: 992px) {
+  .mobile-fixed-cta {
+    display: block;
+  }
+
+  /* Adjust WhatsApp float position when mobile CTA is visible */
+  .whatsapp-float {
+    bottom: 80px;
+  }
+
+  /* Cookie banner stacks vertically on small screens */
+  .cookie-banner-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cookie-banner-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Legal pages padding */
+  .page-legal {
+    padding-top: 120px;
+  }
+
+  /* Testimonials grid */
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Error & Thank-you pages (≤768px) ── */
+
+@media (max-width: 768px) {
+  .page-error-ctas,
+  .page-thankyou-ctas {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .page-error-ctas .btn,
+  .page-thankyou-ctas .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .page-error-eyebrow {
+    font-size: clamp(3rem, 10vw, 5rem);
+  }
+
+  .page-legal-links {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .breadcrumbs {
+    margin-bottom: var(--space-6);
+  }
+}
+
+/* ── Hero Diagnostic Flow — Mobile (≤768px) ── */
+
+@media (max-width: 768px) {
+  /* Progress bar — compact on mobile */
+  .hero-progress-label {
+    display: none;
+  }
+
+  .hero-progress-dot {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hero-progress-line {
+    min-width: 10px;
+  }
+
+  /* Invite Screen */
+  .hero-invite-view {
+    min-height: 280px;
+    padding: 16px 8px;
+  }
+
+  .btn-hero-start {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Challenge Cards */
+  .hero-challenge-card {
+    padding: 9px 12px;
+    gap: 10px;
+  }
+
+  .hero-challenge-title {
+    font-size: 13px;
+  }
+
+  .hero-challenge-phrase {
+    font-size: 11px;
+  }
+
+  /* Objective Cards */
+  .hero-objective-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .hero-svc-name {
+    font-size: 13px;
+  }
+
+  .hero-objective-card {
+    min-height: 68px;
+    padding: 12px 14px;
+    gap: 6px;
+  }
+
+  .hero-objective-text {
+    font-size: 14px;
+  }
+
+  .hero-objective-price {
+    font-size: 10.5px;
+    padding: 2px 7px;
+  }
+
+  /* Analyzing screen compact */
+  .hero-analyzing-view {
+    min-height: 220px;
+  }
+
+  /* Result card */
+  .hero-result-card {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .hero-result-value {
+    font-size: 13.5px;
+  }
+
+  .hero-result-desc {
+    font-size: 12px;
+  }
+
+  .hero-result-commitment {
+    font-size: 11px;
+    padding: 7px 10px;
+  }
+
+  /* Positioning Triad */
+  .hero-positioning-triad {
+    font-size: 10px;
+    gap: 8px;
+    letter-spacing: 0.12em;
+  }
+
+  .triad-item {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Challenge Icon */
+  .hero-challenge-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hero-challenge-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+

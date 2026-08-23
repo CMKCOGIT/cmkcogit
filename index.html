@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" type="image/png" href="assets/images/cmk.png">
+  
+  <!-- SEO -->
+  <title>Desenvolvimento de Software e Soluções Digitais | COGIT</title>
+  <meta name="description" content="Tecnologia sob medida para o que sua empresa precisa resolver. Sites, sistemas, SaaS, automações e produtos digitais.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cmkcogit.com.br/">
+  <meta name="google-site-verification" content="apyGZn_n0cNmR54QFrc57Rayr2e5JjtxGEyn695sO28" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Desenvolvimento de Software e Soluções Digitais | COGIT">
+  <meta property="og:description" content="Tecnologia sob medida para o que sua empresa precisa resolver. Sites, sistemas, SaaS, automações e produtos digitais.">
+  <meta property="og:url" content="https://cmkcogit.com.br/">
+  <meta property="og:site_name" content="CMKCOGIT">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Desenvolvimento de Software e Soluções Digitais | COGIT">
+  <meta name="twitter:description" content="Tecnologia sob medida para o que sua empresa precisa resolver. Sites, sistemas, SaaS, automações e produtos digitais.">
+  <meta name="twitter:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Schema.org - Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "CMKCOGIT",
+    "alternateName": "COGIT",
+    "url": "https://cmkcogit.com.br",
+    "logo": "https://cmkcogit.com.br/assets/images/logo-white.png",
+    "email": "contato@cmkcogit.com.br",
+    "telephone": "+55-17-98156-8889",
+    "description": "Desenvolvimento de software e soluções digitais sob medida. Sites, sistemas, SaaS, automações e produtos digitais para empresas.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "São José do Rio Preto",
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    },
+    "sameAs": [
+      "https://www.instagram.com/cmkcogit",
+      "https://www.linkedin.com/in/cmkcogit"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       00 — BRAND INTRO / REVEAL SCREEN
+       ═══════════════════════════════════════ -->
+  <div class="brand-intro" id="brand-intro" aria-hidden="true" role="presentation">
+    <div class="brand-intro-grid"></div>
+    <div class="brand-intro-glow"></div>
+    
+    <div class="brand-intro-center">
+      <!-- Logo Reveal (0s - 0.8s) -->
+      <div class="brand-intro-logo-wrap">
+        <img src="assets/images/cmk.png" alt="CMK COGIT" class="brand-intro-logo">
+        <div class="brand-intro-shimmer"></div>
+      </div>
+
+      <!-- Slogan & Positioning Reveal (0.8s - 1.5s) -->
+      <div class="brand-intro-slogan-wrap">
+        <span class="brand-intro-slogan">PENSAMOS ANTES DE CONSTRUIR</span>
+        <div class="brand-intro-triad">
+          <span>PENSAR</span>
+          <span class="triad-dot">•</span>
+          <span>ESTRUTURAR</span>
+          <span class="triad-dot">•</span>
+          <span>CONSTRUIR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════ -->
+  <header class="header" id="header" role="banner">
+    <div class="header-inner">
+      <a href="index.html" class="logo" aria-label="CMKCOGIT - Página inicial">
+        <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img">
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Menu principal">
+        <a href="index.html" class="nav-link active">Página inicial</a>
+        <a href="solucoes/index.html" class="nav-link ">Soluções</a>
+        <a href="investimentos.html" class="nav-link ">Investimentos</a>
+        <a href="monte-sua-solucao.html" class="nav-link ">Monte sua solução</a>
+        <a href="como-trabalhamos.html" class="nav-link ">Como trabalhamos</a>
+        <a href="projetos/index.html" class="nav-link ">Projetos</a>
+        <a href="sobre.html" class="nav-link ">Sobre</a>
+      </nav>
+
+      <a href="contato.html" class="btn btn-primary btn-sm header-cta">Fale sobre seu projeto</a>
+
+      <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="menu-overlay" id="menu-overlay" aria-hidden="true"></div>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menu mobile">
+    <a href="index.html" class="nav-link active">Página inicial</a>
+    <a href="solucoes/index.html" class="nav-link ">Soluções</a>
+    <a href="investimentos.html" class="nav-link ">Investimentos</a>
+    <a href="monte-sua-solucao.html" class="nav-link ">Monte sua solução</a>
+    <a href="como-trabalhamos.html" class="nav-link ">Como trabalhamos</a>
+    <a href="projetos/index.html" class="nav-link ">Projetos</a>
+    <a href="sobre.html" class="nav-link ">Sobre</a>
+    <a href="contato.html" class="btn btn-primary" style="margin-top: 1rem;">Fale sobre seu projeto</a>
+  </nav>
+
+  <main role="main">
+    <!-- ═══════════════════════════════════════
+         01 — HERO (2 COLUNAS / DESCOBERTA INTERATIVA)
+         ═══════════════════════════════════════ -->
+    <section class="hero" id="hero" aria-label="Apresentação da COGIT">
+      <div class="hero-bg-grid"></div>
+      <div class="hero-bg-gradient"></div>
+
+      <div class="container container-wide">
+        <div class="hero-inner">
+
+          <!-- FRONT CONTENT (LEFT: 40-45%) -->
+          <div class="hero-content">
+            <div class="hero-badge hero-animate-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-badge-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              PENSAMOS ANTES DE CONSTRUIR
+            </div>
+            
+            <div class="hero-positioning-triad hero-animate-2">
+              <span class="triad-item">PENSAR</span>
+              <span class="triad-divider">•</span>
+              <span class="triad-item">ESTRUTURAR</span>
+              <span class="triad-divider">•</span>
+              <span class="triad-item">CONSTRUIR</span>
+            </div>
+            
+            <h1 class="hero-animate-3">
+              <span class="hero-title-main" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15; display: block;">Sua empresa tem um desafio.</span>
+              <span class="hero-title-highlight" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15;"><span class="hero-title-connector">Nós estruturamos</span> a tecnologia para resolver.</span>
+            </h1>
+
+            <p class="hero-subtitle hero-animate-4" style="margin-top: var(--space-6); font-size: var(--text-lg); max-width: 95%;">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
+
+            <div class="hero-ctas hero-animate-5" style="margin-top: var(--space-8); width: 100%; display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary btn-lg" id="cta-hero-start" onclick="if(window.heroStartDiagnosis){ window.heroStartDiagnosis(); }">
+                Começar diagnóstico <span>→</span>
+              </button>
+              <a href="contato.html" class="btn btn-secondary btn-lg" id="cta-hero-contact" style="background: transparent; border-color: rgba(255,255,255,0.2);">
+                Falar sobre meu projeto
+              </a>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE DISCOVERY BLOCK (RIGHT: 55-60%) -->
+          <div class="hero-interactive-container hero-discovery-container hero-animate-5" id="hero-interactive-container">
+            <!-- Rendered by js/components.js -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         02 — RECOMENDAÇÃO PERSONALIZADA (SEÇÃO 2)
+         ═══════════════════════════════════════ -->
+    <section class="section" id="recommendations" aria-label="Recomendação">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">DIRECIONAMENTO</span>
+          <h2 id="rec-section-title">Alguns caminhos que podemos construir.</h2>
+          <p class="text-body-lg" style="max-width: 680px;" id="rec-section-desc">
+            Você não precisa saber a tecnologia de antemão. Comece pelo que quer melhorar, criar ou resolver.
+          </p>
+        </div>
+
+        <div class="dynamic-rec-grid" id="dynamic-rec-grid">
+          <!-- Card 1: Presença Digital -->
+          <div class="dynamic-rec-card reveal reveal-delay-1">
+            <span class="dynamic-rec-card-tag">Atrair e Converter</span>
+            <h3 style="font-size: var(--text-2xl); margin-bottom: var(--space-2); color: var(--ink);">Presença Digital</h3>
+            <p style="color: var(--text-secondary); font-size: var(--text-base); line-height: var(--leading-relaxed);">
+              Sites institucionais e Landing Pages estratégicas para posicionar seu negócio e gerar oportunidades comerciais.
+            </p>
+            <div class="dynamic-rec-card-why">
+              <strong>Por que recomendamos:</strong> Ideal para quem precisa vender ou se posicionar profissionalmente na internet.
+            </div>
+            <a href="solucoes/sites-institucionais.html" class="dynamic-rec-card-cta">
+              Entender essa solução <span>→</span>
+            </a>
+          </div>
+
+          <!-- Card 2: Operação Digital -->
+          <div class="dynamic-rec-card reveal reveal-delay-2" style="border-color: rgba(74, 61, 219, 0.3); background: linear-gradient(180deg, #FFFFFF 0%, rgba(74, 61, 219, 0.02) 100%);">
+            <span class="dynamic-rec-card-tag" style="background: var(--purple); color: var(--white);">Eficiência & Gestão</span>
+            <h3 style="font-size: var(--text-2xl); margin-bottom: var(--space-2); color: var(--ink);">Operação Digital</h3>
+            <p style="color: var(--text-secondary); font-size: var(--text-base); line-height: var(--leading-relaxed);">
+              Sistemas sob medida e automações de processos para eliminar retrabalho manual, planilhas e organizar a gestão.
+            </p>
+            <div class="dynamic-rec-card-why">
+              <strong>Por que recomendamos:</strong> Perfeito para empresas com gargalos operacionais ou tarefas repetitivas.
+            </div>
+            <a href="solucoes/sistemas-personalizados.html" class="dynamic-rec-card-cta">
+              Entender essa solução <span>→</span>
+            </a>
+          </div>
+
+          <!-- Card 3: Produto Digital -->
+          <div class="dynamic-rec-card reveal reveal-delay-3">
+            <span class="dynamic-rec-card-tag">Inovação & Escala</span>
+            <h3 style="font-size: var(--text-2xl); margin-bottom: var(--space-2); color: var(--ink);">Produto Digital</h3>
+            <p style="color: var(--text-secondary); font-size: var(--text-base); line-height: var(--leading-relaxed);">
+              MVPs, plataformas e produtos SaaS para transformar uma ideia inovadora em um negócio escalável e validado.
+            </p>
+            <div class="dynamic-rec-card-why">
+              <strong>Por que recomendamos:</strong> Indicado para startups e empresas tirando novos produtos do papel.
+            </div>
+            <a href="solucoes/saas-e-produtos-digitais.html" class="dynamic-rec-card-cta">
+              Entender essa solução <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         03 — PROJETOS / PROVAS (CURTO)
+         ═══════════════════════════════════════ -->
+    <section class="section section-neutral" id="cases" aria-label="Projetos">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">PROJETOS</span>
+          <h2>Problemas reais. Soluções construídas.</h2>
+          <p class="text-body-lg" style="max-width: 650px;">
+            Veja como transformamos necessidades de negócios em tecnologia sob medida e resultados concretos.
+          </p>
+        </div>
+
+        <div class="cases-grid" id="cases-grid">
+          <!-- Rendered by components.js -->
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-10);" class="reveal">
+          <a href="projetos/index.html" class="btn btn-secondary-dark">Ver todos os projetos <span>→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         04 — COMO FUNCIONA (3 ETAPAS)
+         ═══════════════════════════════════════ -->
+    <section class="section" id="how-it-works" aria-label="Como funciona">
+      <div class="container">
+        <div class="section-header center reveal">
+          <span class="section-label" style="justify-content: center;">COMO FUNCIONA</span>
+          <h2>Você não precisa chegar com a tecnologia definida.</h2>
+          <p class="text-body-lg" style="max-width: 650px; margin-left: auto; margin-right: auto;">
+            Ajudamos a estruturar o melhor caminho desde o primeiro diagnóstico até a evolução da solução.
+          </p>
+        </div>
+
+        <div class="home-process-grid">
+          <div class="home-process-card reveal reveal-delay-1">
+            <div class="home-process-num">01</div>
+            <h3>Conte o desafio</h3>
+            <p>Compreendemos o problema, a rotina da sua equipe, os objetivos e o contexto do seu negócio.</p>
+          </div>
+
+          <div class="home-process-card reveal reveal-delay-2">
+            <div class="home-process-num">02</div>
+            <h3>Estruturamos a solução</h3>
+            <p>Definimos escopo, prioridades, arquitetura e desenhamos a melhor abordagem antes de escrever qualquer código.</p>
+          </div>
+
+          <div class="home-process-card reveal reveal-delay-3">
+            <div class="home-process-num">03</div>
+            <h3>Construímos e evoluímos</h3>
+            <p>Desenvolvemos a tecnologia com rigor técnico, acompanhamos o uso real e evoluímos com base em dados.</p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-10);" class="reveal">
+          <a href="como-trabalhamos.html" class="btn btn-secondary-dark">Conheça como trabalhamos <span>→</span></a>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ═══════════════════════════════════════
+         06 — CTA FINAL
+         ═══════════════════════════════════════ -->
+    <section class="section section-lg cta-final" id="cta-final" aria-label="Entre em contato">
+      <div class="container">
+        <div class="cta-final-content reveal">
+          <span class="section-label" style="justify-content: center;">PENSAMOS ANTES DE CONSTRUIR</span>
+          <h2>Tem algo que sua empresa precisa resolver?</h2>
+          <p>Conte o problema. Nós ajudamos a pensar, estruturar e construir a solução ideal para o seu momento.</p>
+          <div class="cta-final-buttons">
+            <a href="contato.html" class="btn btn-primary btn-lg" id="cta-final-contact">Falar sobre meu projeto →</a>
+            <a href="monte-sua-solucao.html" class="btn btn-secondary btn-lg" id="cta-final-configurator">Montar minha solução</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ -->
+  <footer class="footer" id="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-top">
+
+        <div class="footer-brand">
+          <a href="index.html" class="logo" aria-label="CMKCOGIT" style="display: flex; align-items: center;">
+            <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img">
+          </a>
+          <p class="footer-tagline" style="font-size: var(--text-lg); margin-top: var(--space-4);">Pensamos antes de construir.</p>
+          <p class="footer-sub-tagline" style="font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: var(--space-4); text-transform: uppercase;">Pensar. Estruturar. Construir.</p>
+          <p class="footer-description">Tecnologia, estratégia e inovação para transformar problemas e ideias em soluções digitais que funcionam.</p>
+          <div class="footer-social" id="footer-social">
+            <!-- Rendered by components.js -->
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Soluções</h4>
+          <div class="footer-links">
+            <a href="solucoes/cogit-start.html" style="color: var(--lilac); font-weight: var(--fw-bold);">COGIT Start</a>
+            <a href="solucoes/landing-pages.html">Landing Pages</a>
+            <a href="solucoes/sites-institucionais.html">Sites Institucionais</a>
+            <a href="solucoes/sistemas-personalizados.html">Sistemas Personalizados</a>
+            <a href="solucoes/saas-e-produtos-digitais.html">SaaS e MVPs</a>
+            <a href="solucoes/automacoes-e-integracoes.html">Automação e Integração</a>
+            <a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas e Outras</a>
+            <a href="solucoes/index.html">Ver todas as soluções</a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Empresa</h4>
+          <div class="footer-links">
+            <a href="sobre.html">Sobre a COGIT</a>
+            <a href="como-trabalhamos.html">Como trabalhamos</a>
+            <a href="investimentos.html">Investimentos</a>
+            <a href="monte-sua-solucao.html">Monte sua solução</a>
+            <a href="projetos/index.html">Projetos e Cases</a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Contato</h4>
+          <div class="footer-links">
+            <a href="contato.html">Fale conosco</a>
+            <a href="monte-sua-solucao.html">Montar projeto</a>
+            <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer">(17) 98156-8889</a>
+            <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; COGIT — Todos os direitos reservados.</p>
+        <div class="footer-bottom-links">
+          <a href="privacidade.html">Política de Privacidade</a>
+          <a href="termos-de-uso.html">Termos de Uso</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       CONTACT HUB (Central Flutuante de Contatos)
+       ═══════════════════════════════════════ -->
+  <div class="whatsapp-float contact-hub" id="whatsapp-float" aria-label="Central de Contatos" data-state="closed">
+    
+    <!-- Channels List -->
+    <div class="ch-channels" id="ch-channels">
+      <a href="https://www.instagram.com/cmkcogit" target="_blank" rel="noopener noreferrer" class="ch-channel" id="ch-instagram" aria-label="Instagram da COGIT">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        <span class="ch-tooltip-channel">Instagram</span>
+      </a>
+      <a href="https://www.linkedin.com/in/cmkcogit" target="_blank" rel="noopener noreferrer" class="ch-channel" id="ch-linkedin" aria-label="LinkedIn da COGIT">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        <span class="ch-tooltip-channel">LinkedIn</span>
+      </a>
+      <button class="ch-channel" id="ch-whatsapp" aria-label="Falar com a COGIT pelo WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.571c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="ch-tooltip-channel">WhatsApp</span>
+      </button>
+      <a href="mailto:contato@cmkcogit.com.br" class="ch-channel" id="ch-email" aria-label="Enviar e-mail para a COGIT">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        <span class="ch-tooltip-channel">E-mail</span>
+      </a>
+    </div>
+
+    <!-- WhatsApp Popup -->
+    <div class="whatsapp-popup" id="whatsapp-popup">
+      <div class="whatsapp-popup-header" style="justify-content: space-between; align-items: flex-start; gap: 16px;">
+        <button class="ch-back-btn" id="ch-back-btn" aria-label="Voltar aos contatos" title="Voltar" style="color: var(--text-tertiary); font-size: 20px; transition: color 200ms ease;">←</button>
+        <span style="flex: 1; text-align: left; padding-top: 2px;">Vamos conversar sobre seu projeto?</span>
+        <button class="whatsapp-popup-close" id="whatsapp-popup-close" aria-label="Fechar" style="font-size: 24px;">×</button>
+      </div>
+      <div class="whatsapp-popup-options" id="whatsapp-popup-options">
+        <!-- Rendered by main.js -->
+      </div>
+    </div>
+
+    <!-- Main Trigger Button -->
+    <button class="whatsapp-btn ch-trigger-btn" id="whatsapp-float-btn" aria-label="Abrir canais de contato">
+      <svg class="ch-icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <svg class="ch-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <span class="whatsapp-tooltip">Vamos conversar sobre seu projeto?</span>
+  </div>
+
+  <!-- Mobile Fixed CTA -->
+  <div class="mobile-fixed-cta" id="mobile-fixed-cta" aria-label="Ação rápida">
+    <a href="contato.html" class="btn btn-primary" id="mobile-fixed-cta-btn">Fale sobre seu projeto</a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/configurator.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/form.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
