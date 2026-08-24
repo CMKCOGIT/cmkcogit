@@ -180,6 +180,7 @@
 .btn-sm {
   padding: var(--space-2) var(--space-5);
   font-size: var(--text-xs);
+  min-height: 40px;
 }
 
 .btn .btn-icon {

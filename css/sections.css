@@ -1038,8 +1038,8 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 16px;
-  max-width: 630px;
+  gap: 18px;
+  max-width: 580px;
 }
 
 .hero-invite-icon {
@@ -1064,10 +1064,10 @@
 }
 
 .hero-invite-eyebrow {
-  font-size: 10.5px;
+  font-size: 11px;
   font-family: var(--font-heading);
   font-weight: var(--fw-bold);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #C4B8FF;
   margin: 0;
@@ -1075,27 +1075,30 @@
 
 .hero-invite-title {
   font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+  font-size: clamp(1.45rem, 3.2vw, 2.6rem);
   font-weight: var(--fw-bold);
   color: #FFFFFF;
-  line-height: 1.1;
-  margin: 6px 0 0 0;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 4px 0 0 0;
+  letter-spacing: -0.01em;
 }
 
 .hero-invite-desc {
   font-family: var(--font-body);
   font-size: 14px;
   color: #94A3B8;
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
-  max-width: 400px;
+  max-width: 420px;
+  text-wrap: pretty;
 }
 
 .btn-hero-start {
-  min-width: 260px;
-  padding: 14px 36px;
+  min-width: 250px;
+  padding: 14px 32px;
   font-size: 15px;
-  margin-top: 8px;
+  margin-top: 4px;
   background: linear-gradient(135deg, #6D5DF5 0%, #9B8CFF 100%);
   box-shadow: 0 6px 24px rgba(109, 93, 245, 0.55);
 }

@@ -278,20 +278,117 @@
 
 /* ── Mobile (≤768px) ── */
 
+/* ── Mobile (≤768px) ── */
+
 @media (max-width: 768px) {
-  /* Hero */
-  .hero {
-    padding-top: 100px;
-    padding-bottom: var(--space-12);
+  /* Header Mobile */
+  .header {
+    height: 72px;
   }
 
-  .hero h1 {
-    font-size: clamp(1.75rem, 7vw, 2.25rem);
+  .header.is-scrolled {
+    height: 64px;
+  }
+
+  body:not(:has(.hero)):not(:has(.solution-hero)) .header,
+  .header.header-solid {
+    height: 64px;
+  }
+
+  .logo-img {
+    height: 42px;
+  }
+
+  .header.is-scrolled .logo-img {
+    height: 36px;
+  }
+
+  /* Section Spacings & Rhythm */
+  .section {
+    padding-top: clamp(2.25rem, 5.5vw, 3.25rem);
+    padding-bottom: clamp(2.25rem, 5.5vw, 3.25rem);
+  }
+
+  .section-lg {
+    padding-top: clamp(2.75rem, 6.5vw, 4rem);
+    padding-bottom: clamp(2.75rem, 6.5vw, 4rem);
+  }
+
+  /* Section Headers */
+  .section-header {
+    margin-bottom: var(--space-8);
+    text-align: center;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+
+  .section-header h2,
+  .section-title {
+    font-size: clamp(1.45rem, 5.2vw, 1.85rem);
+    line-height: 1.25;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .section-header p,
+  .section-lead {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    max-width: 94%;
+    margin-inline: auto;
+    text-wrap: pretty;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding-top: 84px;
+    padding-bottom: var(--space-10);
+  }
+
+  .hero-inner {
+    gap: var(--space-6);
+    padding: var(--space-4) 0;
+  }
+
+  .hero-badge {
+    font-size: 11px;
+    padding: 5px 12px;
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+
+  .hero h1,
+  .hero-content h1 {
+    font-size: clamp(1.65rem, 6.2vw, 2.1rem);
+    line-height: 1.22;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-on-dark-secondary);
+    max-width: 94%;
+    margin: 0 auto 16px auto;
+    text-wrap: pretty;
   }
 
   .hero-ctas {
     flex-direction: column;
     width: 100%;
+    max-width: 320px;
+    gap: 10px;
+    margin: 0 auto;
     align-items: center;
   }
 
@@ -300,185 +397,525 @@
   .solutions-transition .btn,
   .process-transition .btn {
     width: 100%;
-    max-width: 420px;
+    min-height: 48px;
     justify-content: center;
     margin-inline: auto;
+    font-size: 14px;
   }
 
   .hero-capacities {
-    gap: var(--space-2);
-    font-size: 11px;
-  }
-
-  .hero-services {
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 6px 12px;
+    font-size: 11px;
+    margin-top: 14px;
   }
 
-  /* Grids */
-  .solutions-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .grid-2,
-  .grid-3,
-  .grid-4 {
-    grid-template-columns: 1fr;
-  }
-
-  .impact-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* Configurator */
-  .cfg-main {
-    padding: var(--space-6);
-  }
-
-  .cfg-services-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-2);
-  }
-
-  .cfg-level-options {
-    grid-template-columns: 1fr;
-  }
-
-  .cfg-step-title {
-    font-size: var(--text-xl);
-  }
-
-  .cfg-estimate-value {
-    font-size: var(--text-3xl);
-  }
-
-  .cfg-result {
-    padding: var(--space-5);
-  }
-
-  /* Process */
-  .process-step {
-    grid-template-columns: 48px 1fr;
-    gap: var(--space-4);
-  }
-
-  .process-step-number {
-    width: 44px;
-    height: 44px;
-    font-size: var(--text-base);
-  }
-
-  /* Hero Interactive Discovery Mobile Polish */
+  /* ══════════════════════════════════════════
+     COGIT DIAGNOSTIC — HERO INTERACTIVE COMPONENT
+     ══════════════════════════════════════════ */
   .hero-interactive-container {
-    padding: 20px 16px 18px 16px;
+    padding: 16px 14px;
     border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 100%;
+    margin-top: var(--space-4);
+  }
+
+  /* Etapa 0: Convite */
+  .hero-invite-view {
+    min-height: auto;
+    padding: 20px 8px;
+  }
+
+  .hero-invite-content {
+    gap: 14px;
+    max-width: 100%;
+  }
+
+  .hero-invite-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .hero-invite-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .hero-invite-eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    margin-bottom: 2px;
+  }
+
+  .hero-invite-title {
+    font-size: clamp(1.25rem, 4.8vw, 1.55rem);
+    line-height: 1.25;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+    max-width: 310px;
+    margin: 4px auto 0 auto;
+  }
+
+  .hero-invite-desc {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: #94A3B8;
+    max-width: 280px;
+    margin: 4px auto 0 auto;
+    text-wrap: pretty;
+  }
+
+  .btn-hero-start {
+    width: 100%;
+    max-width: 280px;
+    min-width: auto;
+    height: 48px;
+    padding: 12px 20px;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* Topbar & Progress */
+  .hero-discovery-topbar {
+    margin-bottom: 10px;
+  }
+
+  .hero-discovery-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    gap: 4px;
+  }
+
+  .hero-progress-label {
+    display: none;
+  }
+
+  .hero-progress-dot {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hero-progress-line {
+    min-width: 8px;
+  }
+
+  .hero-diag-dot {
+    width: 18px;
+    height: 18px;
+    font-size: 9.5px;
+  }
+
+  .hero-diag-dot-label {
+    font-size: 9px;
+  }
+
+  .hero-diag-dot-line {
+    width: 12px;
   }
 
   .hero-interactive-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    line-height: 1.25;
+    margin-bottom: 4px;
   }
 
   .hero-interactive-desc {
-    font-size: 12.5px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #94A3B8;
+    margin-bottom: 10px;
   }
 
-  .hero-discovery-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .hero-discovery-card {
-    padding: 11px 12px;
+  /* Etapa 1: Grid de Serviços */
+  .hero-svc-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 6px;
   }
 
-  .hero-discovery-card-title {
-    font-size: 13px;
-  }
-
-  .hero-discovery-card-desc {
-    font-size: 11px;
-  }
-
-  .hero-selected-pills-bar {
-    padding: 6px 10px;
-    font-size: 11px;
+  .hero-svc-card {
+    padding: 10px 8px;
+    min-height: 66px;
+    gap: 4px;
+    border-radius: 10px;
   }
 
   .hero-svc-name {
-    font-size: 13.5px;
+    font-size: 11.5px;
+    line-height: 1.2;
   }
 
-  .hero-objective-card {
-    min-height: 84px;
-    padding: 14px 12px;
+  /* Etapa 2: Desafios */
+  .hero-challenges-list {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .hero-challenge-card {
+    padding: 9px 12px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .hero-challenge-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .hero-challenge-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .hero-challenge-title {
+    font-size: 12.5px;
+  }
+
+  .hero-challenge-phrase {
+    font-size: 11px;
+  }
+
+  /* Etapa 3: Objetivos */
+  .hero-objective-grid {
+    grid-template-columns: 1fr;
     gap: 6px;
   }
 
+  .hero-objective-card {
+    min-height: 60px;
+    padding: 10px 12px;
+    gap: 6px;
+    border-radius: 10px;
+  }
+
   .hero-objective-text {
-    font-size: 14.5px;
+    font-size: 13px;
   }
 
   .hero-objective-price {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  /* Analyzing Screen */
+  .hero-analyzing-view {
+    min-height: 200px;
+  }
+
+  /* Result Screen */
+  .hero-result-card {
+    padding: 12px 12px;
+    border-radius: 12px;
+    gap: 6px;
+  }
+
+  .hero-result-value {
+    font-size: 13px;
+  }
+
+  .hero-result-desc {
+    font-size: 11.5px;
+  }
+
+  .hero-result-commitment {
     font-size: 11px;
-    padding: 2px 7px;
-  }
-
-  .hero-summary-box {
-    padding: 14px 14px;
-    gap: 8px;
-  }
-
-  .hero-summary-sub-actions {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    text-align: center;
+    padding: 6px 10px;
   }
 
   .hero-discovery-footer {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     align-items: stretch;
     text-align: center;
-    padding-top: 12px;
-  }
-
-  .hero-discovery-counter {
-    justify-content: center;
-    font-size: 12px;
+    padding-top: 10px;
   }
 
   .btn-hero-back {
     width: 100%;
     justify-content: center;
-    padding: 10px 18px;
+    padding: 9px 16px;
+    font-size: 13px;
   }
 
   .btn-hero-montar {
     width: 100%;
-    padding: 12px 20px;
+    padding: 11px 18px;
+    font-size: 13px;
+  }
+
+  /* ══════════════════════════════════════════
+     SEÇÕES DO SITE (GRIDS & CARDS)
+     ══════════════════════════════════════════ */
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .solutions-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .solutions-grid {
+    max-width: 440px;
+    margin-inline: auto;
+  }
+
+  .service-card {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+
+  .service-card-title,
+  .service-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+  }
+
+  .service-card-desc,
+  .service-card p {
     font-size: 13.5px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .service-card-features li {
+    font-size: 12.5px;
+    padding: 3px 0;
+  }
+
+  /* Challenge Section */
+  .challenge-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 440px;
+    margin-inline: auto;
+  }
+
+  .challenge-card {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .challenge-card-title {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .challenge-card-desc {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  /* Pricing Cards */
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+
+  .pricing-card {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .pricing-card-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .pricing-card-price .amount {
+    font-size: 1.75rem;
+  }
+
+  .pricing-features li {
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 5px 0;
+  }
+
+  /* Process Steps */
+  .process-wrapper {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .process-steps-container {
+    padding-bottom: 12px;
+  }
+
+  .process-step {
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .process-step-number {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .process-step h3 {
+    font-size: 0.98rem;
+    margin-bottom: 4px;
+  }
+
+  .process-step p {
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  /* Configurator */
+  .cfg-main {
+    padding: 16px 12px;
+    border-radius: 14px;
+  }
+
+  .cfg-step-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .cfg-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .cfg-service-card {
+    padding: 10px 8px;
+    border-radius: 10px;
+    min-height: 66px;
+  }
+
+  .cfg-service-card-name {
+    font-size: 11.5px;
+  }
+
+  .cfg-level-options {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .cfg-estimate-value {
+    font-size: 1.4rem;
+  }
+
+  .cfg-result {
+    padding: var(--space-4);
+  }
+
+  /* Impact Stats */
+  .impact-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-width: 440px;
+    margin-inline: auto;
+  }
+
+  .impact-stat {
+    padding: 14px 10px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .impact-stat-number {
+    font-size: clamp(1.5rem, 5.2vw, 2rem);
+  }
+
+  .impact-stat-label {
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+
+  /* Orientation / Custom Plan Block */
+  .orientation-block,
+  .custom-plan-banner {
+    padding: 24px 16px;
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  .orientation-block h3,
+  .custom-plan-banner h3 {
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+  }
+
+  /* CTA Final */
+  .cta-final {
+    padding: 36px 16px;
+    border-radius: 16px;
+    text-align: center;
+    margin-inline: 4px;
+  }
+
+  .cta-final h2 {
+    font-size: clamp(1.35rem, 5vw, 1.75rem);
+    line-height: 1.25;
+    text-wrap: balance;
+    margin-bottom: 8px;
+  }
+
+  .cta-final p {
+    font-size: 13.5px;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 0 auto 16px auto;
+  }
+
+  .cta-final-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    gap: 8px;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .cta-final-buttons .btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Solution Inner Pages */
+  .solution-hero {
+    padding-top: 88px;
+    padding-bottom: 32px;
+  }
+
+  .solution-hero h1 {
+    font-size: clamp(1.65rem, 6vw, 2.1rem);
+    line-height: 1.22;
+    text-wrap: balance;
+  }
+
+  .solution-hero-lead {
+    font-size: 14px;
+    line-height: 1.55;
   }
 
   /* Form */
   .form-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
-  /* Section headers */
-  .section-header {
-    margin-bottom: var(--space-10);
+  .form-group {
+    margin-bottom: 12px;
   }
 
   /* Footer */
   .footer-top {
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--space-6);
   }
 
   .footer-bottom {
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
     text-align: center;
   }
 
@@ -486,36 +923,13 @@
     justify-content: center;
   }
 
-  /* Sections */
-  .section {
-    padding-top: var(--space-12);
-    padding-bottom: var(--space-12);
-  }
-
-  .section-lg {
-    padding-top: var(--space-16);
-    padding-bottom: var(--space-16);
-  }
-
-  /* CTA Final */
-  .cta-final h2 {
-    font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl));
-  }
-
-  .cta-final-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .cta-final-buttons .btn {
-    width: 100%;
-    max-width: 320px;
-  }
-
-  /* WhatsApp / Contact Hub */
+  /* WhatsApp Floating Button */
   .whatsapp-float {
-    bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
-    right: var(--space-5);
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 14px;
+    width: 48px;
+    height: 48px;
+    z-index: var(--z-whatsapp);
   }
 
   .whatsapp-tooltip {
@@ -523,20 +937,16 @@
   }
 
   .whatsapp-popup {
-    width: calc(100vw - 32px);
-    max-width: 380px;
+    width: calc(100vw - 28px);
+    max-width: 360px;
     right: 0;
-  }
-
-  /* Pricing */
-  .pricing-card {
-    padding: var(--space-8);
   }
 
   /* Buttons */
   .btn-lg {
-    padding: var(--space-4) var(--space-8);
+    padding: var(--space-3) var(--space-6);
     font-size: var(--text-sm);
+    min-height: 48px;
   }
 }
 
@@ -544,55 +954,60 @@
 /* ── Small Mobile (≤480px) ── */
 
 @media (max-width: 480px) {
-  .hero h1 {
-    font-size: 1.625rem;
+  .hero h1,
+  .hero-content h1 {
+    font-size: 1.55rem;
+  }
+
+  .hero-invite-title {
+    font-size: 1.22rem;
+    max-width: 280px;
   }
 
   .service-card {
-    padding: var(--space-6);
+    padding: 16px 14px;
   }
 
   .faq-question {
-    padding: var(--space-4) var(--space-5);
-    font-size: var(--text-sm);
+    padding: 12px 14px;
+    font-size: 13.5px;
   }
 
   .faq-answer-inner {
-    padding: 0 var(--space-5) var(--space-4);
-    font-size: var(--text-sm);
+    padding: 0 14px 12px;
+    font-size: 13px;
   }
 
   .cfg-services-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 5px;
   }
 
   .cfg-service-card {
-    padding: var(--space-4) var(--space-3);
+    padding: 8px 6px;
   }
 
   .cfg-service-card-name {
-    font-size: var(--text-xs);
+    font-size: 11px;
   }
 
   .challenge-card {
-    padding: var(--space-6);
+    padding: 16px 14px;
   }
 }
 
 
-/* ── Mobile Fixed CTA (≤992px) ── */
+/* ── Mobile Fixed CTA & Cookies (≤992px) ── */
 
 @media (max-width: 992px) {
   .mobile-fixed-cta {
     display: block;
   }
 
-  /* Adjust WhatsApp float position when mobile CTA is visible */
   .whatsapp-float {
-    bottom: 80px;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Cookie banner stacks vertically on small screens */
   .cookie-banner-inner {
     flex-direction: column;
     text-align: center;
@@ -603,12 +1018,10 @@
     justify-content: center;
   }
 
-  /* Legal pages padding */
   .page-legal {
-    padding-top: 120px;
+    padding-top: 100px;
   }
 
-  /* Testimonials grid */
   .testimonials-grid {
     grid-template-columns: 1fr;
   }
@@ -626,135 +1039,20 @@
   .page-error-ctas .btn,
   .page-thankyou-ctas .btn {
     width: 100%;
-    max-width: 320px;
+    max-width: 300px;
   }
 
   .page-error-eyebrow {
-    font-size: clamp(3rem, 10vw, 5rem);
+    font-size: clamp(2.5rem, 9vw, 4rem);
   }
 
   .page-legal-links {
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .breadcrumbs {
-    margin-bottom: var(--space-6);
-  }
-}
-
-/* ── Hero Diagnostic Flow — Mobile (≤768px) ── */
-
-@media (max-width: 768px) {
-  /* Progress bar — compact on mobile */
-  .hero-progress-label {
-    display: none;
-  }
-
-  .hero-progress-dot {
-    width: 18px;
-    height: 18px;
-  }
-
-  .hero-progress-line {
-    min-width: 10px;
-  }
-
-  /* Invite Screen */
-  .hero-invite-view {
-    min-height: 280px;
-    padding: 16px 8px;
-  }
-
-  .btn-hero-start {
-    width: 100%;
-    max-width: 280px;
-  }
-
-  /* Challenge Cards */
-  .hero-challenge-card {
-    padding: 9px 12px;
-    gap: 10px;
-  }
-
-  .hero-challenge-title {
-    font-size: 13px;
-  }
-
-  .hero-challenge-phrase {
-    font-size: 11px;
-  }
-
-  /* Objective Cards */
-  .hero-objective-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .hero-svc-name {
-    font-size: 13px;
-  }
-
-  .hero-objective-card {
-    min-height: 68px;
-    padding: 12px 14px;
-    gap: 6px;
-  }
-
-  .hero-objective-text {
-    font-size: 14px;
-  }
-
-  .hero-objective-price {
-    font-size: 10.5px;
-    padding: 2px 7px;
-  }
-
-  /* Analyzing screen compact */
-  .hero-analyzing-view {
-    min-height: 220px;
-  }
-
-  /* Result card */
-  .hero-result-card {
-    padding: 12px 14px;
-    gap: 8px;
-  }
-
-  .hero-result-value {
-    font-size: 13.5px;
-  }
-
-  .hero-result-desc {
-    font-size: 12px;
-  }
-
-  .hero-result-commitment {
-    font-size: 11px;
-    padding: 7px 10px;
-  }
-
-  /* Positioning Triad */
-  .hero-positioning-triad {
-    font-size: 10px;
-    gap: 8px;
-    letter-spacing: 0.12em;
-  }
-
-  .triad-item {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-  }
-
-  /* Challenge Icon */
-  .hero-challenge-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .hero-challenge-icon svg {
-    width: 16px;
-    height: 16px;
+    margin-bottom: var(--space-4);
   }
 }
 
