@@ -108,51 +108,74 @@
   }
 
   // ── 3. Hero Initial Entrance Sequence ──
-  // Title -> Subtitle -> Buttons -> Interactive Widget
+  // Sequence: Badge/Triad -> Title -> Subtitle -> Buttons -> Interactive Widget
   function initHeroEntrance() {
-    const heroContent = document.querySelector('.hero-content');
-    if (!heroContent) return;
+    const heroSection = document.querySelector('.hero');
+    if (!heroSection) return;
+
+    const anim1 = heroSection.querySelector('.hero-animate-1'); // Badge
+    const anim2 = heroSection.querySelector('.hero-animate-2'); // Triad
+    const anim3 = heroSection.querySelector('.hero-animate-3'); // Title
+    const anim4 = heroSection.querySelector('.hero-animate-4'); // Subtitle
+    const animButtons = heroSection.querySelector('.hero-ctas'); // Buttons
+    const animInteractive = heroSection.querySelector('.hero-interactive-container'); // Interactive Discovery Block
+    const otherAnim5 = heroSection.querySelectorAll('.hero-animate-5:not(.hero-ctas):not(.hero-interactive-container)');
 
     if (prefersReducedMotion()) {
-      heroContent.querySelectorAll('[class*="hero-animate-"]').forEach(el => {
+      heroSection.querySelectorAll('[class*="hero-animate-"]').forEach(el => {
         el.classList.add('is-hero-animated');
       });
+      if (animInteractive) animInteractive.classList.add('is-hero-animated');
       return;
     }
 
     function triggerHeroSequence() {
-      const anim1 = heroContent.querySelector('.hero-animate-1'); // Badge / Label
-      const anim2 = heroContent.querySelector('.hero-animate-2'); // Triad
-      const anim3 = heroContent.querySelector('.hero-animate-3'); // Title (Priority 1)
-      const anim4 = heroContent.querySelector('.hero-animate-4'); // Subtitle (Priority 2)
-      const anim5 = heroContent.querySelectorAll('.hero-animate-5'); // CTA Buttons & Widget (Priority 3)
-
+      // 1. Hero Badge & Positioning Triad
       if (anim1) anim1.classList.add('is-hero-animated');
       if (anim2) anim2.classList.add('is-hero-animated');
-      if (anim3) anim3.classList.add('is-hero-animated');
 
+      // 2. Main Title
+      setTimeout(() => {
+        if (anim3) anim3.classList.add('is-hero-animated');
+      }, 90);
+
+      // 3. Subtitle
       setTimeout(() => {
         if (anim4) anim4.classList.add('is-hero-animated');
-      }, 140);
+      }, 220);
 
+      // 4. Action Buttons
       setTimeout(() => {
-        anim5.forEach(el => el.classList.add('is-hero-animated'));
-      }, 260);
+        if (animButtons) animButtons.classList.add('is-hero-animated');
+        otherAnim5.forEach(el => el.classList.add('is-hero-animated'));
+      }, 360);
+
+      // 5. Interactive Discovery Block
+      setTimeout(() => {
+        if (animInteractive) animInteractive.classList.add('is-hero-animated');
+      }, 480);
     }
 
     const brandIntro = document.getElementById('brand-intro');
     if (brandIntro && !brandIntro.classList.contains('is-hidden')) {
-      // Listen for brand intro exit
+      let isHeroTriggered = false;
       const checkIntro = setInterval(() => {
         if (brandIntro.classList.contains('is-exiting') || brandIntro.classList.contains('is-hidden')) {
           clearInterval(checkIntro);
-          setTimeout(triggerHeroSequence, 120);
+          if (!isHeroTriggered) {
+            isHeroTriggered = true;
+            setTimeout(triggerHeroSequence, 120);
+          }
         }
-      }, 100);
+      }, 60);
+
       // Fallback
       setTimeout(() => {
         clearInterval(checkIntro);
-        triggerHeroSequence();
+        if (!isHeroTriggered) {
+          isHeroTriggered = true;
+          triggerHeroSequence();
+        }
       }, 2200);
     } else {
       setTimeout(triggerHeroSequence, 80);
@@ -333,29 +356,42 @@
 
     if (prefersReducedMotion()) {
       introEl.classList.add('is-hidden');
+      document.body.classList.remove('intro-animating');
       return;
     }
 
     document.body.classList.add('intro-animating');
 
     let isExited = false;
+    let exitTimer = null;
+    let hideTimer = null;
+
     function exitIntro() {
       if (isExited) return;
       isExited = true;
 
+      if (exitTimer) clearTimeout(exitTimer);
+
       introEl.classList.add('is-exiting');
       document.body.classList.remove('intro-animating');
 
-      setTimeout(() => {
+      hideTimer = setTimeout(() => {
         introEl.classList.add('is-hidden');
       }, 480);
     }
 
+    // Allow user to click to skip intro instantly
     introEl.addEventListener('click', exitIntro, { once: true });
-    setTimeout(exitIntro, 1500);
 
+    // Standard reveal dwell time (~1.5s)
+    exitTimer = setTimeout(exitIntro, 1500);
+
+    // Failsafe watchdog
     setTimeout(() => {
       document.body.classList.remove('intro-animating');
+      if (!isExited) {
+        exitIntro();
+      }
       if (!introEl.classList.contains('is-hidden')) {
         introEl.classList.add('is-hidden');
       }

@@ -183,7 +183,7 @@ const solutionsGroupsData = [
     id: 'atrair-converter',
     title: 'Atrair e converter',
     description: 'Para empresas que precisam melhorar presença, posicionamento e geração de oportunidades.',
-    services: ['cogit-start', 'sites-institucionais', 'landing-pages']
+    services: ['modelos-prontos', 'modelos-sob-medida', 'sites-institucionais', 'landing-pages']
   },
   {
     id: 'ganhar-eficiencia',
@@ -270,16 +270,28 @@ const servicesData = [
     customAnalysis: true
   },
   {
-    id: 'cogit-start',
-    title: 'COGIT Start',
-    description: 'Soluções digitais pré-estruturadas e adaptadas à sua marca. Portfólios, Landing Pages e Sites com entrega ágil a partir de 5 dias úteis.',
+    id: 'modelos-prontos',
+    title: 'Modelos Prontos',
+    description: 'Estruturas desenvolvidas pela Cogit para quem quer colocar o projeto no ar de forma mais rápida e prática. Personalização completa para sua marca.',
     icon: 'zap',
-    slug: 'cogit-start',
-    tag: 'ÁGIL & ACESSÍVEL',
+    slug: 'modelos-prontos',
+    tag: 'ESTRUTURAS PRONTAS',
     basePrice: 790,
     priceType: 'startingAt',
     priceNote: 'Portfólios (R$ 790), Landing Pages (R$ 990) e Sites (R$ 1.990).',
     customAnalysis: false
+  },
+  {
+    id: 'modelos-sob-medida',
+    title: 'Modelos Sob Medida',
+    description: 'Presença digital com estrutura, design e experiência desenvolvidos do zero, exclusivamente para o seu negócio.',
+    icon: 'websites',
+    slug: 'modelos-sob-medida',
+    tag: 'EXCLUSIVO',
+    basePrice: 0,
+    priceType: 'custom',
+    priceNote: 'Investimento definido conforme o projeto e suas especificidades.',
+    customAnalysis: true
   },
   {
     id: 'sites-institucionais',
@@ -421,6 +433,7 @@ const configuratorData = {
       id: 'site-institucional',
       name: 'Site Institucional',
       icon: 'websites',
+      isPresencaDigital: true,
       hasLevels: true,
       allowedAddons: ['pagina-adicional', 'blog', 'seo-avancado', 'copywriting', 'automacao-extra', 'integracao-crm', 'integracao-externa', 'area-restrita'],
       levels: [
@@ -433,6 +446,7 @@ const configuratorData = {
       id: 'landing-page',
       name: 'Landing Page',
       icon: 'landing',
+      isPresencaDigital: true,
       hasLevels: true,
       allowedAddons: ['copywriting', 'seo-avancado', 'automacao-extra', 'integracao-crm', 'integracao-externa', 'analytics-avancado'],
       levels: [
@@ -440,6 +454,17 @@ const configuratorData = {
         { id: 'profissional', name: 'Profissional', description: 'Maior personalização, estrutura estratégica de conversão, Analytics, eventos, integrações simples e maior complexidade visual.', priceType: 'fixed', price: 1490 },
         { id: 'avancada', name: 'Avançada', description: 'Automações, CRM, integrações externas, lógica personalizada ou necessidades específicas.', priceType: 'from', price: 2490 }
       ]
+    },
+    {
+      id: 'portfolio',
+      name: 'Portfólio',
+      icon: 'landing',
+      isPresencaDigital: true,
+      hasLevels: false,
+      priceType: 'from',
+      price: 790,
+      description: 'Portfólios desenvolvidos para apresentar trabalhos, projetos e serviços de forma profissional.',
+      allowedAddons: ['pagina-adicional', 'seo-avancado', 'copywriting']
     },
     {
       id: 'automacao',
@@ -723,7 +748,7 @@ const whatsappOptions = [
   { label: 'Landing Page', message: 'Olá, tenho interesse em criar uma Landing Page com a COGIT.' },
   { label: 'Site Institucional', message: 'Olá, gostaria de entender sobre desenvolvimento de Site Institucional.' },
   { label: 'Solução Personalizada / Sistema', message: 'Olá, gostaria de conversar sobre uma solução personalizada.' },
-  { label: 'COGIT Start (Pacote Rápido)', message: 'Olá, gostaria de entender sobre os pacotes COGIT Start.' },
+  { label: 'Modelos Prontos', message: 'Olá, gostaria de entender mais sobre os Modelos Prontos da COGIT.' },
   { label: 'Automação de Processos', message: 'Olá, gostaria de automatizar processos na minha empresa com a COGIT.' },
   { label: 'Produto Digital / SaaS / MVP', message: 'Olá, tenho uma ideia de produto digital / SaaS e quero estruturar com a COGIT.' },
   { label: 'Outro assunto', message: 'Olá, gostaria de conversar sobre meu projeto com a COGIT.' }

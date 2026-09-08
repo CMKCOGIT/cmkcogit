@@ -799,6 +799,19 @@
     gap: 8px;
   }
 
+  .cfg-modelo-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .cfg-modelo-card {
+    padding: var(--space-5);
+  }
+
+  .cfg-modelo-card-title {
+    font-size: var(--text-base);
+  }
+
   .cfg-estimate-value {
     font-size: 1.4rem;
   }

@@ -57,6 +57,9 @@ function renderHeroInteractive() {
     { id: 'landing-page', name: 'Landing Page', desc: 'Página estratégica para conversão.', priceLabel: 'A partir de R$ 990', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
+    { id: 'portfolio', name: 'Portfólio', desc: 'Modelos de alta conversão.', priceLabel: 'A partir de R$ 790', challenge: 'presenca',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
+    },
     { id: 'automacao-svc', name: 'Automação', desc: 'Elimine tarefas e conecte ferramentas.', priceLabel: 'A partir de R$ 990', challenge: 'automacao',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><path d="M7 12h3M14 12h3M12 7v3M12 14v3"/></svg>'
     },
@@ -110,16 +113,16 @@ function renderHeroInteractive() {
       { id: 'digitalizar-processos', label: 'Digitalizar processos' }
     ],
     'landing-page': [
-      { id: 'captar-clientes', label: 'Captar novos clientes' },
-      { id: 'apresentar-produto', label: 'Apresentar um produto' },
-      { id: 'pagina-vendas', label: 'Criar uma página de vendas' },
-      { id: 'validar-oferta', label: 'Validar uma oferta' }
+      { id: 'modelos-prontos', label: 'Modelos Prontos' },
+      { id: 'sob-medida', label: 'Modelos Sob Medida' }
     ],
     'site-institucional': [
-      { id: 'apresentar-empresa', label: 'Apresentar minha empresa' },
-      { id: 'fortalecer-marca', label: 'Fortalecer minha marca' },
-      { id: 'gerar-autoridade', label: 'Gerar autoridade online' },
-      { id: 'atrair-clientes', label: 'Atrair novos clientes' }
+      { id: 'modelos-prontos', label: 'Modelos Prontos' },
+      { id: 'sob-medida', label: 'Modelos Sob Medida' }
+    ],
+    'portfolio': [
+      { id: 'modelos-prontos', label: 'Modelos Prontos' },
+      { id: 'sob-medida', label: 'Modelos Sob Medida' }
     ],
     'outro-svc': [
       { id: 'desafio-especifico', label: 'Resolver um desafio específico' },
@@ -170,12 +173,20 @@ function renderHeroInteractive() {
     'landing-page:apresentar-produto': { solution: 'Landing Page de Produto', desc: 'Apresentação visual impactante destacando benefícios, demonstração e diferenciais.' },
     'landing-page:pagina-vendas': { solution: 'Página de Vendas Estratégica', desc: 'Estrutura completa com storytelling, quebra de objeções e chamada para ação direta.' },
     'landing-page:validar-oferta': { solution: 'Página de Validação de Oferta', desc: 'Estrutura ágil para mensurar interesse real do público antes de grandes investimentos.' },
+    'landing-page:modelos-prontos': { solution: 'Landing Page Otimizada (Modelo)', desc: 'Estrutura base validada para agilidade e conversão.' },
+    'landing-page:sob-medida': { solution: 'Landing Page Exclusiva', desc: 'Projeto 100% personalizado para seu negócio e identidade.' },
 
     // Site Institucional
     'site-institucional:apresentar-empresa': { solution: 'Site Institucional Estruturado', desc: 'Apresentar sua história, diferenciais e serviços com clareza e autoridade institucional.' },
     'site-institucional:fortalecer-marca': { solution: 'Site Institucional de Alto Padrão', desc: 'Posicionar sua marca como referência no setor com design moderno e identidade consistente.' },
     'site-institucional:gerar-autoridade': { solution: 'Site com Portfólio e Cases', desc: 'Demonstrar credibilidade no mercado através de depoimentos, cases e certificações.' },
     'site-institucional:atrair-clientes': { solution: 'Site Institucional com Foco Comercial', desc: 'Estruturar canais de contato, formulários e CTAs para atrair e converter novas oportunidades.' },
+    'site-institucional:modelos-prontos': { solution: 'Site Institucional (Modelo)', desc: 'Estrutura base profissional para presença digital rápida.' },
+    'site-institucional:sob-medida': { solution: 'Site Institucional Exclusivo', desc: 'Design exclusivo focado na autoridade da sua marca.' },
+
+    // Portfólio
+    'portfolio:modelos-prontos': { solution: 'Portfólio (Modelo)', desc: 'Modelo base focado em conversão e agilidade.' },
+    'portfolio:sob-medida': { solution: 'Portfólio Exclusivo', desc: 'Design 100% personalizado e sob medida.' },
 
     // Outra Solução
     'outro-svc:desafio-especifico': { solution: 'Consultoria e Solução Personalizada', desc: 'Análise aprofundada do seu desafio para desenhar a arquitetura técnica ideal.' },
@@ -230,8 +241,11 @@ function renderHeroInteractive() {
     } else { renderFn(); }
   }
 
+  const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
+
   function renderProgressDots(currentStep, total) {
-    const labels = ['Solução', 'Objetivo', 'Contexto'];
+    const isModelo = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
+    const labels = ['Solução', isModelo ? 'Modelo' : 'Objetivo', 'Contexto'];
     return `<div class="hero-diag-dots">
       ${labels.map((label, i) => {
         const n = i + 1;
@@ -338,8 +352,12 @@ function renderHeroInteractive() {
   // ── ETAPA 2: Grid de Objetivos Dinâmicos (Cards Quadrados) ──
   function renderStep2() {
     state.step = 2;
-
     const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
+
+    if (PRESENCA_DIGITAL_IDS.includes(state.selectedService)) {
+      return renderStep2Modelo(selectedSvc);
+    }
+
     const objectives = getObjectives(state.selectedService);
 
     const cardsHtml = objectives.map(obj => `
@@ -409,6 +427,178 @@ function renderHeroInteractive() {
         if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', card.dataset.id);
       });
     });
+
+    if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
+    if (editBtn) editBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
+    if (continueBtn) continueBtn.addEventListener('click', () => {
+      if (!state.objective) return;
+      transitionTo(renderStep3, 'next');
+    });
+  }
+
+  // ── ETAPA 2 ALTERNATIVA: Modelos ──
+  function renderStep2Modelo(selectedSvc) {
+    const iconZap = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
+    const iconDesign = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+
+    const modeloProntos = state.objective === 'modelos-prontos';
+    const modeloSobMedida = state.objective === 'sob-medida';
+
+    container.innerHTML = `
+      <div class="hero-step-wrapper hero-step-2-view">
+        <div class="hero-interactive-header">
+          <div class="hero-discovery-topbar">
+            <span class="hero-discovery-tag">
+              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><path d="M12 17h.01"/></svg>
+              MODELO
+            </span>
+            ${renderProgressDots(2, 3)}
+          </div>
+
+          <div class="hero-challenge-context-bar">
+            <span class="hero-challenge-context-icon">${selectedSvc ? selectedSvc.iconSvg : ''}</span>
+            <span class="hero-challenge-context-name">${selectedSvc ? selectedSvc.name : 'Solução selecionada'}</span>
+            <span class="hero-challenge-context-price">${selectedSvc ? selectedSvc.priceLabel : ''}</span>
+            <button type="button" class="hero-btn-edit-step" id="hero-btn-edit-challenge">Alterar</button>
+          </div>
+
+          <h2 class="hero-interactive-title" style="margin-top:10px;">Como você deseja construir sua solução?</h2>
+          <p class="hero-interactive-desc">Existem diferentes formas de criar uma solução digital.</p>
+        </div>
+
+        <div class="hero-modelo-grid">
+          <div class="hero-modelo-card ${modeloProntos ? 'is-selected' : ''}" data-id="modelos-prontos">
+            <div class="hero-modelo-card-header">
+              <div class="hero-modelo-card-icon">${iconZap}</div>
+              <div class="hero-objective-check" style="${modeloProntos ? 'opacity: 1;' : 'opacity: 0;'}">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <h4 class="hero-modelo-card-title">Modelos Prontos</h4>
+            <p class="hero-modelo-card-desc">Escolha entre estruturas otimizadas para agilidade, conversão e presença digital.</p>
+            <div class="hero-modelo-card-divider"></div>
+            <div class="hero-modelo-card-actions">
+              <button type="button" class="btn-hero-modelo-sec" id="btn-ver-modelo">Ver modelo</button>
+              <button type="button" class="btn-hero-modelo-pri" id="btn-adquirir-modelo">Adquirir modelo</button>
+            </div>
+          </div>
+
+          <div class="hero-modelo-card ${modeloSobMedida ? 'is-selected' : ''}" data-id="sob-medida">
+            <div class="hero-modelo-card-header">
+              <div class="hero-modelo-card-icon">${iconDesign}</div>
+              <div class="hero-objective-check" style="${modeloSobMedida ? 'opacity: 1;' : 'opacity: 0;'}">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <h4 class="hero-modelo-card-title">Modelos Sob Medida</h4>
+            <p class="hero-modelo-card-desc">Projetos exclusivos focados em alto nível de personalização.</p>
+            <div class="hero-modelo-card-divider"></div>
+            <div class="hero-modelo-card-actions">
+              <button type="button" class="btn-hero-modelo-sec" id="btn-personalizar-sob-medida">Personalizar modelo</button>
+              <button type="button" class="btn-hero-modelo-pri" id="btn-adquirir-sob-medida">Adquirir modelo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-discovery-footer" style="margin-top: var(--space-4);">
+          <button type="button" class="btn-hero-back" id="hero-btn-back-2">← Voltar</button>
+          <button type="button" class="btn-hero-montar" id="hero-btn-continue-2" ${state.objective ? '' : 'disabled'}>
+            Continuar <span>→</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    const cards = container.querySelectorAll('.hero-modelo-card');
+    const continueBtn = document.getElementById('hero-btn-continue-2');
+    const backBtn = document.getElementById('hero-btn-back-2');
+    const editBtn = document.getElementById('hero-btn-edit-challenge');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        state.objective = card.dataset.id;
+        saveState();
+        cards.forEach(c => {
+          c.classList.remove('is-selected');
+          c.querySelector('.hero-objective-check').style.opacity = '0';
+        });
+        card.classList.add('is-selected');
+        card.querySelector('.hero-objective-check').style.opacity = '1';
+        if (continueBtn) continueBtn.removeAttribute('disabled');
+        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', card.dataset.id);
+      });
+    });
+
+    const btnVerModelo = document.getElementById('btn-ver-modelo');
+    const btnAdquirirModelo = document.getElementById('btn-adquirir-modelo');
+    const btnAdquirirSobMedida = document.getElementById('btn-adquirir-sob-medida');
+    const btnPersonalizarSobMedida = document.getElementById('btn-personalizar-sob-medida');
+
+    if (btnVerModelo) {
+      btnVerModelo.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que o card seja clicado
+        if (typeof showModelPreview === 'function') showModelPreview(selectedSvc);
+      });
+    }
+
+    if (btnAdquirirModelo) {
+      btnAdquirirModelo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.objective = 'modelos-prontos';
+        saveState();
+        // Atualiza a interface visualmente caso estivesse diferente
+        cards.forEach(c => {
+          c.classList.remove('is-selected');
+          c.querySelector('.hero-objective-check').style.opacity = '0';
+        });
+        const prontosCard = container.querySelector('[data-id="modelos-prontos"]');
+        if (prontosCard) {
+          prontosCard.classList.add('is-selected');
+          prontosCard.querySelector('.hero-objective-check').style.opacity = '1';
+        }
+        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', 'modelos-prontos');
+        transitionTo(renderStep3, 'next');
+      });
+    }
+
+    if (btnAdquirirSobMedida) {
+      btnAdquirirSobMedida.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.objective = 'sob-medida';
+        saveState();
+        // Atualiza a interface visualmente
+        cards.forEach(c => {
+          c.classList.remove('is-selected');
+          c.querySelector('.hero-objective-check').style.opacity = '0';
+        });
+        const sobMedidaCard = container.querySelector('[data-id="sob-medida"]');
+        if (sobMedidaCard) {
+          sobMedidaCard.classList.add('is-selected');
+          sobMedidaCard.querySelector('.hero-objective-check').style.opacity = '1';
+        }
+        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', 'sob-medida');
+        transitionTo(renderStep3, 'next');
+      });
+    }
+
+    if (btnPersonalizarSobMedida) {
+      btnPersonalizarSobMedida.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.objective = 'sob-medida';
+        saveState();
+        cards.forEach(c => {
+          c.classList.remove('is-selected');
+          c.querySelector('.hero-objective-check').style.opacity = '0';
+        });
+        const sobMedidaCard = container.querySelector('[data-id="sob-medida"]');
+        if (sobMedidaCard) {
+          sobMedidaCard.classList.add('is-selected');
+          sobMedidaCard.querySelector('.hero-objective-check').style.opacity = '1';
+        }
+        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', 'sob-medida-personalizar');
+        transitionTo(renderStep3, 'next');
+      });
+    }
 
     if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
     if (editBtn) editBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
@@ -595,6 +785,71 @@ function renderHeroInteractive() {
 
   // Initial render
   renderStep0();
+}
+
+// ── PREVIEW DE MODELOS (MODAL SIMPLES) ──
+function showModelPreview(selectedSvc) {
+  // Remove se já existir
+  const existing = document.getElementById('hero-model-preview-modal');
+  if (existing) existing.remove();
+
+  const title = selectedSvc ? selectedSvc.name : 'Modelo Pronto';
+  
+  const modalHTML = `
+    <div class="hero-modal-overlay" id="hero-model-preview-modal">
+      <div class="hero-modal-content">
+        <div class="hero-modal-header">
+          <h3 class="hero-modal-title">Visualização: ${title}</h3>
+          <button type="button" class="hero-modal-close" id="hero-modal-close">&times;</button>
+        </div>
+        <div class="hero-modal-body">
+          <div class="hero-modal-mockup">
+            <div class="hero-modal-mockup-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Pré-visualização do modelo em breve</span>
+            </div>
+          </div>
+          <div class="hero-modal-info">
+            <h4>O que está incluso:</h4>
+            <ul>
+              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Design focado em conversão e usabilidade</li>
+              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Estrutura otimizada para SEO e carregamento rápido</li>
+              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> 100% Responsivo para todos os dispositivos</li>
+            </ul>
+          </div>
+        </div>
+        <div class="hero-modal-footer">
+          <button type="button" class="btn-hero-modelo-pri" style="width: 100%;" id="hero-modal-select">Quero este modelo</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  const modal = document.getElementById('hero-model-preview-modal');
+  const closeBtn = document.getElementById('hero-modal-close');
+  const selectBtn = document.getElementById('hero-modal-select');
+
+  // Trigger anim
+  requestAnimationFrame(() => modal.classList.add('is-open'));
+
+  const closeModal = () => {
+    modal.classList.remove('is-open');
+    setTimeout(() => modal.remove(), 300);
+  };
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  selectBtn.addEventListener('click', () => {
+    closeModal();
+    // Simula o clique no botão adquirir para avançar
+    const adquirirBtn = document.getElementById('btn-adquirir-modelo');
+    if (adquirirBtn) adquirirBtn.click();
+  });
 }
 
 

@@ -11,6 +11,7 @@ const ConfiguratorApp = (() => {
     totalSteps: 4,
     selectedServices: [],   // [{serviceId, levelId, levelName, price, priceType}]
     selectedAddons: [],     // [{addonId, name, price, priceType}]
+    solutionModel: null,    // 'modelos-prontos' | 'sob-medida' (para serviços de presença digital)
     isComplex: false,
     formData: {}
   };
@@ -56,6 +57,16 @@ const ConfiguratorApp = (() => {
       default:
         return '';
     }
+  }
+
+  // ── Helpers — Presença Digital ──
+
+  // IDs que ativam o fluxo de modelo (Prontos / Sob Medida)
+  const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
+
+  function isPresencaDigitalOnly() {
+    if (state.selectedServices.length === 0) return false;
+    return state.selectedServices.every(s => PRESENCA_DIGITAL_IDS.includes(s.serviceId));
   }
 
   function checkComplexity() {
@@ -168,6 +179,7 @@ const ConfiguratorApp = (() => {
     const serviceIdMap = {
       'site-institucional': 'sites-institucionais',
       'landing-page': 'landing-pages',
+      'portfolio': 'modelos-prontos',
       'automacao': 'automacao',
       'sistema': 'sistemas',
       'saas': 'saas',
@@ -203,8 +215,14 @@ const ConfiguratorApp = (() => {
     `;
   }
 
-  // ── Step 2: Level Selection ──
+  // ── Step 2: Level Selection (serviços comuns) ou Modelo (presença digital) ──
   function renderStep2() {
+    // Se todos os serviços selecionados são de presença digital → nova tela de escolha de modelo
+    if (isPresencaDigitalOnly()) {
+      return renderStep2Modelo();
+    }
+
+    // Fluxo original para demais serviços (inalterado)
     const servicesWithDetails = state.selectedServices.map(sel => {
       const serviceData = configuratorData.services.find(s => s.id === sel.serviceId);
       return { ...sel, data: serviceData };
@@ -255,6 +273,74 @@ const ConfiguratorApp = (() => {
               `;
             }
           }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Step 2 Alternativo: Escolha de Modelo (Presença Digital) ──
+  function renderStep2Modelo() {
+    const modeloProntos   = state.solutionModel === 'modelos-prontos';
+    const modeloSobMedida = state.solutionModel === 'sob-medida';
+
+    // Ícone de relâmpago para Modelos Prontos
+    const iconZap = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+    // Ícone de compass/design para Sob Medida
+    const iconDesign = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`;
+
+    const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    return `
+      <div class="cfg-step" data-step="2-modelo">
+        <h3 class="cfg-step-title">Como você deseja construir sua solução?</h3>
+        <p class="cfg-step-subtitle">Escolha o modelo ideal para o seu projeto.</p>
+
+        <div class="cfg-modelo-grid">
+
+          <!-- Card 01: Modelos Prontos -->
+          <button
+            class="cfg-modelo-card ${modeloProntos ? 'is-selected' : ''}"
+            data-modelo-id="modelos-prontos"
+            type="button"
+            id="cfg-modelo-prontos"
+          >
+            <div class="cfg-modelo-card-header">
+              <div class="cfg-modelo-card-icon cfg-modelo-icon-zap">${iconZap}</div>
+              <div class="cfg-level-card-radio ${modeloProntos ? 'is-checked' : ''}"></div>
+            </div>
+            <h4 class="cfg-modelo-card-title">Modelos Prontos</h4>
+            <p class="cfg-modelo-card-desc">
+              Escolha uma estrutura já desenvolvida pela COGIT e personalize com sua identidade visual, conteúdo e informações do seu negócio.
+            </p>
+            <ul class="cfg-modelo-features">
+              <li>${checkIcon}<span>Mais rápido</span></li>
+              <li>${checkIcon}<span>Melhor custo-benefício</span></li>
+              <li>${checkIcon}<span>Ideal para colocar sua presença digital no ar</span></li>
+            </ul>
+          </button>
+
+          <!-- Card 02: Modelos Sob Medida -->
+          <button
+            class="cfg-modelo-card ${modeloSobMedida ? 'is-selected' : ''}"
+            data-modelo-id="sob-medida"
+            type="button"
+            id="cfg-modelo-sob-medida"
+          >
+            <div class="cfg-modelo-card-header">
+              <div class="cfg-modelo-card-icon cfg-modelo-icon-design">${iconDesign}</div>
+              <div class="cfg-level-card-radio ${modeloSobMedida ? 'is-checked' : ''}"></div>
+            </div>
+            <h4 class="cfg-modelo-card-title">Modelos Sob Medida</h4>
+            <p class="cfg-modelo-card-desc">
+              Construímos uma solução totalmente personalizada, pensada para suas necessidades, objetivos e diferenciais.
+            </p>
+            <ul class="cfg-modelo-features">
+              <li>${checkIcon}<span>Design exclusivo</span></li>
+              <li>${checkIcon}<span>Estrutura personalizada</span></li>
+              <li>${checkIcon}<span>Maior nível de estratégia e desenvolvimento</span></li>
+            </ul>
+          </button>
+
         </div>
       </div>
     `;
@@ -411,6 +497,13 @@ const ConfiguratorApp = (() => {
 
           ${estimateHTML}
 
+          ${state.solutionModel ? `
+            <div class="cfg-result-modelo-badge">
+              <span class="cfg-result-modelo-label">Modelo escolhido</span>
+              <span class="cfg-result-modelo-value">${state.solutionModel === 'modelos-prontos' ? '⚡ Modelos Prontos' : '◉ Modelos Sob Medida'}</span>
+            </div>
+          ` : ''}
+
           <p class="cfg-transparency-note">Esta estimativa considera o escopo base das opções selecionadas. O investimento final poderá variar conforme complexidade, integrações, regras de negócio e necessidades específicas.</p>
         </div>
 
@@ -534,6 +627,12 @@ const ConfiguratorApp = (() => {
           <span class="cfg-summary-total-label">Estimativa Inicial</span>
           ${totalHTML}
           ${additionalInfo}
+          ${state.solutionModel ? `
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle)">
+              <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Modelo</div>
+              <div style="font-size: 13px; color: var(--purple); font-weight: 600;">${state.solutionModel === 'modelos-prontos' ? '⚡ Modelos Prontos' : '◉ Modelos Sob Medida'}</div>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -543,10 +642,16 @@ const ConfiguratorApp = (() => {
   function renderNavigation() {
     const canGoBack = state.currentStep > 1;
     const canGoNext = state.currentStep < state.totalSteps;
-    const isLastStep = state.currentStep === state.totalSteps;
 
     let nextDisabled = false;
+
+    // Etapa 1: deve ter pelo menos 1 serviço selecionado
     if (state.currentStep === 1 && state.selectedServices.length === 0) {
+      nextDisabled = true;
+    }
+
+    // Etapa 2 de presença digital: deve ter modelo selecionado
+    if (state.currentStep === 2 && isPresencaDigitalOnly() && !state.solutionModel) {
       nextDisabled = true;
     }
 
@@ -568,12 +673,20 @@ const ConfiguratorApp = (() => {
       });
     });
 
-    // Level selection (Step 2)
+    // Level selection (Step 2 — fluxo original)
     containerEl.querySelectorAll('.cfg-level-card').forEach(card => {
       card.addEventListener('click', () => {
         const serviceId = card.dataset.serviceId;
         const levelId = card.dataset.levelId;
         selectLevel(serviceId, levelId);
+      });
+    });
+
+    // Modelo selection (Step 2 — presença digital)
+    containerEl.querySelectorAll('.cfg-modelo-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const modeloId = card.dataset.modeloId;
+        selectSolutionModel(modeloId);
       });
     });
 
@@ -661,6 +774,15 @@ const ConfiguratorApp = (() => {
       state.selectedServices.push(entry);
       trackEvent('configurator_select', serviceId);
     }
+
+    // Resetar modelo ao mudar seleção de serviço (pode mudar o contexto de presença digital)
+    state.solutionModel = null;
+    render();
+  }
+
+  function selectSolutionModel(modeloId) {
+    state.solutionModel = modeloId;
+    trackEvent('configurator_modelo', modeloId);
     render();
   }
 
@@ -723,8 +845,21 @@ const ConfiguratorApp = (() => {
   function goNext() {
     if (state.currentStep === 1 && state.selectedServices.length === 0) return;
 
-    // Skip step 2 if no services have levels and no services need level selection
+    // Etapa 2 de presença digital: não avançar sem modelo selecionado
+    if (state.currentStep === 2 && isPresencaDigitalOnly() && !state.solutionModel) return;
+
+    // Etapa 1 → determinar próxima etapa
     if (state.currentStep === 1) {
+      // Se presença digital: sempre vai para Step 2 (escolha de modelo)
+      if (isPresencaDigitalOnly()) {
+        state.currentStep = 2;
+        trackEvent('configurator_step', 'step_2_modelo');
+        render();
+        scrollToConfigurator();
+        return;
+      }
+
+      // Demais serviços: pular Step 2 se nenhum tem níveis
       const hasLeveledServices = state.selectedServices.some(s => {
         const data = configuratorData.services.find(srv => srv.id === s.serviceId);
         return data && data.hasLevels;
@@ -748,7 +883,15 @@ const ConfiguratorApp = (() => {
 
   function goBack() {
     if (state.currentStep > 1) {
-      // If on step 3 and no leveled services, go back to step 1
+      // Se na etapa 3 e todos os serviços são presença digital → voltar para etapa 2 (modelo)
+      if (state.currentStep === 3 && isPresencaDigitalOnly()) {
+        state.currentStep = 2;
+        render();
+        scrollToConfigurator();
+        return;
+      }
+
+      // Se na etapa 3 e nenhum serviço comum tem níveis → voltar para etapa 1
       if (state.currentStep === 3) {
         const hasLeveledServices = state.selectedServices.some(s => {
           const data = configuratorData.services.find(srv => srv.id === s.serviceId);
@@ -789,6 +932,13 @@ const ConfiguratorApp = (() => {
         const price = s.priceType === 'analysis' || s.priceType === 'custom' ? 'Sob análise' : (s.price != null ? `R$ ${s.price.toLocaleString('pt-BR')}` : 'A definir');
         message += `- ${name}${level} — ${price}\n`;
       });
+
+      // Incluir modelo escolhido se presença digital
+      if (state.solutionModel) {
+        const modeloLabel = state.solutionModel === 'modelos-prontos' ? 'Modelos Prontos' : 'Modelos Sob Medida';
+        message += `*Modelo escolhido:* ${modeloLabel}\n`;
+      }
+
       message += "\n";
     }
 
@@ -855,6 +1005,7 @@ const ConfiguratorApp = (() => {
         priceType: a.priceType,
         quantity: a.quantity
       })),
+      solutionModel: state.solutionModel,
       estimate: total,
       isComplex: state.isComplex,
       contact: { name, company, email, whatsapp },
@@ -876,6 +1027,7 @@ const ConfiguratorApp = (() => {
     state.currentStep = 1;
     state.selectedServices = [];
     state.selectedAddons = [];
+    state.solutionModel = null;
     state.isComplex = false;
     state.formData = {};
     render();
@@ -887,6 +1039,7 @@ const ConfiguratorApp = (() => {
     // Reset current state
     state.selectedServices = [];
     state.selectedAddons = [];
+    state.solutionModel = null;
     state.isComplex = false;
     state.formData = {};
     
@@ -914,16 +1067,17 @@ const ConfiguratorApp = (() => {
       }
     });
 
-    // Advance to step 2 or 3 depending on whether any service has levels
-    const hasLeveledServices = state.selectedServices.some(s => {
-      const data = configuratorData.services.find(srv => srv.id === s.serviceId);
-      return data && data.hasLevels;
-    });
-
-    if (hasLeveledServices) {
+    // Advance to the appropriate step
+    if (isPresencaDigitalOnly()) {
+      // Presença digital → Step 2 (escolha de modelo)
       state.currentStep = 2;
     } else {
-      state.currentStep = 3; // skip level selection if none apply
+      // Demais serviços: Step 2 se algum tem níveis, caso contrário Step 3
+      const hasLeveledServices = state.selectedServices.some(s => {
+        const data = configuratorData.services.find(srv => srv.id === s.serviceId);
+        return data && data.hasLevels;
+      });
+      state.currentStep = hasLeveledServices ? 2 : 3;
     }
 
     render();
