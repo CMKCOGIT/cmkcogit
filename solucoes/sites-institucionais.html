@@ -29,8 +29,6 @@
   <meta name="twitter:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Styles -->
   <link rel="stylesheet" href="../css/style.css">
@@ -56,6 +54,7 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 
   <!-- ═══════════════════════════════════════
        HEADER
@@ -205,7 +204,7 @@
     </div>
   </nav>
 
-  <main role="main">
+  <main id="main-content" role="main">
     <!-- Hero da Solução -->
     <section class="solution-hero">
       <div class="hero-bg-grid"></div>
@@ -215,7 +214,7 @@
         <h1>Sites institucionais para empresas que precisam transmitir autoridade e gerar confiança.</h1>
         <p>Construção de presença digital sólida, arquitetura profissional com múltiplas páginas, apresentação clara da sua empresa, serviços, cases e canais de contato.</p>
         <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
-          <a href="../monte-sua-solucao.html" onclick="sessionStorage.setItem('cogit_preselect', 'site-institucional');" class="btn btn-primary">Configurar meu site institucional <span>→</span></a>
+          <a href="../monte-sua-solucao.html?services=site-institucional" class="btn btn-primary">Configurar meu site institucional <span>→</span></a>
           <a href="../contato.html" class="btn btn-secondary">Conversar com especialista</a>
         </div>
       </div>
@@ -404,7 +403,7 @@
                 <span style="font-size: 12px; color: var(--text-tertiary); display: block;">Investimento a partir de</span>
                 <strong style="font-size: var(--text-2xl); color: var(--ink);">R$ 1.990</strong>
               </div>
-              <a href="../monte-sua-solucao.html" onclick="sessionStorage.setItem('cogit_preselect', 'site-institucional');" class="btn btn-secondary-dark" style="width: 100%; justify-content: center;">Configurar Essencial <span>→</span></a>
+              <a href="../monte-sua-solucao.html?services=site-institucional" class="btn btn-secondary-dark" style="width: 100%; justify-content: center;">Configurar Essencial <span>→</span></a>
             </div>
           </div>
 
@@ -430,7 +429,7 @@
                 <span style="font-size: 12px; color: var(--text-tertiary); display: block;">Investimento a partir de</span>
                 <strong style="font-size: var(--text-2xl); color: var(--ink);">R$ 2.990</strong>
               </div>
-              <a href="../monte-sua-solucao.html" onclick="sessionStorage.setItem('cogit_preselect', 'site-institucional');" class="btn btn-primary" style="width: 100%; justify-content: center;">Configurar Profissional <span>→</span></a>
+              <a href="../monte-sua-solucao.html?services=site-institucional" class="btn btn-primary" style="width: 100%; justify-content: center;">Configurar Profissional <span>→</span></a>
             </div>
           </div>
 
@@ -517,11 +516,12 @@
           <p>Converse com nossa equipe para definir a arquitetura ideal do seu novo site institucional.</p>
           <div class="cta-final-buttons">
             <a href="../contato.html?solucao=site-institucional" class="btn btn-primary btn-lg">Falar com especialista →</a>
-            <a href="../monte-sua-solucao.html" onclick="sessionStorage.setItem('cogit_preselect', 'site-institucional');" class="btn btn-secondary btn-lg">Configurar meu site</a>
+            <a href="../monte-sua-solucao.html?services=site-institucional" class="btn btn-secondary btn-lg">Configurar meu site</a>
           </div>
         </div>
       </div>
     </section>
+  <noscript><p class="container form-notice">Ative o JavaScript para usar os diagnósticos e o menu interativo. Para falar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
   </main>
 
   <!-- ═══════════════════════════════════════
@@ -643,6 +643,8 @@
 
   <!-- Scripts -->
   <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/privacy.js"></script>
   <script src="../js/analytics.js"></script>
   <script src="../js/components.js"></script>
   <script src="../js/configurator.js"></script>

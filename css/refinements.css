@@ -1,0 +1,277 @@
+/* COGIT — shared refinements, September 2026.
+   Scoped card tokens preserve the existing brand and page backgrounds. */
+:root {
+  --text-base: 1rem;
+  --border-subtle: #d9dbe4;
+  --cogit-config-surface: #242329;
+  --cogit-config-hover: #2b2932;
+  --cogit-config-selected: #302b3a;
+  --cogit-config-border: #4b4655;
+  --cogit-config-control: #8a8495;
+  --cogit-config-text: #fafafc;
+  --cogit-config-muted: #c6c3cf;
+  --cogit-config-indicator: #a78bfa;
+  --cogit-config-focus: #c4b5fd;
+}
+
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 7rem; }
+body { min-width: 0; }
+img { height: auto; }
+button, a, input, select, textarea { touch-action: manipulation; }
+button, input, select, textarea { max-width: 100%; }
+input:not([type=checkbox]):not([type=radio]), select, textarea { font-size: 1rem; }
+button:disabled { cursor: not-allowed; }
+:is(.grid, [class$="-grid"], .cfg-wrapper, .hero-inner, .footer-top, .form-grid) > * { min-width: 0; }
+.grid-auto { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.75rem), 1fr)); }
+.btn { overflow-wrap: anywhere; }
+.btn::after { pointer-events: none; border-radius: inherit; }
+.skip-link { position: fixed; top: .75rem; left: .75rem; z-index: 2000; padding: .75rem 1rem; background: #fff; color: var(--ink); border-radius: .5rem; transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+main, section[id] { scroll-margin-top: 7rem; }
+.footer-links a, .footer-bottom-links a { overflow-wrap: anywhere; }
+.footer-sub-tagline { font-size: .75rem !important; }
+.footer-social a { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+
+/* One family for the home diagnosis, contact diagnosis and estimator. */
+:is(#hero-interactive-container, #configurator-app, #cogit-diagnostic-form) :is(.hero-svc-card, .hero-objective-card, .hero-modelo-card, .cfg-service-card, .cfg-level-card, .cfg-modelo-card, .cfg-addon-card, .diag-svc-card, .diag-option-item) {
+  background: var(--cogit-config-surface);
+  border: 2px solid var(--cogit-config-border);
+  border-radius: 1rem;
+  color: var(--cogit-config-text);
+  box-shadow: 0 3px 10px rgb(0 0 0 / .1);
+  transform: none;
+  min-width: 0;
+  transition: background-color 180ms ease, border-color 180ms ease;
+  animation: none;
+}
+@media (hover: hover) {
+  :is(#hero-interactive-container, #configurator-app, #cogit-diagnostic-form) :is(.hero-svc-card, .hero-objective-card, .cfg-service-card, .cfg-level-card, .cfg-modelo-card, .cfg-addon-card, .diag-svc-card, .diag-option-item):hover {
+    background: var(--cogit-config-hover); border-color: var(--cogit-config-control); transform: none; box-shadow: 0 3px 10px rgb(0 0 0 / .1);
+  }
+}
+:is(#hero-interactive-container, #configurator-app, #cogit-diagnostic-form) :is(.hero-svc-card, .hero-objective-card, .hero-modelo-card, .cfg-service-card, .cfg-level-card, .cfg-modelo-card, .cfg-addon-card, .diag-svc-card, .diag-option-item).is-selected {
+  background: var(--cogit-config-selected); border-color: var(--cogit-config-indicator); transform: none; box-shadow: none;
+}
+:is(#hero-interactive-container, #configurator-app, #cogit-diagnostic-form) :is(.hero-svc-name, .hero-objective-text, .hero-modelo-card-title, .cfg-service-card-name, .cfg-level-card-name, .cfg-modelo-card-title, .cfg-addon-card-name, .diag-svc-name, .diag-option-title) {
+  color: var(--cogit-config-text); font-weight: 600; line-height: 1.4; overflow-wrap: anywhere;
+}
+:is(#hero-interactive-container, #configurator-app, #cogit-diagnostic-form) :is(.hero-modelo-card-desc, .cfg-level-card-desc, .cfg-modelo-card-desc, .cfg-modelo-features li, .diag-svc-desc, .diag-option-desc, .cfg-service-card-price-hint, .cfg-addon-card-price, .diag-svc-price, .cfg-price-value, .cfg-price-analysis) {
+  color: var(--cogit-config-muted); opacity: 1; line-height: 1.5;
+}
+:is(#hero-interactive-container, #configurator-app, #cogit-diagnostic-form) :is(.hero-svc-icon, .hero-modelo-card-icon, .cfg-service-card-icon, .cfg-modelo-card-icon, .diag-svc-icon) {
+  background: transparent; color: var(--cogit-config-indicator); border: 0; box-shadow: none; transform: none; width: 32px; height: 32px; border-radius: 0;
+}
+:is(.hero-svc-icon, .hero-modelo-card-icon, .cfg-service-card-icon, .cfg-modelo-card-icon, .diag-svc-icon) svg { width: 24px; height: 24px; }
+:is(.hero-svc-check, .hero-objective-check, .cfg-service-card-check, .diag-svc-check) { box-shadow: none; background: var(--cogit-config-indicator); color: #242329; }
+.hero-svc-card, .cfg-service-card { min-height: 116px; padding: 22px 14px 18px; }
+.hero-svc-name, .cfg-service-card-name, .diag-svc-name, .hero-objective-text { font-size: 1rem; }
+.hero-svc-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 16px; }
+.hero-objective-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.hero-objective-card { min-height: 96px; padding: 24px; }
+#hero-interactive-container { min-width: 0; container-type: inline-size; box-shadow: 0 16px 36px rgb(0 0 0 / .2); backdrop-filter: none; overflow: visible; }
+.hero-modelo-grid, .cfg-modelo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+#hero-interactive-container .hero-modelo-card { padding: 24px; cursor: default; user-select: text; }
+.hero-modelo-card-header { min-height: 32px; margin-bottom: 16px; }
+.hero-modelo-card-title, .cfg-modelo-card-title { font-size: clamp(1.25rem, 2vw, 1.5rem); }
+.hero-modelo-card-desc, .cfg-modelo-card-desc { font-size: 1rem; line-height: 1.5; }
+.hero-modelo-card-divider, .hero-modelo-card.is-selected .hero-modelo-card-divider { background: var(--cogit-config-border); margin: 24px 0 16px; }
+.hero-modelo-card-actions { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: auto; }
+.hero-model-choice { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; color: var(--cogit-config-muted); font-size: .875rem; }
+.hero-model-choice input { accent-color: var(--cogit-config-indicator); width: 20px; height: 20px; flex: 0 0 20px; }
+.hero-model-choice:has(input:checked) { color: var(--cogit-config-text); }
+.btn-hero-modelo-sec, .btn-hero-modelo-pri { flex: initial; display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 12px 16px; white-space: normal; overflow-wrap: anywhere; font-size: .9375rem; line-height: 1.4; box-shadow: none; border-radius: 10px; }
+.btn-hero-modelo-sec { border: 1px solid var(--cogit-config-control); background: transparent; color: var(--cogit-config-text); }
+.btn-hero-modelo-sec:hover { background: var(--cogit-config-hover); border-color: var(--cogit-config-muted); }
+.btn-hero-modelo-pri { background: var(--purple); color: #fff; border-color: var(--purple); }
+.btn-hero-modelo-pri:hover { background: var(--purple-hover); box-shadow: none; transform: none; }
+#hero-interactive-container :focus-visible, #configurator-app :is(.cfg-service-card, .cfg-modelo-card, .cfg-level-card, .cfg-addon-select):focus-visible, #cogit-diagnostic-form :is(.diag-svc-card, .diag-option-item):focus-visible {
+  outline: 3px solid var(--cogit-config-focus); outline-offset: 4px; box-shadow: none;
+}
+.hero-challenge-context-bar { flex-wrap: wrap; gap: 8px; }
+.hero-challenge-context-name { min-width: 0; overflow-wrap: anywhere; }
+.hero-challenge-context-price { white-space: normal; margin-left: auto; }
+.hero-btn-edit-step { min-height: 44px; margin-left: auto; padding: 8px; }
+.hero-discovery-topbar, .hero-discovery-footer { flex-wrap: wrap; gap: 16px; }
+.hero-diag-dots { max-width: 100%; }
+.hero-diag-dot-label { font-size: .8125rem; }
+.btn-hero-montar, .btn-hero-back { min-height: 48px; white-space: normal; max-width: 100%; }
+.hero-textarea { font-size: 1rem; }
+.hero-result-row { min-width: 0; flex-wrap: wrap; }
+.hero-result-value, .hero-result-desc, .hero-result-context { overflow-wrap: anywhere; }
+.hero-result-context { white-space: pre-wrap; }
+.cfg-modelo-card { padding: 24px; }
+.cfg-modelo-features li svg { color: var(--cogit-config-indicator); flex-shrink: 0; }
+.cfg-level-card-radio, .diag-option-radio { border-color: var(--cogit-config-control); flex-shrink: 0; }
+.cfg-level-card-radio.is-checked { border-color: var(--cogit-config-indicator); }
+.cfg-level-card-radio.is-checked::after { background: var(--cogit-config-indicator); }
+.cfg-addon-select { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; min-height: 48px; color: var(--cogit-config-text); }
+.cfg-addon-quantity { margin-left: auto; flex-shrink: 0; }
+.cfg-addon-qty-btn { min-width: 44px; min-height: 44px; color: var(--cogit-config-text); border-color: var(--cogit-config-control); }
+.cfg-addon-card { flex-wrap: wrap; }
+.cfg-addon-card-name { flex: 1; }
+.cfg-addon-card-price { white-space: normal; }
+.cfg-summary-item-row, .cfg-summary-item-level, .cfg-result-item > div { gap: 12px; flex-wrap: wrap; }
+.cfg-wrapper:has(.cfg-step[data-step="4"]) { grid-template-columns: 1fr; }
+.diag-option-item { width: 100%; text-align: left; }
+.diag-option-content { min-width: 0; }
+
+/* Native dialogs keep focus, Escape and background interaction correct. */
+dialog.hero-model-dialog { position: fixed; inset: 0; padding: 0; width: min(720px, calc(100% - 32px)); max-height: calc(100dvh - 32px); margin: auto; border: 0; border-radius: 16px; overflow: auto; background: var(--cogit-config-surface); color: var(--cogit-config-text); opacity: 1; transform: none; }
+dialog.hero-model-dialog:not([open]) { display: none; }
+dialog.hero-model-dialog[open] { display: block; }
+dialog.hero-model-dialog::backdrop { background: rgb(9 12 24 / .75); }
+dialog .hero-modal-content { max-width: 100%; width: 100%; max-height: none; background: var(--cogit-config-surface); transform: none; box-shadow: none; }
+.hero-modal-close { min-width: 44px; min-height: 44px; flex-shrink: 0; }
+.hero-modal-title { overflow-wrap: anywhere; }
+.hero-modal-info li { align-items: flex-start; }
+
+/* Shared layout repairs; auto grids must be allowed to shrink below 300px. */
+.page-services-grid, .page-solution-grid, .solution-cards-grid, .start-features-grid, .start-plans-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.mobile-menu { max-width: 100%; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
+.mobile-menu:not(.is-open) { visibility: hidden; }
+.mobile-menu.is-open { visibility: visible; }
+.mobile-accordion-content { overflow: hidden; }
+.nav-dropdown:focus-within .nav-dropdown-menu { opacity: 1; visibility: visible; transform: none; }
+.whatsapp-popup { width: min(340px, calc(100vw - 32px)); max-height: calc(100dvh - 120px); overflow-y: auto; }
+.whatsapp-float:not([data-state="closed"]) { z-index: 650; }
+.form-error, .consent-error { color: #b42338; font-size: .875rem; }
+.form-group.has-error .form-error { display: block; }
+.form-notice { font-size: .875rem; line-height: 1.5; margin-block: 12px; color: var(--text-secondary); }
+.privacy-field { margin-block: 20px; }
+.privacy-label { display: flex; align-items: flex-start; gap: 10px; font-size: .875rem; line-height: 1.6; cursor: pointer; }
+.privacy-label input { margin-top: 3px; min-width: 20px; width: 20px; height: 20px; accent-color: var(--purple); flex-shrink: 0; }
+.privacy-label a, .form-notice a { text-decoration: underline; text-underline-offset: 3px; }
+#hero-interactive-container .privacy-label, #hero-interactive-container .form-notice { color: var(--cogit-config-muted); }
+#hero-interactive-container .consent-error { color: #ffb4bc; }
+.form-status { margin-block: 16px; font-size: 1rem; }
+
+/* Consent surfaces: equal accept/reject weight and a persistent settings link. */
+.cookie-banner { position: fixed; inset: auto 16px 16px; width: auto; max-width: 1200px; margin: auto; padding: 20px; z-index: 1000; background: #242329; color: #fafafc; border: 1px solid #8a8495; border-radius: 16px; box-shadow: 0 12px 40px rgb(0 0 0 / .3); max-height: calc(100dvh - 32px); overflow-y: auto; transform: none; opacity: 1; }
+.cookie-banner-inner { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; max-width: none; margin: 0; padding: 0; }
+.cookie-copy { flex: 1 1 420px; min-width: 0; }
+.cookie-banner h2 { font-size: 1rem; color: #fafafc; margin-bottom: 6px; }
+.cookie-banner p { margin: 0; min-width: 0; font-size: .875rem; line-height: 1.6; color: #c6c3cf; }
+.cookie-banner a { color: #c4b5fd; text-decoration: underline; }
+.cookie-banner-actions { display: flex; flex: 1 1 400px; flex-wrap: wrap; gap: 10px; }
+.cookie-action { min-height: 48px; flex: 1 1 140px; padding: 10px 16px; border: 1px solid #8a8495; border-radius: 8px; background: transparent; color: #fafafc; font-size: .875rem; font-weight: 600; }
+.cookie-action:hover { background: #302b3a; border-color: #c4b5fd; }
+.cookie-action:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 3px; }
+.cookie-action-settings { flex-basis: 100%; border: 0; text-decoration: underline; }
+.cookie-settings-link { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-align: left; min-height: 44px; font-size: .875rem; }
+.cookie-dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 24px; border: 1px solid #8a8495; border-radius: 16px; background: #242329; color: #fafafc; overflow: auto; }
+.cookie-dialog::backdrop { background: rgb(9 12 24 / .75); }
+.cookie-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.cookie-dialog h2 { color: #fafafc; font-size: 1.375rem; }
+.cookie-dialog p { color: #c6c3cf; font-size: .9375rem; line-height: 1.6; }
+.cookie-dialog-close { min-width: 44px; min-height: 44px; font-size: 1.5rem; color: #fafafc; }
+.cookie-category { display: flex; align-items: flex-start; gap: 12px; padding-block: 20px; border-bottom: 1px solid #4b4655; }
+.cookie-category input { width: 22px; height: 22px; flex-shrink: 0; accent-color: #a78bfa; margin-top: 4px; }
+.cookie-category label { color: #fafafc; font-weight: 600; cursor: pointer; }
+.cookie-category p { margin-top: 6px; }
+.cookie-dialog-actions { display: grid; gap: 12px; margin-top: 20px; }
+.cookie-dialog a { color: #c4b5fd; text-decoration: underline; }
+body:has(.cookie-banner) :is(.mobile-fixed-cta, .whatsapp-float) { visibility: hidden; pointer-events: none; }
+
+@container (max-width: 560px) { .hero-modelo-grid { grid-template-columns: 1fr; } }
+@media (max-width: 992px) {
+  .cfg-wrapper { grid-template-columns: minmax(0, 1fr); }
+  .cfg-summary { position: static; max-width: 100%; }
+  .hero-inner { min-height: auto; }
+  .hero-content, #hero-interactive-container { width: 100%; }
+}
+@media (max-width: 680px) {
+  .hero-modelo-grid, .cfg-modelo-grid { grid-template-columns: 1fr; }
+  .hero-discovery-topbar { align-items: flex-start; }
+  .hero-challenge-context-price { margin-left: 0; }
+  .hero-result-row, .hero-summary-actions { flex-direction: column; align-items: stretch; }
+  .hero-result-value { text-align: left; }
+  .cfg-services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cfg-level-options { grid-template-columns: minmax(0, 1fr); }
+  .cfg-form-grid, .cfg-addons-grid { grid-template-columns: minmax(0, 1fr); }
+  .cfg-main { padding: 20px; }
+  .diag-panel-item { flex-wrap: wrap; gap: 8px; }
+  .hero-modal-header, .hero-modal-body, .hero-modal-footer { padding: 20px; }
+}
+@media (max-width: 480px) {
+  :root { --gutter: 1rem; }
+  .hero h1, .solution-hero h1, .page-hero h1 { font-size: clamp(1.875rem, 8vw, 2.5rem); }
+  #hero-interactive-container { padding: 20px 16px; }
+  .hero-discovery-topbar { flex-direction: column; }
+  .hero-discovery-footer { align-items: stretch; }
+  .hero-discovery-footer > button { flex: 1 1 100%; }
+  .hero-interactive-title { font-size: 1.5rem; line-height: 1.3; }
+  .hero-interactive-desc { font-size: 1rem; }
+  .hero-svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  #hero-interactive-container .hero-svc-card { padding: 24px 8px 16px; }
+  #hero-interactive-container .hero-svc-name { font-size: .875rem; }
+  #hero-interactive-container .hero-modelo-card { padding: 20px; }
+  .hero-modelo-card-header { flex-wrap: wrap; gap: 8px; }
+  .hero-objective-grid { grid-template-columns: 1fr; }
+  .hero-result-card { padding: 20px; }
+  .hero-result-label { font-size: .8125rem; }
+  .hero-sub-link, .hero-btn-restart-flow { font-size: .875rem; }
+  .header .logo { min-width: 0; max-width: calc(100% - 60px); }
+  .header .logo-img { max-width: 100%; height: 40px; object-fit: contain; }
+  .footer-top, .form-grid, .diag-services-grid { grid-template-columns: minmax(0, 1fr); }
+  .footer-bottom, .footer-bottom-links { flex-wrap: wrap; gap: 12px; }
+  .footer-bottom-links { justify-content: flex-start; }
+  .cogit-diag-card { padding: 20px 16px; }
+  .diag-progress-step-labels { flex-wrap: wrap; gap: 10px; }
+  .diag-progress-label-item { font-size: .8125rem; }
+  .diag-actions { flex-wrap: wrap; gap: 12px; }
+  .diag-actions > button { width: 100%; }
+  .cfg-nav { flex-wrap: wrap; gap: 12px; }
+  .cfg-nav .btn { flex: 1 1 100%; }
+  .cfg-service-card-name { font-size: .875rem; }
+  .cfg-modelo-card { padding: 20px; }
+  .cookie-banner { inset-inline: 10px; bottom: 10px; padding: 16px; }
+  .cookie-banner-inner { gap: 12px; }
+  .cookie-banner-actions { gap: 8px; }
+  .cookie-action { flex-basis: 100%; }
+  .cookie-dialog { padding: 20px; }
+}
+@media (max-width: 340px) {
+  #hero-interactive-container .hero-svc-grid, .cfg-services-grid { grid-template-columns: 1fr; }
+  .hero-diag-dots { gap: 6px; flex-wrap: wrap; }
+  .hero-diag-dot-line { min-width: 8px; }
+  .hero-model-choice { font-size: .8125rem; }
+  .hero-challenge-context-name { flex-basis: calc(100% - 32px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal, .reveal-up, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade, .card-stagger-item { opacity: 1 !important; transform: none !important; }
+}
+
+/* Content remains readable when scripts are unavailable. */
+html:not(.animations-ready) :is(.reveal, .reveal-up, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade, [class*="hero-animate-"]) { opacity: 1; transform: none; visibility: visible; }
+html:not(.animations-ready) #brand-intro { display: none; }
+#hero-interactive-container .privacy-label a { color: var(--cogit-config-focus); }
+.cookie-dialog :focus-visible { outline: 3px solid #c4b5fd; outline-offset: 3px; }
+.hero-model-dialog :is(h3,h4,p,li) { color: var(--cogit-config-text); }
+.hero-model-dialog .hero-modal-mockup { min-height: 120px; }
+
+.hero .hero-title-highlight { color: var(--lilac); }
+#hero-interactive-container .btn-hero-modelo-pri { box-shadow: none; }
+#hero-interactive-container .hero-modelo-card-desc { flex: 1; }
+
+:root { --leading-none: 1; --text-md: 1rem; --purple-dark: #3d31c4; }
+.process-wrapper { grid-template-columns: minmax(0, .45fr) minmax(0, .55fr); }
+.process-wrapper > * { min-width: 0; }
+@media (max-width: 992px) {
+ .process-wrapper { grid-template-columns: minmax(0, 1fr); }
+ :is(.card-from-left, .card-from-right, .reveal-left, .reveal-right):not(.is-visible) { transform: translateY(20px); }
+}
+
+.hero-model-dialog .hero-modal-mockup-placeholder { color: var(--cogit-config-muted); }
+.hero-model-dialog .hero-modal-close, .hero-model-dialog .hero-modal-info li svg { color: var(--cogit-config-indicator); }
+#hero-interactive-container .btn-hero-whatsapp, .diag-whatsapp-btn { background: var(--purple); color: #fff; box-shadow: none; }
+#hero-interactive-container .btn-hero-whatsapp:hover, .diag-whatsapp-btn:hover { background: var(--purple-hover); }
+#cfg-whatsapp-direct { color: var(--purple) !important; text-decoration: underline; text-underline-offset: 3px; }
+
+.cfg-transparency-note { font-size: .875rem; line-height: 1.6; font-style: normal; color: #525968; }
+.footer :is(.footer-links a, .footer-bottom-links a, .cookie-settings-link) { color: #c6ccd9; }
+.footer :is(.footer-description, .footer-tagline, .footer-sub-tagline, .footer-copyright) { color: #b7c0d2; }
+.footer :focus-visible { outline: 3px solid var(--cogit-config-focus); outline-offset: 4px; }

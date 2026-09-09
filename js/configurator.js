@@ -18,6 +18,7 @@ const ConfiguratorApp = (() => {
 
   // ── DOM References ──
   let containerEl = null;
+  let lastRenderedStep = null;
 
   // ── Helpers ──
   function formatPrice(value) {
@@ -78,12 +79,12 @@ const ConfiguratorApp = (() => {
       }
     }
     // Also complex if any selected service is analysis-only
-    const allAnalysis = state.selectedServices.every(s => s.priceType === 'analysis' || s.priceType === 'custom');
     const hasMultipleAnalysis = state.selectedServices.filter(s => s.priceType === 'analysis' || s.priceType === 'custom').length >= 2;
     return hasMultipleAnalysis;
   }
 
   function calculateTotal() {
+    state.isComplex = checkComplexity();
     if (state.isComplex) return null;
 
     let hasCustomItems = false;
@@ -118,11 +119,7 @@ const ConfiguratorApp = (() => {
   }
 
   function trackEvent(action, label) {
-    console.log(`[COGIT Analytics] ${action}: ${label}`);
-    // Replace with actual analytics when integrated
-    if (typeof gtag === 'function') {
-      gtag('event', action, { event_label: label });
-    }
+    if (typeof window.trackEvent === 'function') window.trackEvent(action, label);
   }
 
   // ── Render ──
@@ -130,6 +127,13 @@ const ConfiguratorApp = (() => {
   function render() {
     if (!containerEl) return;
 
+    const previousStep = lastRenderedStep;
+    const active = document.activeElement;
+    const focusIndex = containerEl.contains(active) ? Array.from(containerEl.querySelectorAll('button, input, textarea, a')).indexOf(active) : -1;
+    const focusKey = active?.id || null;
+    containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]), .cfg-form textarea').forEach(field => {
+      state.formData[field.id] = field.value;
+    });
     containerEl.innerHTML = `
       <div class="cfg-wrapper">
         <div class="cfg-main">
@@ -141,11 +145,20 @@ const ConfiguratorApp = (() => {
       </div>
     `;
 
+    containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]), .cfg-form textarea').forEach(field => {
+      field.value = state.formData[field.id] || '';
+    });
     bindEvents();
+    if (previousStep !== null && previousStep !== state.currentStep) CogitUI.focusHeading(containerEl.querySelector('.cfg-step'));
+    else if (focusIndex >= 0) {
+      const target = (focusKey && document.getElementById(focusKey)) || containerEl.querySelectorAll('button, input, textarea, a')[focusIndex];
+      target?.focus({preventScroll: true});
+    }
+    lastRenderedStep = state.currentStep;
   }
 
   function renderProgressBar() {
-    const steps = ['O que você precisa?', 'Qual nível?', 'Adicionais', 'Sua estimativa'];
+    const steps = ['Soluções', isPresencaDigitalOnly() ? 'Modelo' : 'Nível', 'Adicionais', 'Estimativa'];
     return `
       <div class="cfg-progress">
         <div class="cfg-progress-bar">
@@ -153,7 +166,7 @@ const ConfiguratorApp = (() => {
         </div>
         <div class="cfg-progress-steps">
           ${steps.map((label, i) => `
-            <span class="cfg-progress-step ${i + 1 === state.currentStep ? 'is-active' : ''} ${i + 1 < state.currentStep ? 'is-done' : ''}">${i + 1}</span>
+            <span class="cfg-progress-step ${i + 1 === state.currentStep ? 'is-active' : ''} ${i + 1 < state.currentStep ? 'is-done' : ''}">${i + 1}<span class="sr-only">: ${label}${i + 1 === state.currentStep ? ', etapa atual' : ''}</span></span>
           `).join('')}
         </div>
         <span class="cfg-progress-label">${state.currentStep} de ${state.totalSteps}</span>
@@ -200,7 +213,7 @@ const ConfiguratorApp = (() => {
             const priceText = sourceData && sourceData.basePrice ? `A partir de R$ ${sourceData.basePrice.toLocaleString('pt-BR')}` : 'Sob análise';
             
             return `
-              <button class="cfg-service-card ${isSelected ? 'is-selected' : ''}" data-service-id="${service.id}" type="button">
+              <button class="cfg-service-card ${isSelected ? 'is-selected' : ''}" data-service-id="${service.id}" type="button" aria-pressed="${isSelected}">
                 <div class="cfg-service-card-icon">${ICONS[service.icon] || ''}</div>
                 <span class="cfg-service-card-name">${service.name}</span>
                 <span class="cfg-service-card-price-hint">${priceText}</span>
@@ -246,14 +259,14 @@ const ConfiguratorApp = (() => {
                     ${s.data.levels.map(level => {
                       const isSelected = s.levelId === level.id;
                       return `
-                        <button class="cfg-level-card ${isSelected ? 'is-selected' : ''}" data-service-id="${s.serviceId}" data-level-id="${level.id}" type="button">
+                        <button class="cfg-level-card ${isSelected ? 'is-selected' : ''}" data-service-id="${s.serviceId}" data-level-id="${level.id}" type="button" aria-pressed="${isSelected}">
                           <div class="cfg-level-card-header">
                             <span class="cfg-level-card-name">${level.name}</span>
                             <div class="cfg-level-card-radio ${isSelected ? 'is-checked' : ''}"></div>
                           </div>
                           <p class="cfg-level-card-desc">${level.description}</p>
                           <div class="cfg-level-card-price">${getPriceDisplay(level.priceType, level.price)}</div>
-                          ${level.priceType === 'analysis' ? '<a href="#contact" class="cfg-level-diagnosis-link">Solicitar diagnóstico</a>' : ''}
+                          ${level.priceType === 'analysis' ? '<span class="cfg-level-diagnosis-link">Necessita diagnóstico técnico</span>' : ''}
                         </button>
                       `;
                     }).join('')}
@@ -300,7 +313,7 @@ const ConfiguratorApp = (() => {
           <!-- Card 01: Modelos Prontos -->
           <button
             class="cfg-modelo-card ${modeloProntos ? 'is-selected' : ''}"
-            data-modelo-id="modelos-prontos"
+            data-modelo-id="modelos-prontos" aria-pressed="${modeloProntos}"
             type="button"
             id="cfg-modelo-prontos"
           >
@@ -322,7 +335,7 @@ const ConfiguratorApp = (() => {
           <!-- Card 02: Modelos Sob Medida -->
           <button
             class="cfg-modelo-card ${modeloSobMedida ? 'is-selected' : ''}"
-            data-modelo-id="sob-medida"
+            data-modelo-id="sob-medida" aria-pressed="${modeloSobMedida}"
             type="button"
             id="cfg-modelo-sob-medida"
           >
@@ -388,19 +401,19 @@ const ConfiguratorApp = (() => {
               const qty = selectedItem.quantity || 1;
               quantityControls = `
                 <div class="cfg-addon-quantity">
-                  <button type="button" class="cfg-addon-qty-btn" data-addon-action="minus" data-addon-id="${addon.id}">-</button>
-                  <span class="cfg-addon-qty-val">${qty}</span>
-                  <button type="button" class="cfg-addon-qty-btn" data-addon-action="plus" data-addon-id="${addon.id}">+</button>
+                  <button type="button" class="cfg-addon-qty-btn" aria-label="Diminuir quantidade de ${addon.name}" data-addon-action="minus" data-addon-id="${addon.id}">-</button>
+                  <span class="cfg-addon-qty-val" aria-live="polite" aria-atomic="true">${qty}</span>
+                  <button type="button" class="cfg-addon-qty-btn" aria-label="Aumentar quantidade de ${addon.name}" data-addon-action="plus" data-addon-id="${addon.id}">+</button>
                 </div>
               `;
             }
 
             return `
               <div class="cfg-addon-card ${isSelected ? 'is-selected' : ''}" data-addon-id="${addon.id}">
-                <div class="cfg-addon-card-check">
+                <button type="button" class="cfg-addon-select" data-addon-id="${addon.id}" aria-pressed="${isSelected}"><span class="cfg-addon-card-check" aria-hidden="true">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <span class="cfg-addon-card-name">${addon.name}</span>
+                </span>
+                <span class="cfg-addon-card-name">${addon.name}</span></button>
                 ${quantityControls}
                 ${!quantityControls ? `<span class="cfg-addon-card-price">${getAddonPriceDisplay(addon.priceType, addon.price)}</span>` : ''}
               </div>
@@ -508,32 +521,35 @@ const ConfiguratorApp = (() => {
         </div>
 
         <!-- Configuration Form -->
-        <div class="cfg-form">
+        <form class="cfg-form" id="cfg-contact-form" novalidate>
           <h4 class="cfg-form-title">Quero conversar sobre este projeto</h4>
           <div class="cfg-form-grid">
             <div class="form-group">
               <label class="form-label" for="cfg-name">Nome <span class="required">*</span></label>
-              <input class="form-input" type="text" id="cfg-name" placeholder="Seu nome" required>
+              <input class="form-input" type="text" id="cfg-name" name="name" autocomplete="name" maxlength="120" placeholder="Seu nome" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="cfg-company">Empresa</label>
-              <input class="form-input" type="text" id="cfg-company" placeholder="Nome da empresa">
+              <input class="form-input" type="text" id="cfg-company" name="company" autocomplete="organization" maxlength="160" placeholder="Nome da empresa">
             </div>
             <div class="form-group">
               <label class="form-label" for="cfg-email">E-mail <span class="required">*</span></label>
-              <input class="form-input" type="email" id="cfg-email" placeholder="seu@email.com" required>
+              <input class="form-input" type="email" id="cfg-email" name="email" autocomplete="email" maxlength="254" placeholder="seu@email.com" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="cfg-whatsapp">WhatsApp <span class="required">*</span></label>
-              <input class="form-input" type="tel" id="cfg-whatsapp" placeholder="(00) 00000-0000" required>
+              <input class="form-input" type="tel" id="cfg-whatsapp" name="whatsapp" autocomplete="tel" maxlength="16" placeholder="(00) 00000-0000" required>
             </div>
             <div class="form-group full-width">
               <label class="form-label" for="cfg-notes">Conte algum detalhe importante sobre seu projeto</label>
-              <textarea class="form-textarea" id="cfg-notes" placeholder="Informações adicionais sobre o projeto..." rows="3"></textarea>
+              <textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Informações adicionais sobre o projeto..." rows="3"></textarea>
             </div>
           </div>
-          <button class="btn btn-primary btn-lg cfg-submit-btn" type="button" id="cfg-submit">
-            Receber proposta com essa configuração →
+          ${CogitPrivacy.formMarkup('cfg-contact-consent')}
+          <p class="cfg-transparency-note">Seus dados só serão compartilhados quando você continuar e enviar a mensagem no WhatsApp. Recusar cookies opcionais não impede o contato.</p>
+          <p id="cfg-contact-status" class="form-status" role="status"></p>
+          <button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">
+            Preparar mensagem no WhatsApp →
           </button>
           
           <div style="text-align: center; margin-top: 16px;">
@@ -542,9 +558,9 @@ const ConfiguratorApp = (() => {
 
           <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" class="cfg-advanced-link" id="cfg-whatsapp-direct" style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #25D366;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.571c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Solicitar pelo WhatsApp
+            Conversar apenas sobre a configuração
           </a>
-        </div>
+        </form>
       </div>
     `;
   }
@@ -691,7 +707,7 @@ const ConfiguratorApp = (() => {
     });
 
     // Addon selection (Step 3)
-    containerEl.querySelectorAll('.cfg-addon-card').forEach(card => {
+    containerEl.querySelectorAll('.cfg-addon-select').forEach(card => {
       card.addEventListener('click', () => {
         const addonId = card.dataset.addonId;
         toggleAddon(addonId);
@@ -715,8 +731,7 @@ const ConfiguratorApp = (() => {
     });
 
     // Submit
-    const submitBtn = document.getElementById('cfg-submit');
-    if (submitBtn) submitBtn.addEventListener('click', submitConfiguration);
+    document.getElementById('cfg-contact-form')?.addEventListener('submit', submitConfiguration);
 
     // WhatsApp Direct
     const whatsappDirectBtn = document.getElementById('cfg-whatsapp-direct');
@@ -731,16 +746,8 @@ const ConfiguratorApp = (() => {
     const cfgWhatsapp = document.getElementById('cfg-whatsapp');
     if (cfgWhatsapp) {
       cfgWhatsapp.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
-        if (value.length > 7) {
-          value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
-        } else if (value.length > 2) {
-          value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
-        } else if (value.length > 0) {
-          value = `(${value}`;
-        }
-        e.target.value = value;
+        e.target.value = CogitUI.formatPhone(e.target.value);
+        e.target.setCustomValidity('');
       });
     }
   }
@@ -776,6 +783,9 @@ const ConfiguratorApp = (() => {
     }
 
     // Resetar modelo ao mudar seleção de serviço (pode mudar o contexto de presença digital)
+    const allowed = new Set(state.selectedServices.flatMap(service => configuratorData.services.find(item => item.id === service.serviceId)?.allowedAddons || []));
+    if (state.selectedServices.some(service => service.serviceId === 'automacao')) allowed.delete('automacao-extra');
+    state.selectedAddons = state.selectedAddons.filter(addon => allowed.has(addon.addonId));
     state.solutionModel = null;
     render();
   }
@@ -829,7 +839,7 @@ const ConfiguratorApp = (() => {
     if (!addon || addon.quantity == null) return;
 
     if (action === 'plus') {
-      addon.quantity++;
+      addon.quantity = Math.min(99, addon.quantity + 1);
     } else if (action === 'minus') {
       if (addon.quantity > 1) {
         addon.quantity--;
@@ -915,11 +925,11 @@ const ConfiguratorApp = (() => {
     if (el) {
       const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
       const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top, behavior: CogitUI.motion() });
     }
   }
 
-  function openWhatsAppDirect() {
+  function openWhatsAppDirect(contact = null) {
     const phone = "5517981568889";
     let message = "Olá! Montei uma configuração no site da COGIT e gostaria de conversar sobre o projeto.\n\n";
     
@@ -965,62 +975,32 @@ const ConfiguratorApp = (() => {
       }
     }
 
+    if (contact) {
+      message += `\n*Nome:* ${contact.name}\n*Empresa:* ${contact.company || 'Não informada'}\n*E-mail:* ${contact.email}\n*WhatsApp:* ${contact.whatsapp}\n*Contexto:* ${contact.notes || 'Não informado'}\n\n${CogitPrivacy.consentReceipt()}`;
+    }
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
   }
 
-  function submitConfiguration() {
-    const name = document.getElementById('cfg-name')?.value?.trim();
-    const company = document.getElementById('cfg-company')?.value?.trim();
-    const email = document.getElementById('cfg-email')?.value?.trim();
-    const whatsapp = document.getElementById('cfg-whatsapp')?.value?.trim();
-    const notes = document.getElementById('cfg-notes')?.value?.trim();
-
-    // Basic validation
-    if (!name || !email || !whatsapp) {
-      alert('Por favor, preencha os campos obrigatórios (Nome, E-mail e WhatsApp).');
-      return;
+  function submitConfiguration(event) {
+    event.preventDefault();
+    const form = document.getElementById('cfg-contact-form');
+    const phone = document.getElementById('cfg-whatsapp');
+    const validPhone = /^\d{10,11}$/.test(phone.value.replace(/\D/g, ''));
+    phone.setCustomValidity(validPhone ? '' : 'Informe um telefone com DDD e 10 ou 11 dígitos.');
+    const name = document.getElementById('cfg-name');
+    name.setCustomValidity(name.value.trim() ? '' : 'Informe seu nome.');
+    name.addEventListener('input', () => name.setCustomValidity(''), {once: true});
+    // Native validation plus an explicit, separate contact authorization.
+    for (const field of form.querySelectorAll('input:not([type="checkbox"]), textarea')) {
+      field.setAttribute('aria-invalid', String(!field.checkValidity()));
+      if (!field.reportValidity()) return;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Por favor, insira um e-mail válido.');
-      return;
-    }
-
-    const total = calculateTotal();
-    const configData = {
-      services: state.selectedServices.map(s => {
-        const sData = configuratorData.services.find(srv => srv.id === s.serviceId);
-        return {
-          service: sData ? sData.name : s.serviceId,
-          level: s.levelName,
-          price: s.price,
-          priceType: s.priceType
-        };
-      }),
-      addons: state.selectedAddons.map(a => ({
-        name: a.name,
-        price: a.price,
-        priceType: a.priceType,
-        quantity: a.quantity
-      })),
-      solutionModel: state.solutionModel,
-      estimate: total,
-      isComplex: state.isComplex,
-      contact: { name, company, email, whatsapp },
-      notes
-    };
-
-    console.log('[COGIT Configurator] Configuration submitted:', configData);
+    if (!CogitPrivacy.authorize(form)) return;
+    const contact = Object.fromEntries(['name', 'company', 'email', 'whatsapp', 'notes'].map(key => [key, document.getElementById('cfg-' + key).value.trim()]));
+    openWhatsAppDirect(contact);
+    document.getElementById('cfg-contact-status').textContent = 'Mensagem preparada. Revise e envie no WhatsApp para a Cogit receber sua solicitação. Se a janela não abriu, permita pop-ups deste site e tente novamente.';
     trackEvent('configurator_completed', `services:${state.selectedServices.length},addons:${state.selectedAddons.length}`);
-    trackEvent('proposal_requested', `services:${state.selectedServices.length}`);
-
-    // Save configuration details to sessionStorage
-    sessionStorage.setItem('cogit_submitted_config', JSON.stringify(configData));
-
-    // Redirect to thank you page
-    window.location.href = 'obrigado.html';
   }
 
   function reset() {
@@ -1044,7 +1024,7 @@ const ConfiguratorApp = (() => {
     state.formData = {};
     
     // Auto-select the provided services
-    servicesArray.forEach(serviceId => {
+    Array.from(new Set(servicesArray)).forEach(serviceId => {
       const serviceData = configuratorData.services.find(s => s.id === serviceId);
       if (serviceData) {
         const entry = {
@@ -1066,6 +1046,8 @@ const ConfiguratorApp = (() => {
         state.selectedServices.push(entry);
       }
     });
+
+    if (!state.selectedServices.length) { state.currentStep = 1; render(); return; }
 
     // Advance to the appropriate step
     if (isPresencaDigitalOnly()) {
@@ -1095,7 +1077,7 @@ const ConfiguratorApp = (() => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlProblem = urlParams.get('problem');
     const urlServices = urlParams.get('services');
-    let preselectStr = sessionStorage.getItem('cogit_preselect') || urlServices;
+    let preselectStr = urlServices;
 
     if (!preselectStr && urlProblem && typeof problemFlowsData !== 'undefined') {
       const problem = problemFlowsData.find(p => p.id === urlProblem);
@@ -1105,7 +1087,6 @@ const ConfiguratorApp = (() => {
     }
 
     if (preselectStr) {
-      sessionStorage.removeItem('cogit_preselect');
       const servicesArray = preselectStr.split(',').map(s => s.trim()).filter(Boolean);
       if (servicesArray.length > 0) {
         preselectAndScroll(servicesArray);

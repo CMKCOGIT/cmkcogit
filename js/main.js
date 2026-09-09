@@ -28,19 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize mobile fixed CTA
   if (typeof initMobileFixedCTA === 'function') initMobileFixedCTA();
 
-  // Initialize Analytics (respects cookie consent)
-  if (typeof siteConfig !== 'undefined' && siteConfig.requireCookieConsent) {
-    if (typeof initCookieBanner === 'function') initCookieBanner();
-    // If already consented, load analytics
-    if (localStorage.getItem('cogit_cookie_consent') === 'accepted') {
-      if (typeof initAnalytics === 'function') initAnalytics();
-      if (typeof bindAnalyticsEvents === 'function') bindAnalyticsEvents();
-    }
-  } else {
-    // No consent required — load directly
-    if (typeof initAnalytics === 'function') initAnalytics();
-    if (typeof bindAnalyticsEvents === 'function') bindAnalyticsEvents();
-  }
+  // Analytics always requires an explicit, current opt-in.
+  if (typeof initCookieBanner === 'function') initCookieBanner();
+  if (typeof initAnalytics === 'function') initAnalytics();
+  if (typeof bindAnalyticsEvents === 'function') bindAnalyticsEvents();
 
   // Set response time text from config
   if (typeof initResponseTime === 'function') initResponseTime();
@@ -82,8 +73,8 @@ function initContactHub() {
         }
         
         const url = `${baseUrl}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
-        hubEl.dataset.state = 'closed';
+        window.open(url, '_blank', 'noopener,noreferrer');
+        setState('closed');
       });
     });
   }
@@ -102,10 +93,20 @@ function initContactHub() {
 
   // State Management
   function setState(state) {
+    const previouslyOpen = hubEl.dataset.state !== 'closed';
     hubEl.dataset.state = state;
+    triggerBtn.setAttribute('aria-expanded', String(state !== 'closed'));
+    if (popup) popup.inert = state !== 'whatsapp';
+    const channels = document.getElementById('ch-channels') || hubEl.querySelector('.ch-channels');
+    if (channels) channels.inert = state !== 'channels';
+    if (state === 'closed' && previouslyOpen && hubEl.contains(document.activeElement)) triggerBtn.focus();
+    else if (state === 'whatsapp') closeBtn?.focus();
     if (state === 'channels' && typeof trackEvent === 'function') trackEvent('contact_hub_open');
     if (state === 'whatsapp' && typeof trackEvent === 'function') trackEvent('whatsapp_menu_open');
   }
+
+  triggerBtn.setAttribute('aria-controls', 'whatsapp-popup');
+  setState('closed');
 
   // Toggle Hub
   triggerBtn.addEventListener('click', (e) => {
@@ -174,45 +175,22 @@ function initMobileFixedCTA() {
   const mobileCta = document.getElementById('mobile-fixed-cta');
   if (!mobileCta) return;
 
-  let hasScrolled = false;
-  const scrollThreshold = 400; // Show after scrolling 400px
-
-  function handleScroll() {
-    const currentScroll = window.scrollY;
-
-    // Don't show when near the contact form (to avoid covering it)
-    const contactSection = document.getElementById('contact');
-    const configuratorSection = document.getElementById('configurator');
-    let nearForm = false;
-
-    if (contactSection) {
-      const contactRect = contactSection.getBoundingClientRect();
-      if (contactRect.top < window.innerHeight && contactRect.bottom > 0) {
-        nearForm = true;
-      }
-    }
-
-    if (configuratorSection) {
-      const cfgRect = configuratorSection.getBoundingClientRect();
-      if (cfgRect.top < window.innerHeight && cfgRect.bottom > 0) {
-        nearForm = true;
-      }
-    }
-
-    if (currentScroll > scrollThreshold && !nearForm) {
-      if (!hasScrolled) {
-        hasScrolled = true;
-        mobileCta.classList.add('is-visible');
-      }
-    } else {
-      if (hasScrolled || nearForm) {
-        hasScrolled = false;
-        mobileCta.classList.remove('is-visible');
-      }
-    }
+  function updateVisibility() {
+    const protectedAreas = ['contact', 'configurator', 'diagnostic-experience', 'footer'];
+    const nearContent = protectedAreas.some(id => {
+      const element = document.getElementById(id);
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    });
+    const visible = window.matchMedia('(max-width: 992px)').matches && window.scrollY > 400 && !nearContent;
+    mobileCta.classList.toggle('is-visible', visible);
+    mobileCta.inert = !visible;
+    mobileCta.setAttribute('aria-hidden', String(!visible));
   }
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('scroll', updateVisibility, {passive: true});
+  window.addEventListener('resize', updateVisibility, {passive: true});
+  updateVisibility();
 }
 
 // ── Response Time Text ──

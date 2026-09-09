@@ -29,8 +29,6 @@
   <meta name="twitter:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -61,6 +59,7 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 
   <!-- ═══════════════════════════════════════
        HEADER
@@ -206,7 +205,7 @@
     </div>
   </nav>
 
-  <main role="main">
+  <main id="main-content" role="main">
     
     <!-- ═══════════════════════════════════════
          HERO DA PÁGINA
@@ -236,6 +235,7 @@
           <div class="diag-result-header">
             <div class="diag-result-badge">✓ DIAGNÓSTICO CONCLUÍDO</div>
             <h2 class="diag-result-title">Análise Estratégica COGIT</h2>
+            <p class="form-notice">Recomendação automática baseada nas suas escolhas. A equipe receberá suas informações somente quando você enviar a mensagem no WhatsApp.</p>
             <p class="diag-result-quote">"A COGIT começa pela compreensão do problema. A tecnologia vem depois."</p>
           </div>
 
@@ -384,28 +384,28 @@
 
                 <div class="form-group full-width" style="margin-bottom: var(--space-6);">
                   <label class="form-label" for="diag-context-desc">Contexto adicional (opcional)</label>
-                  <textarea class="form-textarea" id="diag-context-desc" name="context" placeholder="Conte brevemente sobre sua situação atual, desafios ou objetivos..." rows="3"></textarea>
+                  <textarea class="form-textarea" id="diag-context-desc" maxlength="2000" name="context" placeholder="Conte brevemente sobre sua situação atual, desafios ou objetivos..." rows="3"></textarea>
                 </div>
 
-                <div class="diag-step-section-label">Para onde enviamos sua recomendação estratégica?</div>
+                <div class="diag-step-section-label">Como a equipe pode entrar em contato?</div>
                 <div class="form-grid">
                   <div class="form-group">
                     <label class="form-label" for="diag-name">Seu Nome <span class="required">*</span></label>
-                    <input class="form-input" type="text" id="diag-name" name="name" placeholder="Seu nome" required autocomplete="name">
+                    <input class="form-input" type="text" id="diag-name" maxlength="120" name="name" placeholder="Seu nome" required autocomplete="name">
                     <span class="form-error"></span>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="diag-company">Empresa</label>
-                    <input class="form-input" type="text" id="diag-company" name="company" placeholder="Nome da empresa" autocomplete="organization">
+                    <input class="form-input" type="text" id="diag-company" maxlength="160" name="company" placeholder="Nome da empresa" autocomplete="organization">
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="diag-whatsapp">WhatsApp <span class="required">*</span></label>
-                    <input class="form-input" type="tel" id="diag-whatsapp" name="whatsapp" placeholder="(00) 00000-0000" required autocomplete="tel">
+                    <input class="form-input" type="tel" id="diag-whatsapp" maxlength="16" name="whatsapp" placeholder="(00) 00000-0000" required autocomplete="tel">
                     <span class="form-error"></span>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="diag-email">E-mail <span class="required">*</span></label>
-                    <input class="form-input" type="email" id="diag-email" name="email" placeholder="seu@email.com" required autocomplete="email">
+                    <input class="form-input" type="email" id="diag-email" maxlength="254" name="email" placeholder="seu@email.com" required autocomplete="email">
                     <span class="form-error"></span>
                   </div>
                 </div>
@@ -413,7 +413,7 @@
                 <div class="diag-actions">
                   <button type="button" class="diag-btn-prev" data-prev="2">← Voltar</button>
                   <button type="submit" class="btn btn-primary btn-lg" id="diag-submit-btn" style="padding: 14px 28px;">
-                    Gerar recomendação →
+                    Preparar recomendação e mensagem →
                   </button>
                 </div>
               </div>
@@ -464,6 +464,7 @@
 
       </div>
     </section>
+  <noscript><p class="container form-notice">Ative o JavaScript para usar os diagnósticos e o menu interativo. Para falar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
   </main>
 
   <!-- ═══════════════════════════════════════
@@ -572,6 +573,8 @@
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/privacy.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/components.js"></script>
   <script src="js/configurator.js"></script>

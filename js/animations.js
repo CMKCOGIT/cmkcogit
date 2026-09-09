@@ -35,7 +35,7 @@
         }
       });
     }, {
-      threshold: 0.12,
+      threshold: 0.01,
       rootMargin: '0px 0px -40px 0px'
     });
 
@@ -99,7 +99,7 @@
           }
         });
       }, {
-        threshold: 0.08,
+        threshold: 0.01,
         rootMargin: '0px 0px -40px 0px'
       });
 
@@ -208,7 +208,7 @@
         }
       });
     }, {
-      threshold: 0.15,
+      threshold: 0.01,
       rootMargin: '0px 0px -60px 0px'
     });
 
@@ -324,7 +324,7 @@
         const targetId = this.getAttribute('href');
         if (!targetId || targetId === '#' || targetId.length <= 1) return;
 
-        const targetEl = document.querySelector(targetId);
+        const targetEl = document.getElementById(targetId.slice(1));
         if (!targetEl) return;
 
         e.preventDefault();
@@ -337,14 +337,9 @@
           behavior: prefersReducedMotion() ? 'auto' : 'smooth'
         });
 
-        // Close mobile menu if open
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const menuToggle = document.querySelector('.menu-toggle');
-        if (mobileMenu && mobileMenu.classList.contains('is-open')) {
-          mobileMenu.classList.remove('is-open');
-          if (menuToggle) menuToggle.classList.remove('is-active');
-          document.body.classList.remove('no-scroll');
-        }
+        window.CogitHeader?.close(false);
+        if (!targetEl.hasAttribute('tabindex')) targetEl.tabIndex = -1;
+        targetEl.focus({preventScroll: true});
       });
     });
   }
@@ -400,6 +395,7 @@
 
   // ── Master Initialization ──
   function initAnimations() {
+    document.documentElement.classList.add('animations-ready');
     initBrandIntro();
     initHeroEntrance();
     initScrollReveal();

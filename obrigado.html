@@ -29,8 +29,6 @@
   <meta name="twitter:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -61,6 +59,7 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 
   <!-- ═══════════════════════════════════════
        HEADER
@@ -209,23 +208,24 @@
     </div>
   </nav>
 
-  <main role="main">
+  <main id="main-content" role="main">
     <section class="section" style="padding-top: 160px; padding-bottom: var(--space-24); min-height: 80vh; display: flex; align-items: center;">
       <div class="container center reveal" style="text-align: center; max-width: 650px;">
         <div style="width: 72px; height: 72px; border-radius: var(--radius-full); background: rgba(74, 61, 219, 0.1); color: var(--purple); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6);">
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <span class="section-label" style="justify-content: center;">SOLICITAÇÃO RECEBIDA</span>
-        <h1 style="font-size: var(--text-4xl); margin-bottom: var(--space-2); color: var(--ink);">Obrigado pelo contato!</h1>
+        <span class="section-label" style="justify-content: center;">CONTINUE SEU CONTATO</span>
+        <h1 style="font-size: var(--text-4xl); margin-bottom: var(--space-2); color: var(--ink);">Vamos conversar sobre seu projeto?</h1>
         <p class="text-body-lg" style="color: var(--text-secondary); margin-bottom: var(--space-8);">
-          Recebemos as informações do seu projeto. Nossa equipe técnica fará uma análise prévia e retornará pelo WhatsApp ou e-mail informado.
+          Para a Cogit receber sua solicitação, abra o WhatsApp e envie a mensagem. A preparação do diagnóstico neste site não confirma o envio nem o recebimento pela equipe.
         </p>
         <div style="display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap;">
           <a href="index.html" class="btn btn-primary">Voltar para a página inicial</a>
-          <a href="https://wa.me/5517981568889?text=Ol%C3%A1%2C%20acabei%20de%20enviar%20uma%20solicita%C3%A7%C3%A3o%20pelo%20site%20da%20COGIT%20e%20gostaria%20de%20conversar." target="_blank" rel="noopener noreferrer" class="btn btn-secondary-dark">Conversar no WhatsApp agora</a>
+          <a href="https://wa.me/5517981568889?text=Ol%C3%A1%21%20Gostaria%20de%20conversar%20sobre%20meu%20projeto." target="_blank" rel="noopener noreferrer" class="btn btn-secondary-dark">Conversar no WhatsApp agora</a>
         </div>
       </div>
     </section>
+  <noscript><p class="container form-notice">Ative o JavaScript para usar os diagnósticos e o menu interativo. Para falar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
   </main>
 
   <!-- ═══════════════════════════════════════
@@ -347,6 +347,8 @@
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/privacy.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/components.js"></script>
   <script src="js/configurator.js"></script>

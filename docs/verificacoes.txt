@@ -1,0 +1,25 @@
+PASS All JavaScript files parse
+PASS Local HTML references exist; IDs are unique
+PASS Every content page supports zoom, landmarks, labels and local privacy controls
+PASS Styles and fonts resolve locally
+PASS Personal drafts are not persisted or logged
+PASS No analytics request or event queue without consent, even with legacy bypass disabled
+PASS Reject persists and does not load analytics
+PASS Accept loads once; URL parameters and personal event fields are excluded
+PASS Revocation unloads analytics, clears its accessible cookies and stops events
+PASS Malformed, expired, old-version, future and overlong choices are rejected
+PASS Blocked storage falls back to a page-only decision
+PASS Contact authorization is unchecked and independent of optional cookies
+PASS Free text is escaped and Brazilian phone formatting supports 10/11 digits
+  #fafafc / #242329: 14.95:1
+  #c6c3cf / #242329: 8.99:1
+  #c6c3cf / #302b3a: 7.90:1
+  #ffffff / #4a3ddb: 7.04:1
+  #a79bff / #0f1b33: 7.16:1
+PASS Card text and primary CTA meet WCAG AA contrast
+PASS Estimator totals include selected extras and remove incompatible extras
+PASS Quantity controls add, reduce and remove an extra
+PASS Complexity does not leave a stale estimate after removing a service
+PASS WhatsApp message is encoded; only the explicit contact handoff includes personal fields
+
+18 checks passed. 24 HTML files inspected. Browser layout and interaction review are separate.

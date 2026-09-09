@@ -1,50 +1,78 @@
-/* ============================================
-   COGIT — Analytics & Event Tracking
-   Configurable GA4 + custom event helpers
-   ============================================ */
-
-// ── Google Analytics Loader ──
+/* COGIT — consent-gated analytics. No pre-consent pings or event queue. */
+let cogitAnalyticsLoaded = false;
+let cogitAnalyticsLoading = false;
 function initAnalytics() {
-  const gaId = (typeof siteConfig !== 'undefined' && siteConfig.gaId) ? siteConfig.gaId : '';
-
-  if (!gaId) {
-    // No GA ID configured — skip loading
-    window.gtag = function() {};
-    return;
-  }
-
-  // Check cookie consent if banner is active
-  if (typeof siteConfig !== 'undefined' && siteConfig.requireCookieConsent) {
-    const consent = localStorage.getItem('cogit_cookie_consent');
-    if (consent !== 'accepted') {
-      window.gtag = function() {};
-      return;
-    }
-  }
-
-  // Load gtag.js asynchronously (non-blocking)
-  const script = document.createElement('script');
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
-  script.async = true;
-  document.head.appendChild(script);
-
+  const gaId = typeof siteConfig !== 'undefined' ? siteConfig.gaId : '';
+  if (!/^G-[A-Z0-9]+$/.test(gaId || '') || !window.CogitPrivacy?.allows('analytics')) return;
+  if (cogitAnalyticsLoaded || cogitAnalyticsLoading) return;
+  cogitAnalyticsLoading = true;
+  window['ga-disable-' + gaId] = false;
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function() { dataLayer.push(arguments); };
-  gtag('js', new Date());
-  gtag('config', gaId, {
-    send_page_view: true
+  window.gtag = function() {
+    if (window.CogitPrivacy?.allows('analytics')) window.dataLayer.push(arguments);
+  };
+  window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+  window.gtag('js', new Date());
+  window.gtag('config', gaId, {
+    send_page_view: true,
+    page_location: location.origin + location.pathname,
+    page_referrer: '',
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    cookie_expires: 15552000,
+    cookie_update: false
   });
+  const script = document.createElement('script');
+  script.id = 'cogit-analytics-script';
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
+  script.async = true;
+  script.referrerPolicy = 'no-referrer';
+  script.onload = () => { cogitAnalyticsLoaded = true; cogitAnalyticsLoading = false; };
+  script.onerror = () => { cogitAnalyticsLoading = false; script.remove(); window.dataLayer = []; };
+  document.head.append(script);
 }
-
-// ── Event Tracking Helper ──
+window.gtag = function() {};
+function stopAnalytics() {
+  const gaId = typeof siteConfig !== 'undefined' ? siteConfig.gaId : '';
+  const wasRunning = cogitAnalyticsLoaded || cogitAnalyticsLoading;
+  if (gaId) window['ga-disable-' + gaId] = true;
+  window.gtag = function() {};
+  window.dataLayer = [];
+  document.getElementById('cogit-analytics-script')?.remove();
+  const domains = location.hostname.split('.').map((_, i, a) => a.slice(i).join('.'));
+  const paths = ['/', ...location.pathname.split('/').slice(0, -1).map((_, i, a) => a.slice(0, i + 1).join('/') + '/')];
+  document.cookie.split(';').map(cookie => cookie.trim().split('=')[0]).filter(name => /^(_ga|_gid|_gat)(_|$)/.test(name)).forEach(name => {
+    paths.forEach(path => {
+      document.cookie = name + '=; Max-Age=0; path=' + path;
+      domains.forEach(domain => { document.cookie = name + '=; Max-Age=0; path=' + path + '; domain=' + domain; });
+    });
+  });
+  cogitAnalyticsLoaded = false;
+  cogitAnalyticsLoading = false;
+  // Unload a previously authorized vendor completely, including its own listeners.
+  if (wasRunning) location.reload();
+}
+window.addEventListener('cogit:consent-change', event => {
+  if (event.detail.analytics) initAnalytics(); else stopAnalytics();
+});
 function trackEvent(eventName, params) {
-  if (typeof gtag === 'function') {
-    gtag('event', eventName, params || {});
-  }
+  if (!window.CogitPrivacy?.allows('analytics') || !(cogitAnalyticsLoaded || cogitAnalyticsLoading)) return;
+  if (!/^[a-z][a-z0-9_]{0,39}$/.test(eventName)) return;
+  const source = typeof params === 'string' ? { event_label: params } : (params || {});
+  const safe = {};
+  const allowed = ['event_category', 'event_label', 'service', 'services', 'selected', 'step', 'step_name', 'challenge', 'objective', 'option'];
+  allowed.forEach(key => {
+    const value = source[key];
+    if (typeof value === 'number' || typeof value === 'boolean') safe[key] = value;
+    else if (typeof value === 'string') safe[key] = value.slice(0, 120);
+  });
+  window.gtag('event', eventName, safe);
 }
 
-// ── Bind Analytics Events to DOM ──
+let cogitAnalyticsEventsBound = false;
 function bindAnalyticsEvents() {
+  if (cogitAnalyticsEventsBound) return;
+  cogitAnalyticsEventsBound = true;
   // Contact CTA clicks (hero, final, header)
   document.querySelectorAll('[href="#contact"], [id*="cta"][id*="contact"]').forEach(function(el) {
     el.addEventListener('click', function() {
@@ -147,46 +175,5 @@ function bindAnalyticsEvents() {
   }
 }
 
-// ── Cookie Consent Banner ──
-function initCookieBanner() {
-  if (typeof siteConfig === 'undefined' || !siteConfig.requireCookieConsent) return;
 
-  // Already consented
-  if (localStorage.getItem('cogit_cookie_consent') === 'accepted') return;
-
-  var banner = document.createElement('div');
-  banner.className = 'cookie-banner';
-  banner.id = 'cookie-banner';
-  banner.setAttribute('role', 'alert');
-  banner.innerHTML = 
-    '<div class="cookie-banner-inner">' +
-      '<p>Este site utiliza cookies e ferramentas de análise para melhorar sua experiência. ' +
-      'Ao continuar navegando, você concorda com nossa <a href="/privacidade.html">Política de Privacidade</a>.</p>' +
-      '<div class="cookie-banner-actions">' +
-        '<button class="btn btn-primary btn-sm" id="cookie-accept">Aceitar</button>' +
-        '<button class="btn btn-secondary btn-sm" id="cookie-reject">Recusar</button>' +
-      '</div>' +
-    '</div>';
-  
-  document.body.appendChild(banner);
-
-  // Show with animation
-  requestAnimationFrame(function() {
-    banner.classList.add('is-visible');
-  });
-
-  document.getElementById('cookie-accept').addEventListener('click', function() {
-    localStorage.setItem('cogit_cookie_consent', 'accepted');
-    banner.classList.remove('is-visible');
-    setTimeout(function() { banner.remove(); }, 400);
-    // Now load analytics
-    initAnalytics();
-    bindAnalyticsEvents();
-  });
-
-  document.getElementById('cookie-reject').addEventListener('click', function() {
-    localStorage.setItem('cogit_cookie_consent', 'rejected');
-    banner.classList.remove('is-visible');
-    setTimeout(function() { banner.remove(); }, 400);
-  });
-}
+function initCookieBanner() { window.CogitPrivacy?.init(); }

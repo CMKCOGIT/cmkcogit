@@ -209,36 +209,20 @@ function renderHeroInteractive() {
     context: ''
   };
 
-  try {
-    const saved = sessionStorage.getItem('cogit_diag_state');
-    if (saved) {
-      const p = JSON.parse(saved);
-      if (p) {
-        state.challenge = p.challenge || null;
-        state.selectedService = p.selectedService || null;
-        state.objective = p.objective || null;
-        state.context = p.context || '';
-      }
-    }
-  } catch (e) {}
-
-  function saveState() {
-    try { sessionStorage.setItem('cogit_diag_state', JSON.stringify({ challenge: state.challenge, selectedService: state.selectedService, objective: state.objective, context: state.context })); } catch (e) {}
-  }
-
   function transitionTo(renderFn, direction = 'next') {
     const wrapper = container.querySelector('.hero-step-wrapper');
     if (wrapper) {
       wrapper.classList.add(direction === 'next' ? 'is-fading-left' : 'is-fading-right');
       setTimeout(() => {
         renderFn();
+        CogitUI.focusHeading(container);
         const nw = container.querySelector('.hero-step-wrapper');
         if (nw) {
           nw.classList.add(direction === 'next' ? 'is-entering-right' : 'is-entering-left');
           requestAnimationFrame(() => setTimeout(() => nw.classList.remove('is-entering-right', 'is-entering-left'), 30));
         }
-      }, 150);
-    } else { renderFn(); }
+      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 150);
+    } else { renderFn(); CogitUI.focusHeading(container); }
   }
 
   const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
@@ -333,7 +317,7 @@ function renderHeroInteractive() {
         state.selectedService = card.dataset.id;
         state.challenge = card.dataset.challenge;
         state.objective = null;
-        saveState();
+        
         cards.forEach(c => { c.classList.remove('is-selected'); c.setAttribute('aria-pressed', 'false'); });
         card.classList.add('is-selected');
         card.setAttribute('aria-pressed', 'true');
@@ -416,7 +400,7 @@ function renderHeroInteractive() {
     cards.forEach(card => {
       card.addEventListener('click', () => {
         state.objective = card.dataset.id;
-        saveState();
+        
         cards.forEach(c => {
           c.classList.remove('is-selected');
           c.setAttribute('aria-pressed', 'false');
@@ -466,13 +450,11 @@ function renderHeroInteractive() {
           <p class="hero-interactive-desc">Existem diferentes formas de criar uma solução digital.</p>
         </div>
 
-        <div class="hero-modelo-grid">
+        <div class="hero-modelo-grid" role="group" aria-label="Tipo de modelo">
           <div class="hero-modelo-card ${modeloProntos ? 'is-selected' : ''}" data-id="modelos-prontos">
             <div class="hero-modelo-card-header">
               <div class="hero-modelo-card-icon">${iconZap}</div>
-              <div class="hero-objective-check" style="${modeloProntos ? 'opacity: 1;' : 'opacity: 0;'}">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
+              <label class="hero-model-choice"><input type="radio" name="hero-solution-model" value="modelos-prontos" aria-label="Selecionar Modelos Prontos" ${modeloProntos ? 'checked' : ''}><span>${modeloProntos ? 'Selecionado' : 'Selecionar'}</span></label>
             </div>
             <h4 class="hero-modelo-card-title">Modelos Prontos</h4>
             <p class="hero-modelo-card-desc">Escolha entre estruturas otimizadas para agilidade, conversão e presença digital.</p>
@@ -486,9 +468,7 @@ function renderHeroInteractive() {
           <div class="hero-modelo-card ${modeloSobMedida ? 'is-selected' : ''}" data-id="sob-medida">
             <div class="hero-modelo-card-header">
               <div class="hero-modelo-card-icon">${iconDesign}</div>
-              <div class="hero-objective-check" style="${modeloSobMedida ? 'opacity: 1;' : 'opacity: 0;'}">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
+              <label class="hero-model-choice"><input type="radio" name="hero-solution-model" value="sob-medida" aria-label="Selecionar Modelos Sob Medida" ${modeloSobMedida ? 'checked' : ''}><span>${modeloSobMedida ? 'Selecionado' : 'Selecionar'}</span></label>
             </div>
             <h4 class="hero-modelo-card-title">Modelos Sob Medida</h4>
             <p class="hero-modelo-card-desc">Projetos exclusivos focados em alto nível de personalização.</p>
@@ -514,91 +494,27 @@ function renderHeroInteractive() {
     const backBtn = document.getElementById('hero-btn-back-2');
     const editBtn = document.getElementById('hero-btn-edit-challenge');
 
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        state.objective = card.dataset.id;
-        saveState();
-        cards.forEach(c => {
-          c.classList.remove('is-selected');
-          c.querySelector('.hero-objective-check').style.opacity = '0';
-        });
-        card.classList.add('is-selected');
-        card.querySelector('.hero-objective-check').style.opacity = '1';
-        if (continueBtn) continueBtn.removeAttribute('disabled');
-        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', card.dataset.id);
+    function selectModel(id) {
+      state.objective = id;
+      cards.forEach(card => {
+        const selected = card.dataset.id === id;
+        card.classList.toggle('is-selected', selected);
+        card.querySelector('input').checked = selected;
+        card.querySelector('.hero-model-choice span').textContent = selected ? 'Selecionado' : 'Selecionar';
+      });
+      continueBtn.disabled = false;
+      if (typeof trackEvent === 'function') trackEvent('hero_model_selected', id);
+    }
+    container.querySelectorAll('[name="hero-solution-model"]').forEach(input => {
+      input.addEventListener('change', () => selectModel(input.value));
+    });
+    document.getElementById('btn-ver-modelo').addEventListener('click', () => showModelPreview(selectedSvc));
+    [['btn-adquirir-modelo', 'modelos-prontos'], ['btn-personalizar-sob-medida', 'sob-medida'], ['btn-adquirir-sob-medida', 'sob-medida']].forEach(([id, model]) => {
+      document.getElementById(id).addEventListener('click', () => {
+        selectModel(model);
+        transitionTo(renderStep3, 'next');
       });
     });
-
-    const btnVerModelo = document.getElementById('btn-ver-modelo');
-    const btnAdquirirModelo = document.getElementById('btn-adquirir-modelo');
-    const btnAdquirirSobMedida = document.getElementById('btn-adquirir-sob-medida');
-    const btnPersonalizarSobMedida = document.getElementById('btn-personalizar-sob-medida');
-
-    if (btnVerModelo) {
-      btnVerModelo.addEventListener('click', (e) => {
-        e.stopPropagation(); // Evita que o card seja clicado
-        if (typeof showModelPreview === 'function') showModelPreview(selectedSvc);
-      });
-    }
-
-    if (btnAdquirirModelo) {
-      btnAdquirirModelo.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.objective = 'modelos-prontos';
-        saveState();
-        // Atualiza a interface visualmente caso estivesse diferente
-        cards.forEach(c => {
-          c.classList.remove('is-selected');
-          c.querySelector('.hero-objective-check').style.opacity = '0';
-        });
-        const prontosCard = container.querySelector('[data-id="modelos-prontos"]');
-        if (prontosCard) {
-          prontosCard.classList.add('is-selected');
-          prontosCard.querySelector('.hero-objective-check').style.opacity = '1';
-        }
-        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', 'modelos-prontos');
-        transitionTo(renderStep3, 'next');
-      });
-    }
-
-    if (btnAdquirirSobMedida) {
-      btnAdquirirSobMedida.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.objective = 'sob-medida';
-        saveState();
-        // Atualiza a interface visualmente
-        cards.forEach(c => {
-          c.classList.remove('is-selected');
-          c.querySelector('.hero-objective-check').style.opacity = '0';
-        });
-        const sobMedidaCard = container.querySelector('[data-id="sob-medida"]');
-        if (sobMedidaCard) {
-          sobMedidaCard.classList.add('is-selected');
-          sobMedidaCard.querySelector('.hero-objective-check').style.opacity = '1';
-        }
-        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', 'sob-medida');
-        transitionTo(renderStep3, 'next');
-      });
-    }
-
-    if (btnPersonalizarSobMedida) {
-      btnPersonalizarSobMedida.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.objective = 'sob-medida';
-        saveState();
-        cards.forEach(c => {
-          c.classList.remove('is-selected');
-          c.querySelector('.hero-objective-check').style.opacity = '0';
-        });
-        const sobMedidaCard = container.querySelector('[data-id="sob-medida"]');
-        if (sobMedidaCard) {
-          sobMedidaCard.classList.add('is-selected');
-          sobMedidaCard.querySelector('.hero-objective-check').style.opacity = '1';
-        }
-        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', 'sob-medida-personalizar');
-        transitionTo(renderStep3, 'next');
-      });
-    }
 
     if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
     if (editBtn) editBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
@@ -627,8 +543,9 @@ function renderHeroInteractive() {
         </div>
 
         <div class="hero-context-field">
-          <textarea id="hero-context-input" class="hero-textarea hero-textarea-lg" rows="4"
-            placeholder="Ex: Hoje controlamos tudo por planilhas e queremos organizar nosso processo de vendas...">${state.context || ''}</textarea>
+          <label class="sr-only" for="hero-context-input">Contexto do seu projeto (opcional)</label>
+          <textarea maxlength="2000" id="hero-context-input" class="hero-textarea hero-textarea-lg" rows="4"
+            placeholder="Ex: Hoje controlamos tudo por planilhas e queremos organizar nosso processo de vendas...">${CogitUI.escapeHtml(state.context)}</textarea>
         </div>
 
         <div class="hero-discovery-footer" style="margin-top: var(--space-4);">
@@ -644,17 +561,18 @@ function renderHeroInteractive() {
     const backBtn = document.getElementById('hero-btn-back-3');
     const finalBtn = document.getElementById('hero-btn-finalize');
 
-    if (textarea) textarea.addEventListener('input', e => { state.context = e.target.value; saveState(); });
+    if (textarea) textarea.addEventListener('input', e => { state.context = e.target.value;  });
     if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep2, 'back'));
     if (finalBtn) finalBtn.addEventListener('click', () => {
       if (textarea) state.context = textarea.value;
-      saveState();
+      
       transitionTo(renderAnalyzing, 'next');
     });
   }
 
   // ── TELA INTERMEDIÁRIA: Analisando ──
   function renderAnalyzing() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { renderResult(); return; }
     container.innerHTML = `
       <div class="hero-step-wrapper hero-analyzing-view">
         <div class="hero-analyzing-content">
@@ -744,17 +662,19 @@ function renderHeroInteractive() {
           ${state.context && state.context.trim() ? `
           <div class="hero-result-context">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>"${state.context.trim()}"</span>
+            <span>"${CogitUI.escapeHtml(state.context.trim())}"</span>
           </div>` : ''}
         </div>
 
+        ${CogitPrivacy.formMarkup('hero-contact-consent', true)}
+        <p class="hero-interactive-desc">O diagnóstico fica neste navegador. Ao continuar, revise e envie a mensagem no WhatsApp para falar com a equipe.</p>
         <div class="hero-summary-actions">
-          <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="btn-hero-montar btn-hero-whatsapp" id="hero-btn-whatsapp">
+          <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" class="btn-hero-montar btn-hero-whatsapp" id="hero-btn-whatsapp">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
             Receber orientação da COGIT
           </a>
           <div class="hero-summary-sub-actions">
-            <a href="contato.html" class="hero-sub-link" id="hero-link-form">Ou preencher diagnóstico completo →</a>
+            <a href="contato.html?solucao=${encodeURIComponent(state.selectedService || '')}" class="hero-sub-link" id="hero-link-form">Ou preencher diagnóstico completo →</a>
             <button type="button" class="hero-btn-restart-flow" id="hero-btn-restart">← Refazer diagnóstico</button>
           </div>
         </div>
@@ -764,13 +684,15 @@ function renderHeroInteractive() {
     const waBtn = document.getElementById('hero-btn-whatsapp');
     const restartBtn = document.getElementById('hero-btn-restart');
 
-    if (waBtn) waBtn.addEventListener('click', () => {
+    if (waBtn) waBtn.addEventListener('click', (event) => {
+      if (!CogitPrivacy.authorize(container)) { event.preventDefault(); return; }
+      waBtn.href = waLink + encodeURIComponent('\n\n' + CogitPrivacy.consentReceipt());
       if (typeof trackEvent === 'function') trackEvent('hero_whatsapp_conversion', { challenge: state.challenge, service: state.selectedService, objective: state.objective });
     });
 
     if (restartBtn) restartBtn.addEventListener('click', () => {
       state.challenge = null; state.selectedService = null; state.objective = null; state.context = '';
-      saveState();
+      
       transitionTo(renderStep0, 'back');
     });
   }
@@ -780,7 +702,7 @@ function renderHeroInteractive() {
     if (state.step === 0) {
       transitionTo(renderStep1, 'next');
     }
-    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    container.scrollIntoView({ behavior: CogitUI.motion(), block: 'nearest' });
   };
 
   // Initial render
@@ -795,18 +717,19 @@ function showModelPreview(selectedSvc) {
 
   const title = selectedSvc ? selectedSvc.name : 'Modelo Pronto';
   
+  const returnFocus = document.activeElement;
   const modalHTML = `
-    <div class="hero-modal-overlay" id="hero-model-preview-modal">
+    <dialog class="hero-model-dialog" id="hero-model-preview-modal" aria-labelledby="hero-model-preview-title">
       <div class="hero-modal-content">
         <div class="hero-modal-header">
-          <h3 class="hero-modal-title">Visualização: ${title}</h3>
-          <button type="button" class="hero-modal-close" id="hero-modal-close">&times;</button>
+          <h3 class="hero-modal-title" id="hero-model-preview-title">Sobre o modelo: ${title}</h3>
+          <button type="button" class="hero-modal-close" id="hero-modal-close" aria-label="Fechar informações do modelo" autofocus>&times;</button>
         </div>
         <div class="hero-modal-body">
           <div class="hero-modal-mockup">
             <div class="hero-modal-mockup-placeholder">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <span>Pré-visualização do modelo em breve</span>
+              <span>Peça à equipe os modelos disponíveis para esta solução</span>
             </div>
           </div>
           <div class="hero-modal-info">
@@ -819,10 +742,10 @@ function showModelPreview(selectedSvc) {
           </div>
         </div>
         <div class="hero-modal-footer">
-          <button type="button" class="btn-hero-modelo-pri" style="width: 100%;" id="hero-modal-select">Quero este modelo</button>
+          <button type="button" class="btn-hero-modelo-pri" style="width: 100%;" id="hero-modal-select">Tenho interesse em um modelo pronto</button>
         </div>
       </div>
-    </div>
+    </dialog>
   `;
 
   document.body.insertAdjacentHTML('beforeend', modalHTML);
@@ -831,13 +754,9 @@ function showModelPreview(selectedSvc) {
   const closeBtn = document.getElementById('hero-modal-close');
   const selectBtn = document.getElementById('hero-modal-select');
 
-  // Trigger anim
-  requestAnimationFrame(() => modal.classList.add('is-open'));
-
-  const closeModal = () => {
-    modal.classList.remove('is-open');
-    setTimeout(() => modal.remove(), 300);
-  };
+  modal.showModal();
+  const closeModal = () => modal.close();
+  modal.addEventListener('close', () => { modal.remove(); returnFocus?.focus({preventScroll: true}); });
 
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
@@ -987,11 +906,9 @@ function updateHomeDynamicRecommendations(flowId) {
 }
 
 window.continueToConfigurator = function(preselectStr) {
-  if (preselectStr) {
-    sessionStorage.setItem('cogit_preselect', preselectStr);
-  }
-  const target = window.location.pathname.includes('/solucoes/') || window.location.pathname.includes('/projetos/') ? '../monte-sua-solucao.html' : 'monte-sua-solucao.html';
-  window.location.href = target;
+  const target = new URL(CogitPrivacy.siteUrl('monte-sua-solucao.html'));
+  if (preselectStr) target.searchParams.set('services', preselectStr);
+  window.location.href = target.href;
 };
 
 // ── Render Services Grid ──
@@ -1283,27 +1200,6 @@ function renderFormOptions() {
       budgetRanges.map(b => `<option value="${b}">${b}</option>`).join('');
   }
 
-  // Auto-fill from Hero Discovery if navigated from Step 3
-  try {
-    const prefill = sessionStorage.getItem('cogit_contact_prefill');
-    if (prefill) {
-      const data = JSON.parse(prefill);
-      const descEl = document.getElementById('description');
-      if (descEl && !descEl.value) {
-        let msg = '';
-        if (data.solutions && data.solutions.length) {
-          msg += `Soluções de interesse: ${data.solutions.join(', ')}\n`;
-        }
-        if (data.objective) {
-          msg += `Objetivo principal: ${data.objective}\n`;
-        }
-        if (data.details) {
-          msg += `Detalhes da ideia: ${data.details}\n`;
-        }
-        descEl.value = msg.trim();
-      }
-    }
-  } catch (e) {}
 }
 
 // ── Render Footer Social Links ──

@@ -3029,7 +3029,7 @@
 
 .cfg-level-options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   gap: var(--space-3);
 }
 
@@ -4929,7 +4929,7 @@
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-10);
 }
@@ -4989,7 +4989,7 @@
 /* Home Section 2: Dynamic Recommendation Cards */
 .dynamic-rec-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-10);
 }
@@ -5078,7 +5078,7 @@
 /* Home Section 4: 3-Step Process Teaser */
 .home-process-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-10);
 }
@@ -5129,7 +5129,7 @@
 /* Home Section 5: Pricing Teaser */
 .home-pricing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-10);
 }
@@ -5225,7 +5225,7 @@
 
 .hub-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: var(--space-6);
 }
 
@@ -5448,7 +5448,7 @@
 
 .solution-block-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-8);
 }
@@ -5492,7 +5492,7 @@
 /* Pricing Philosophy Banner */
 .pricing-philosophy-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-8);
   margin-bottom: var(--space-16);
@@ -6301,7 +6301,7 @@
 /* Insight cards grid */
 .diag-insights-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: var(--space-4);
   margin-bottom: var(--space-8);
 }

@@ -1,0 +1,49 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>COGIT · Revisão local</title>
+<style>body{margin:0;background:#e9e8ef;color:#242329;font:15px system-ui}header{padding:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}label{display:flex;gap:6px;align-items:center}button,select{font:inherit;min-height:40px}iframe{display:block;margin:0 auto;border:1px solid #777;background:white}pre{padding:16px;white-space:pre-wrap;font:12px monospace}#review-frame{height:800px}#scan-frames{position:fixed;left:-10000px;top:0;pointer-events:none}</style>
+<header><strong>COGIT · Revisão local</strong><label>Página <select id="page"></select></label><label>Largura <select id="width"><option>300</option><option>320</option><option>375</option><option>600</option><option>768</option><option>1024</option><option>1440</option><option>1920</option></select></label><label>Altura <select id="height"><option>800</option><option>500</option><option>300</option></select></label><button id="load">Carregar página</button><button id="measure">Medir quadro atual</button><button id="scan">Auditar larguras de todas as páginas</button></header>
+<p style="padding:0 16px">Ferramenta local de revisão. O quadro abaixo usa as páginas e estilos reais, na largura selecionada.</p>
+<iframe id="review-frame" title="Site COGIT na largura selecionada" width="300" src="../index.html"></iframe><pre id="live-report" role="status"></pre><pre id="report" role="status">Pronto para revisar.</pre><div id="scan-frames"></div>
+<script>
+const pages = ['index.html','monte-sua-solucao.html','contato.html','investimentos.html','sobre.html','como-trabalhamos.html','projetos/index.html','solucoes/index.html','solucoes/sites-e-landing-pages.html','solucoes/sites-institucionais.html','solucoes/landing-pages.html','solucoes/modelos-prontos.html','solucoes/modelos-sob-medida.html','solucoes/sistemas-personalizados.html','solucoes/automacoes-e-integracoes.html','solucoes/saas-e-produtos-digitais.html','solucoes/plataformas-e-outras-solucoes.html','privacidade.html','termos-de-uso.html','404.html','obrigado.html'];
+const page = document.getElementById('page'), frame = document.getElementById('review-frame');
+for(const name of pages){const option=document.createElement('option');option.value=name;option.textContent=name;page.append(option);}
+document.getElementById('load').onclick=()=>{frame.style.width=document.getElementById('width').value+'px';frame.style.height=document.getElementById('height').value+'px';frame.src='../'+page.value;};
+document.getElementById('measure').onclick=()=>{
+ const d=frame.contentDocument,w=frame.contentWindow,width=w.innerWidth;
+ const overflow=Array.from(d.querySelectorAll('main *, dialog[open] *, .cookie-banner *')).filter(el=>{
+  const r=el.getBoundingClientRect(),s=w.getComputedStyle(el);
+  return !(s.position==='absolute'&&!el.textContent.trim())&&r.width&&r.height&&r.right>width+1&&r.left<width&&s.visibility!=='hidden'&&s.display!=='none'&&!el.closest('.reveal:not(.is-visible), .card-stagger-item:not(.is-visible)');
+ }).map(el=>({tag:el.tagName,class:el.className,text:el.textContent.trim().slice(0,80)}));
+ document.getElementById('live-report').textContent=JSON.stringify({page:page.value,step:d.querySelector('.cfg-step')?.getAttribute('data-step')||null,width,documentWidth:d.documentElement.scrollWidth,overflow},null,2);
+};
+document.getElementById('scan').onclick=async()=>{
+ const report=document.getElementById('report'), scan=document.getElementById('scan');scan.disabled=true;const results=[];
+ const widths=[300,320,375,600,768,1024,1440,1920];
+ for(const name of pages){
+  report.textContent=`Verificando ${name} · ${results.length} combinações concluídas…`;
+  const batch=await Promise.all(widths.map(width=>new Promise(resolve=>{
+   const f=document.createElement('iframe');f.style.width=width+'px';f.style.height='800px';f.title=`Auditoria ${name} ${width}`;
+   const timeout=setTimeout(()=>{f.remove();resolve({page:name,width,error:'Tempo de carregamento excedido'});},15000);
+   f.onload=async()=>{
+    const d=f.contentDocument,w=f.contentWindow;await d.fonts.ready;
+    setTimeout(()=>{
+     const overflow=[];
+     for(const el of d.querySelectorAll('body *')){
+      const r=el.getBoundingClientRect(),s=w.getComputedStyle(el);
+      if(!r.width||!r.height||s.visibility==='hidden'||s.display==='none'||el.closest('.mobile-menu:not(.is-open), #brand-intro, .whatsapp-popup, .ch-channels')||el.tagName==='SVG'||el.closest('svg'))continue;
+      // Exclude untranslated reveal effects, which are decorative, not layout widths.
+      if(el.closest('.reveal:not(.is-visible), .card-stagger-item:not(.is-visible), [class*="hero-animate-"]:not(.is-hero-animated)'))continue;
+      if((r.right>width+1||r.left< -1)&&r.right>0&&r.left<width&&s.position!=='absolute')overflow.push({tag:el.tagName,id:el.id,class:el.className,left:Math.round(r.left),right:Math.round(r.right),text:el.textContent.trim().slice(0,70)});
+     }
+     const brokenImages=Array.from(d.images).filter(i=>!i.complete||!i.naturalWidth).map(i=>i.getAttribute('src'));
+     results.push({page:name,width,documentWidth:d.documentElement.scrollWidth,overflow,brokenImages});clearTimeout(timeout);f.remove();resolve();
+    },2400);
+   };
+   f.src='../'+name;document.getElementById('scan-frames').append(f);
+  })));
+  for(const item of batch)if(item)results.push(item);
+ }
+ const issues=results.filter(r=>r.error||r.overflow?.length||r.brokenImages?.length||r.documentWidth>r.width+1);
+ report.textContent=JSON.stringify({tested:results.length,widths,issues},null,2);scan.disabled=false;
+};
+</script></html>

@@ -29,8 +29,6 @@
   <meta name="twitter:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Styles -->
   <link rel="stylesheet" href="../css/style.css">
@@ -61,6 +59,7 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 
   <!-- ═══════════════════════════════════════
        HEADER
@@ -209,7 +208,7 @@
     </div>
   </nav>
 
-  <main role="main">
+  <main id="main-content" role="main">
     <section class="solution-hero">
       <div class="hero-bg-grid"></div>
       <div class="hero-bg-gradient"></div>
@@ -218,7 +217,7 @@
         <h1>Sistemas Personalizados</h1>
         <p>Softwares construídos exatamente para as regras e processos da sua empresa. Sem pagar por recursos inúteis e sem limitações de ferramentas genéricas.</p>
         <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
-          <a href="../monte-sua-solucao.html" onclick="sessionStorage.setItem('cogit_preselect', 'sistema');" class="btn btn-primary">Configurar sistema <span>→</span></a>
+          <a href="../monte-sua-solucao.html?services=sistema" class="btn btn-primary">Configurar sistema <span>→</span></a>
           <a href="../contato.html" class="btn btn-secondary">Solicitar diagnóstico</a>
         </div>
       </div>
@@ -275,11 +274,12 @@
         </div>
 
         <div style="display: flex; justify-content: center; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap;" class="reveal">
-          <a href="../monte-sua-solucao.html" onclick="sessionStorage.setItem('cogit_preselect', 'sistema');" class="btn btn-primary btn-lg">Estimar no configurador <span>→</span></a>
+          <a href="../monte-sua-solucao.html?services=sistema" class="btn btn-primary btn-lg">Estimar no configurador <span>→</span></a>
           <a href="../contato.html" class="btn btn-secondary-dark btn-lg">Agendar conversa técnica</a>
         </div>
       </div>
     </section>
+  <noscript><p class="container form-notice">Ative o JavaScript para usar os diagnósticos e o menu interativo. Para falar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
   </main>
 
   <!-- ═══════════════════════════════════════
@@ -401,6 +401,8 @@
 
   <!-- Scripts -->
   <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/privacy.js"></script>
   <script src="../js/analytics.js"></script>
   <script src="../js/components.js"></script>
   <script src="../js/configurator.js"></script>

@@ -8,7 +8,7 @@ const siteConfig = {
   // Google Analytics — insert your GA4 ID (e.g. 'G-XXXXXXXXXX')
   gaId: '',
 
-  // Set to true to show cookie consent banner before loading analytics
+  // Compatibility setting; analytics always requires explicit opt-in.
   requireCookieConsent: true,
 
   // Response time text shown in the contact section

@@ -1,0 +1,10 @@
+{
+  "name": "cogit-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Site estático da COGIT. Node é opcional e usado apenas para revisão local.",
+  "scripts": {
+    "dev": "node tools/preview.mjs",
+    "check": "node tools/check.mjs"
+  }
+}

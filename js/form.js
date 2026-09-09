@@ -41,8 +41,7 @@ function initForm() {
     name: '',
     company: '',
     whatsapp: '',
-    email: '',
-    origin: document.referrer || window.location.href
+    email: ''
   };
 
   const stepNames = {
@@ -53,6 +52,7 @@ function initForm() {
 
   // ── Service Catalog (with icons from ICONS object + pricing) ──
   const SERVICES_CATALOG = [
+    {id: 'portfolio', name: 'Portfólio', desc: 'Apresente seu trabalho com uma presença digital profissional.', price: 790, priceLabel: 'A partir de R$ 790', icon: 'websites', challenge: 'Presença digital'},
     {
       id: 'site-institucional',
       name: 'Site Institucional',
@@ -129,6 +129,15 @@ function initForm() {
 
   // ── Objective Map (dynamic by selected services) ──
   const OBJECTIVES_MAP = {
+    'portfolio': {
+      title: 'Como você quer apresentar seu trabalho?',
+      subtitle: 'Escolha o principal objetivo do seu portfólio.',
+      options: [
+        {title: 'Apresentar meus projetos', desc: 'Organizar trabalhos, imagens e estudos de caso.'},
+        {title: 'Atrair novos clientes', desc: 'Destacar seus serviços e facilitar o contato.'},
+        {title: 'Fortalecer minha identidade profissional', desc: 'Apresentar sua trajetória e seus diferenciais.'}
+      ]
+    },
     'site-institucional': {
       title: 'Qual é o foco do Site Institucional?',
       subtitle: 'Selecione a prioridade comercial mais relevante.',
@@ -223,6 +232,12 @@ function initForm() {
 
   // Strategic insight engine
   const INSIGHTS = {
+    'portfolio': {
+      scenario: 'Você quer apresentar seu trabalho de forma organizada e profissional.',
+      opportunity: 'Destacar projetos relevantes e facilitar o contato de potenciais clientes.',
+      solution: 'Portfólio Profissional',
+      solutionDesc: 'Uma presença digital com apresentação pessoal, seleção de trabalhos e caminhos claros para contato.'
+    },
     'site-institucional': {
       scenario: 'Sua empresa precisa de um posicionamento digital sólido para transmitir credibilidade antes de reuniões comerciais.',
       opportunity: 'Aumento de conversão em propostas e fechamentos por transmitir autoridade prévia ao cliente.',
@@ -438,23 +453,26 @@ function initForm() {
     if (step2Title) step2Title.textContent = objData.title;
     if (step2Subtitle) step2Subtitle.textContent = objData.subtitle;
 
-    step2OptionsEl.innerHTML = objData.options.map((opt, i) => `
-      <div class="diag-option-item ${i === 0 ? 'is-selected' : ''}" data-value="${opt.title}">
+    if (!objData.options.some(opt => opt.title === diagState.objective)) diagState.objective = '';
+    step2OptionsEl.innerHTML = objData.options.map(opt => `
+      <button type="button" class="diag-option-item ${diagState.objective === opt.title ? 'is-selected' : ''}" data-value="${opt.title}" aria-pressed="${diagState.objective === opt.title}">
         <div class="diag-option-content">
           <div class="diag-option-title">${opt.title}</div>
           <div class="diag-option-desc">${opt.desc}</div>
         </div>
-        <div class="diag-option-radio"></div>
-      </div>
+        <div class="diag-option-radio" aria-hidden="true"></div>
+      </button>
     `).join('');
 
-    diagState.objective = objData.options[0].title;
+    form.querySelector('[data-next="3"]').disabled = !diagState.objective;
 
     step2OptionsEl.querySelectorAll('.diag-option-item').forEach(item => {
       item.addEventListener('click', () => {
-        step2OptionsEl.querySelectorAll('.diag-option-item').forEach(it => it.classList.remove('is-selected'));
+        step2OptionsEl.querySelectorAll('.diag-option-item').forEach(it => { it.classList.remove('is-selected'); it.setAttribute('aria-pressed', 'false'); });
         item.classList.add('is-selected');
         diagState.objective = item.dataset.value;
+        item.setAttribute('aria-pressed', 'true');
+        form.querySelector('[data-next="3"]').disabled = false;
       });
     });
   }
@@ -463,6 +481,8 @@ function initForm() {
   function goToStep(targetStep) {
     if (targetStep < 1 || targetStep > diagState.totalSteps) return;
 
+    if (targetStep > 1 && !diagState.selectedServices.length) return;
+    if (targetStep === 3 && !diagState.objective) return;
     if (targetStep === 2) renderStep2();
 
     // Hide all steps
@@ -470,7 +490,7 @@ function initForm() {
 
     // Show target
     const targetEl = form.querySelector(`.diag-step[data-step="${targetStep}"]`);
-    if (targetEl) targetEl.classList.add('is-active');
+    if (targetEl) { targetEl.classList.add('is-active'); CogitUI.focusHeading(targetEl); }
 
     diagState.step = targetStep;
     updateProgressBar();
@@ -480,7 +500,7 @@ function initForm() {
     if (diagSection) {
       const headerH = document.querySelector('.header')?.offsetHeight || 80;
       const top = diagSection.getBoundingClientRect().top + window.scrollY - headerH - 16;
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top, behavior: CogitUI.motion() });
     }
 
     if (typeof trackEvent === 'function') {
@@ -557,7 +577,9 @@ ${services}
 📱 *WhatsApp:* ${diagState.whatsapp}
 ✉️ *E-mail:* ${diagState.email}
 
-Gostaria de receber a orientação estratégica da COGIT!`;
+Gostaria de receber a orientação estratégica da COGIT!
+
+${CogitPrivacy.consentReceipt()}`;
 
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   }
@@ -565,28 +587,15 @@ Gostaria de receber a orientação estratégica da COGIT!`;
   // ── 11. Auto-Detect Context from URL ──
   function autoDetectContext() {
     const urlParams = new URLSearchParams(window.location.search);
-    const sol = urlParams.get('solucao') || urlParams.get('produto') || sessionStorage.getItem('cogit_preselect');
-    const ref = document.referrer.toLowerCase();
-
+    const sol = urlParams.get('solucao') || urlParams.get('produto');
     let preselect = null;
     if (sol) {
-      const s = sol.toLowerCase();
-      if (s.includes('landing') || s === 'lp') preselect = 'landing-page';
-      else if (s.includes('site') || s.includes('institucional')) preselect = 'site-institucional';
-      else if (s.includes('modelos-prontos') || s.includes('pronta') || s.includes('start') || s.includes('portfolio')) preselect = 'landing-page';
-      else if (s.includes('modelos-sob-medida') || s.includes('sob-medida') || s.includes('exclusivo')) preselect = 'site-institucional';
-      else if (s.includes('automacao')) preselect = 'automacao';
-      else if (s.includes('sistema') || s.includes('software')) preselect = 'sistema';
-      else if (s.includes('saas')) preselect = 'saas';
-      else if (s.includes('mvp')) preselect = 'mvp';
-      else if (s.includes('plataforma')) preselect = 'plataforma';
-    } else if (ref) {
-      if (ref.includes('landing-pages')) preselect = 'landing-page';
-      else if (ref.includes('modelos-prontos') || ref.includes('solucoes-prontas') || ref.includes('cogit-start') || ref.includes('sites-institucionais')) preselect = 'site-institucional';
-      else if (ref.includes('modelos-sob-medida')) preselect = 'site-institucional';
-      else if (ref.includes('automacoes')) preselect = 'automacao';
-      else if (ref.includes('sistemas-personalizados')) preselect = 'sistema';
-      else if (ref.includes('saas-e-produtos')) preselect = 'saas';
+      const value = sol.toLowerCase().replace(/-svc$/, '');
+      if (SERVICES_CATALOG.some(service => service.id === value)) preselect = value;
+      else if (value === 'lp') preselect = 'landing-page';
+      else if (value === 'modelos-prontos') preselect = 'landing-page';
+      else if (value === 'modelos-sob-medida') preselect = 'site-institucional';
+      else if (value === 'outro') preselect = 'outras-solucoes';
     }
 
     if (preselect) toggleService(preselect);
@@ -596,12 +605,7 @@ Gostaria de receber a orientação estratégica da COGIT!`;
   const waInput = document.getElementById('diag-whatsapp');
   if (waInput) {
     waInput.addEventListener('input', (e) => {
-      let v = e.target.value.replace(/\D/g, '');
-      if (v.length > 11) v = v.slice(0, 11);
-      if (v.length > 7) v = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
-      else if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-      else if (v.length > 0) v = `(${v}`;
-      e.target.value = v;
+      e.target.value = CogitUI.formatPhone(e.target.value);
     });
   }
 
@@ -619,8 +623,10 @@ Gostaria de receber a orientação estratégica da COGIT!`;
       let err = '';
       if (!val) err = 'Campo obrigatório';
       else if (isEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) err = 'E-mail inválido';
-      else if (isPhone && val.replace(/\D/g, '').length < 10) err = 'WhatsApp inválido com DDD';
+      else if (isPhone && !/^\d{10,11}$/.test(val.replace(/\D/g, ''))) err = 'WhatsApp inválido com DDD';
 
+      field.setAttribute('aria-invalid', String(!!err));
+      if (errEl) { errEl.id = field.id + '-error'; field.setAttribute('aria-describedby', errEl.id); }
       if (err) {
         group?.classList.add('has-error');
         if (errEl) errEl.textContent = err;
@@ -667,10 +673,13 @@ Gostaria de receber a orientação estratégica da COGIT!`;
   // Form submission
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (diagState.step !== 3 || !diagState.selectedServices.length || !diagState.objective) return;
     if (!validateContact()) {
       form.querySelector('.has-error input')?.focus();
       return;
     }
+
+    if (!CogitPrivacy.authorize(form)) return;
 
     diagState.name = document.getElementById('diag-name')?.value.trim() || '';
     diagState.email = document.getElementById('diag-email')?.value.trim() || '';
@@ -689,19 +698,13 @@ Gostaria de receber a orientação estratégica da COGIT!`;
       });
     }
 
-    console.log('COGIT Diagnostic Completed:', {
-      services: diagState.selectedServices,
-      objective: diagState.objective,
-      context: diagState.context,
-      contact: { name: diagState.name, email: diagState.email, whatsapp: diagState.whatsapp, company: diagState.company }
-    });
-
     // Show result
     if (configuratorLayout) configuratorLayout.style.display = 'none';
     if (resultScreen) {
       resultScreen.style.display = 'block';
       resultScreen.classList.add('is-active');
-      resultScreen.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      CogitUI.focusHeading(resultScreen);
+      resultScreen.scrollIntoView({ behavior: CogitUI.motion(), block: 'start' });
     }
   });
 
@@ -711,6 +714,12 @@ Gostaria de receber a orientação estratégica da COGIT!`;
       diagState.selectedServices = [];
       diagState.objective = '';
       diagState.step = 1;
+      form.reset();
+      ['name', 'email', 'whatsapp', 'company', 'context'].forEach(key => diagState[key] = '');
+      form.querySelectorAll('[aria-invalid]').forEach(field => field.removeAttribute('aria-invalid'));
+      form.querySelectorAll('.has-error').forEach(group => group.classList.remove('has-error'));
+      form.querySelector('.consent-error')?.setAttribute('hidden', '');
+      document.getElementById('res-whatsapp-cta')?.setAttribute('href', 'https://wa.me/5517981568889');
 
       if (resultScreen) { resultScreen.style.display = 'none'; resultScreen.classList.remove('is-active'); }
       if (configuratorLayout) configuratorLayout.style.display = 'grid';
@@ -726,6 +735,13 @@ Gostaria de receber a orientação estratégica da COGIT!`;
       if (selectionContext) selectionContext.classList.remove('is-visible');
     });
   }
+
+  const finalActions = form.querySelector('#diag-step-3 .diag-actions');
+  finalActions.insertAdjacentHTML('beforebegin', CogitPrivacy.formMarkup('diag-contact-consent') + '<p class="cfg-transparency-note">A recomendação é gerada neste navegador. Para a equipe receber seus dados, continue no WhatsApp e envie a mensagem. Cookies opcionais não são necessários para entrar em contato.</p>');
+  form.querySelectorAll('input, textarea').forEach(field => field.addEventListener('input', () => {
+    field.removeAttribute('aria-invalid');
+    field.closest('.form-group')?.classList.remove('has-error');
+  }));
 
   // ── 15. Initialise ──
   renderServiceCards();

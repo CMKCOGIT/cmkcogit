@@ -12,7 +12,6 @@ function initHeader() {
   if (!header) return;
 
   // ── Sticky Header ──
-  let lastScroll = 0;
   const scrollThreshold = 50;
 
   function handleScroll() {
@@ -24,7 +23,6 @@ function initHeader() {
       header.classList.remove('is-scrolled');
     }
 
-    lastScroll = currentScroll;
   }
 
   window.addEventListener('scroll', handleScroll, { passive: true });
@@ -33,9 +31,17 @@ function initHeader() {
   // ── Mobile Menu Controller ──
   const closeBtn = document.getElementById('mobile-menu-close') || mobileMenu?.querySelector('.mobile-menu-close');
 
+  let returnFocus = null;
+  let inertElements = [];
+  if (mobileMenu) mobileMenu.inert = true;
   function openMobileMenu() {
     if (!mobileMenu) return;
+    returnFocus = document.activeElement;
+    mobileMenu.inert = false;
     mobileMenu.classList.add('is-open');
+    inertElements = Array.from(document.body.children).filter(el => el !== mobileMenu && el !== menuOverlay && !el.contains(mobileMenu) && !el.inert && !['SCRIPT', 'STYLE'].includes(el.tagName));
+    inertElements.forEach(el => el.inert = true);
+    closeBtn?.focus();
     if (menuToggle) {
       menuToggle.classList.add('is-active');
       menuToggle.setAttribute('aria-expanded', 'true');
@@ -44,9 +50,13 @@ function initHeader() {
     document.body.classList.add('no-scroll');
   }
 
-  function closeMobileMenu() {
+  function closeMobileMenu(restoreFocus = true) {
     if (!mobileMenu) return;
+    const wasOpen = mobileMenu.classList.contains('is-open');
     mobileMenu.classList.remove('is-open');
+    mobileMenu.inert = true;
+    inertElements.forEach(el => el.inert = false); inertElements = [];
+    if (wasOpen && restoreFocus) returnFocus?.focus({preventScroll: true});
     if (menuToggle) {
       menuToggle.classList.remove('is-active');
       menuToggle.setAttribute('aria-expanded', 'false');
@@ -55,6 +65,8 @@ function initHeader() {
     document.body.classList.remove('no-scroll');
   }
 
+  window.CogitHeader = {close: closeMobileMenu};
+  window.matchMedia('(min-width: 1201px)').addEventListener('change', event => { if (event.matches) closeMobileMenu(false); });
   if (menuToggle && mobileMenu) {
     menuToggle.addEventListener('click', () => {
       if (mobileMenu.classList.contains('is-open')) {
@@ -71,6 +83,8 @@ function initHeader() {
     // Submenu / Accordion Toggle for Soluções
     const accordionTriggers = mobileMenu.querySelectorAll('.mobile-accordion-trigger');
     accordionTriggers.forEach(trigger => {
+      const panel = trigger.nextElementSibling;
+      if (panel) panel.inert = trigger.getAttribute('aria-expanded') !== 'true';
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         const parent = trigger.closest('.mobile-nav-accordion');
@@ -78,7 +92,8 @@ function initHeader() {
 
         if (parent) {
           parent.classList.toggle('is-expanded');
-          trigger.setAttribute('aria-expanded', !isExpanded);
+          trigger.setAttribute('aria-expanded', String(!isExpanded));
+          if (panel) panel.inert = isExpanded;
         }
       });
     });
@@ -88,6 +103,14 @@ function initHeader() {
       link.addEventListener('click', () => {
         closeMobileMenu();
       });
+    });
+
+    mobileMenu.addEventListener('keydown', event => {
+      if (event.key !== 'Tab') return;
+      const items = Array.from(mobileMenu.querySelectorAll('a[href], button:not([disabled])')).filter(el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden' && !el.closest('[inert]'));
+      const first = items[0], last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
     });
 
     // Close menu on escape
