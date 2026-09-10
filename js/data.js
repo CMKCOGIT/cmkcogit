@@ -626,19 +626,19 @@ const casesData = [
     ctaText: 'Entender arquitetura'
   },
   {
-    id: 'nexus',
-    title: 'Nexus',
-    segment: 'Sustentabilidade & B2B',
+    id: 'nexos',
+    title: 'Nexos',
+    segment: 'Sustentabilidade / Economia Circular',
     status: 'Em desenvolvimento',
     statusTag: 'PRODUTO EM EVOLUÇÃO',
-    solution: 'Plataforma web para gestão sustentável de resíduos recicláveis, conectando empresas geradoras e compradores em um ambiente digital centralizado com gestão de pedidos e dashboards.',
+    solution: 'Projeto sustentável em estruturação para conectar empresas que geram resíduos, organizações compradoras e, futuramente, pessoas que precisam encontrar o descarte correto.',
     highlights: [
-      'Gestão de pedidos e negociações diretas',
-      'Controle operacional e rastreabilidade de resíduos',
-      'Dashboards estratégicos e centralização de dados'
+      'Conexão entre geradores, compradores e oportunidades',
+      'Rastreabilidade, negociação e certificações na plataforma',
+      'Participação gratuita prevista para pessoas físicas'
     ],
     technologies: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'],
-    image: 'assets/images/case-nexus.jpg',
+    image: 'assets/images/case-nexos.jpg',
     ctaText: 'Entender arquitetura'
   },
   {

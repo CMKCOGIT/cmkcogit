@@ -1078,7 +1078,7 @@ function renderCases() {
     const delayClass = `reveal-delay-${(i % 3) + 1}`;
     
     return `
-      <div class="case-card ${delayClass}" id="case-${c.id}">
+      <div class="case-card ${delayClass}" id="case-${c.id}" data-about-reveal>
         <div class="case-card-header">
           <span class="case-card-tag">
             <span class="case-status-pulse"></span>
@@ -1283,4 +1283,3 @@ function initComponents() {
   renderFooterSocial();
   renderTestimonials();
 }
-
