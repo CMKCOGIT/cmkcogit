@@ -626,8 +626,8 @@ const casesData = [
     ctaText: 'Entender arquitetura'
   },
   {
-    id: 'nexos',
-    title: 'Nexos',
+    id: 'nexus',
+    title: 'Nexus',
     segment: 'Sustentabilidade / Economia Circular',
     status: 'Em desenvolvimento',
     statusTag: 'PRODUTO EM EVOLUÇÃO',
@@ -638,7 +638,7 @@ const casesData = [
       'Participação gratuita prevista para pessoas físicas'
     ],
     technologies: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'],
-    image: 'assets/images/case-nexos.jpg',
+    image: 'assets/images/case-nexus.jpg',
     ctaText: 'Entender arquitetura'
   },
   {

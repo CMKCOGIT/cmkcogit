@@ -385,22 +385,34 @@
 
   .hero-ctas {
     flex-direction: column;
-    width: 100%;
-    max-width: 320px;
+    width: 100% !important;
+    max-width: 100% !important;
     gap: 10px;
     margin: 0 auto;
-    align-items: center;
+    align-items: stretch !important;
   }
 
   .hero-ctas .btn,
+  .hero-ctas #cta-hero-contact,
+  .hero-ctas #cta-hero-start,
   .orientation-block .btn,
   .solutions-transition .btn,
   .process-transition .btn {
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     min-height: 48px;
     justify-content: center;
-    margin-inline: auto;
+    margin-inline: 0;
     font-size: 14px;
+    white-space: normal;
+  }
+
+  #cta-hero-contact {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    justify-content: center;
+    text-align: center;
   }
 
   .hero-capacities {

@@ -37,20 +37,68 @@
   align-items: flex-start;
 }
 
+.hero-content .hero-subtitle {
+  margin-bottom: 0 !important;
+}
+
+.hero-content .hero-ctas {
+  margin-top: 1.25rem !important;
+  margin-bottom: 0 !important;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
 #cta-hero-contact {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
   font-weight: var(--fw-semibold);
-  transition: all 200ms ease;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: var(--radius-lg);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.22s var(--ease-out), border-color 0.22s var(--ease-out), color 0.22s var(--ease-out), transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+}
+
+#cta-hero-contact::after {
+  border-radius: inherit;
 }
 
 #cta-hero-contact:hover {
-  border-color: var(--purple);
-  background: rgba(74, 61, 219, 0.22);
+  background: rgba(74, 61, 219, 0.2);
+  border-color: rgba(167, 155, 255, 0.55);
   color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(74, 61, 219, 0.3);
+  box-shadow: 0 8px 24px rgba(74, 61, 219, 0.28), 0 0 0 1px rgba(167, 155, 255, 0.2);
+}
+
+#cta-hero-contact:active {
+  transform: translateY(0);
+  background: rgba(74, 61, 219, 0.28);
+  box-shadow: 0 2px 8px rgba(74, 61, 219, 0.2);
+}
+
+#cta-hero-contact:focus-visible {
+  outline: 2px solid var(--lilac);
+  outline-offset: 3px;
 }
 
 .hero-interactive-container {
@@ -2243,8 +2291,8 @@
 .hero-ctas {
   display: flex;
   gap: var(--space-4);
-  margin-bottom: var(--space-8);
-  justify-content: center;
+  margin-bottom: 0;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 

@@ -192,6 +192,12 @@
     display: none;
   }
 
+  .hero-content .hero-ctas {
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 1.25rem;
+  }
+
   .hero-inner {
     min-height: calc(100svh - 100px);
   }
