@@ -1,1107 +1,455 @@
-/* ============================================
-   COGIT — Configurator Module
-   Interactive "Monte sua Solução" builder
-   ============================================ */
-
+/* COGIT — Configurador guiado: objetivo, recomendação, formato, complementos e resumo. */
 const ConfiguratorApp = (() => {
-
-  // ── State ──
-  const state = {
-    currentStep: 1,
-    totalSteps: 4,
-    selectedServices: [],   // [{serviceId, levelId, levelName, price, priceType}]
-    selectedAddons: [],     // [{addonId, name, price, priceType}]
-    solutionModel: null,    // 'modelos-prontos' | 'sob-medida' (para serviços de presença digital)
-    isComplex: false,
-    formData: {}
-  };
-
-  // ── DOM References ──
+  const OBJECTIVES = [
+    {id:'atrair-vender',name:'Atrair e vender',description:'Gerar oportunidades e transformar visitas em contatos.',icon:'landing',services:['landing-page','site-institucional','automacao']},
+    {id:'apresentar-empresa',name:'Apresentar minha empresa',description:'Construir presença, confiança e autoridade digital.',icon:'websites',services:['site-institucional','landing-page']},
+    {id:'mostrar-trabalho',name:'Mostrar meu trabalho',description:'Organizar projetos, serviços e resultados em um portfólio.',icon:'landing',services:['portfolio','site-institucional']},
+    {id:'automatizar-processo',name:'Automatizar um processo',description:'Reduzir tarefas manuais e conectar ferramentas.',icon:'automation',services:['automacao','sistema']},
+    {id:'organizar-operacao',name:'Organizar minha operação',description:'Centralizar dados, rotinas e acompanhamento.',icon:'systems',services:['sistema','automacao','plataforma']},
+    {id:'produto-digital',name:'Criar um produto digital',description:'Validar uma ideia e preparar o caminho para escalar.',icon:'mvp',services:['mvp','saas','plataforma']},
+    {id:'nao-sei',name:'Ainda não tenho certeza',description:'Receber orientação para encontrar o melhor ponto de partida.',icon:'otherSolutions',services:[]}
+  ];
+  const PRESENCE_IDS = ['site-institucional','landing-page','portfolio'];
+  const STEP_LABELS = ['Objetivo','Soluções','Formato','Complementos','Resumo'];
+  const ADDON_GROUPS = [
+    {name:'Conversão',description:'Para transformar interesse em oportunidade.',items:['copywriting','integracao-crm','analytics-avancado']},
+    {name:'Conteúdo',description:'Para apresentar melhor sua marca e seus projetos.',items:['pagina-adicional','blog','seo-avancado']},
+    {name:'Operação',description:'Para conectar ferramentas e reduzir trabalho manual.',items:['automacao-extra','integracao-externa','integracao-api','dashboard']},
+    {name:'Acesso e gestão',description:'Para experiências com usuários e áreas privadas.',items:['area-restrita']}
+  ];
+  const state = {currentStep:1,totalSteps:5,selectedObjectives:[],selectedServices:[],selectedAddons:[],showAllServices:false,isComplex:false,formData:{}};
   let containerEl = null;
   let lastRenderedStep = null;
+  let transitionDirection = 1;
 
-  // ── Helpers ──
-  function formatPrice(value) {
-    if (!value || value === null) return null;
-    // If already has R$ prefix
-    if (typeof value === 'string' && value.includes('R$')) return value;
-    const numValue = typeof value === 'string' ? parseFloat(value) : value;
-    if (!isNaN(numValue)) {
-      return `R$ ${numValue.toLocaleString('pt-BR')}`;
+  function esc(value) {
+    if (typeof CogitUI !== 'undefined' && CogitUI.escapeHtml) return CogitUI.escapeHtml(String(value || ''));
+    return String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[char]);
+  }
+  function money(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? 'R$ ' + number.toLocaleString('pt-BR') : '';
+  }
+  function getService(id) { return configuratorData.services.find(item => item.id === id); }
+  function getAddon(id) { return configuratorData.addons.find(item => item.id === id); }
+  function getObjective(id) { return OBJECTIVES.find(item => item.id === id); }
+  function getEntry(id) { return state.selectedServices.find(item => item.serviceId === id); }
+  function isPresence(id) { return PRESENCE_IDS.includes(id); }
+  function icon(name) { return '<span class="cfg-choice-icon" aria-hidden="true">' + ((typeof ICONS !== 'undefined' && ICONS[name]) || '•') + '</span>'; }
+  function track(action,label) { if (typeof window.trackEvent === 'function') window.trackEvent(action,label); }
+  function minimum(service) {
+    if (!service) return null;
+    if (service.hasLevels) {
+      const level = service.levels.find(item => item.price != null);
+      return level ? level.price : null;
     }
-    return `R$ ${value}`;
+    return service.price;
   }
-
-  function getPriceDisplay(priceType, price) {
-    switch (priceType) {
-      case 'fixed':
-        return `<span class="cfg-price-value">${formatPrice(price)}</span>`;
-      case 'from':
-        return `<span class="cfg-price-value">A partir de ${formatPrice(price)}</span>`;
-      case 'analysis':
-      case 'custom':
-        return `<span class="cfg-price-analysis">Sob análise</span>`;
-      default:
-        return '';
-    }
+  function serviceHint(service) {
+    const price = minimum(service);
+    return price == null ? 'Diagnóstico inicial' : (service.priceType === 'fixed' ? '' : 'A partir de ') + money(price);
   }
-
-  function getAddonPriceDisplay(priceType, price) {
-    switch (priceType) {
-      case 'fixed':
-        return `+ ${formatPrice(price)}`;
-      case 'from':
-        return `A partir de ${formatPrice(price)}`;
-      case 'analysis':
-      case 'custom':
-        return 'Sob análise';
-      default:
-        return '';
-    }
+  function recommendedIds() {
+    const ids = [];
+    state.selectedObjectives.forEach(id => {
+      const objective = getObjective(id);
+      (objective ? objective.services : []).forEach(serviceId => { if (!ids.includes(serviceId)) ids.push(serviceId); });
+    });
+    return ids;
   }
-
-  // ── Helpers — Presença Digital ──
-
-  // IDs que ativam o fluxo de modelo (Prontos / Sob Medida)
-  const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
-
-  function isPresencaDigitalOnly() {
-    if (state.selectedServices.length === 0) return false;
-    return state.selectedServices.every(s => PRESENCA_DIGITAL_IDS.includes(s.serviceId));
+  function allowedAddons() {
+    const allowed = new Set();
+    state.selectedServices.forEach(entry => {
+      const service = getService(entry.serviceId);
+      (service && service.allowedAddons || []).forEach(id => allowed.add(id));
+    });
+    if (state.selectedServices.some(entry => entry.serviceId === 'automacao')) allowed.delete('automacao-extra');
+    return allowed;
   }
-
   function checkComplexity() {
-    const ids = state.selectedServices.map(s => s.serviceId);
-    const combos = configuratorData.complexCombinations || [];
-    for (const combo of combos) {
-      if (combo.every(id => ids.includes(id))) {
-        return true;
-      }
-    }
-    // Also complex if any selected service is analysis-only
-    const hasMultipleAnalysis = state.selectedServices.filter(s => s.priceType === 'analysis' || s.priceType === 'custom').length >= 2;
-    return hasMultipleAnalysis;
+    const ids = state.selectedServices.map(entry => entry.serviceId);
+    const combination = (configuratorData.complexCombinations || []).some(combo => combo.every(id => ids.includes(id)));
+    const customModel = state.selectedServices.some(entry => entry.modelId === 'sob-medida');
+    const customItems = state.selectedServices.filter(entry => entry.priceType === 'analysis' || entry.priceType === 'custom').length;
+    return combination || customModel || customItems >= 2;
   }
-
   function calculateTotal() {
     state.isComplex = checkComplexity();
-    if (state.isComplex) return null;
-
-    let hasCustomItems = false;
-    let total = 0;
-
-    state.selectedServices.forEach(s => {
-      if (s.priceType === 'analysis' || s.priceType === 'custom') {
-        hasCustomItems = true;
-      } else if (s.price != null && !isNaN(s.price)) {
-        total += parseFloat(s.price);
-      }
+    let value = 0;
+    let hasFrom = false;
+    let hasCustom = false;
+    state.selectedServices.forEach(entry => {
+      if (entry.modelId === 'sob-medida' || ['analysis','custom'].includes(entry.priceType)) { hasCustom = true; return; }
+      if (entry.price != null) { value += Number(entry.price); if (entry.priceType === 'from') hasFrom = true; }
     });
-
-    state.selectedAddons.forEach(a => {
-      if (a.priceType === 'analysis' || a.priceType === 'custom') {
-        hasCustomItems = true;
-      } else if (a.price != null && !isNaN(a.price)) {
-        total += parseFloat(a.price) * (a.quantity || 1);
-      }
+    state.selectedAddons.forEach(entry => {
+      if (['analysis','custom'].includes(entry.priceType)) { hasCustom = true; return; }
+      if (entry.price != null) { value += Number(entry.price) * (entry.quantity || 1); if (entry.priceType === 'from') hasFrom = true; }
     });
-
-    if (hasCustomItems && total > 0) {
-      return { type: 'partial', value: total };
-    }
-    if (hasCustomItems) {
-      return { type: 'custom' };
-    }
-    if (total > 0) {
-      return { type: 'fixed', value: total };
-    }
-    return { type: 'placeholder' };
+    if (hasCustom && value) return {type:'partial',value,hasFrom};
+    if (hasCustom) return {type:'custom',value:null};
+    if (value) return {type:hasFrom ? 'from' : 'fixed',value};
+    return {type:'pending',value:null};
   }
-
-  function trackEvent(action, label) {
-    if (typeof window.trackEvent === 'function') window.trackEvent(action, label);
+  function estimate(short) {
+    const total = calculateTotal();
+    if (total.type === 'custom') return short ? 'Sob análise' : 'Investimento sob análise';
+    if (total.type === 'partial') return (total.hasFrom ? 'A partir de ' : '') + money(total.value) + (short ? ' +' : ' + itens sob análise');
+    if (total.type === 'from') return 'A partir de ' + money(total.value);
+    if (total.type === 'fixed') return money(total.value);
+    return short ? 'A definir' : 'Configure para estimar';
   }
-
-  // ── Render ──
-
+  function rememberForm() {
+    if (!containerEl) return;
+    containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]),.cfg-form textarea').forEach(field => { state.formData[field.id] = field.value; });
+  }
+  function restoreForm() {
+    if (!containerEl) return;
+    containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]),.cfg-form textarea').forEach(field => { field.value = state.formData[field.id] || ''; });
+  }
   function render() {
     if (!containerEl) return;
-
-    const previousStep = lastRenderedStep;
-    const active = document.activeElement;
-    const focusIndex = containerEl.contains(active) ? Array.from(containerEl.querySelectorAll('button, input, textarea, a')).indexOf(active) : -1;
-    const focusKey = active?.id || null;
-    containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]), .cfg-form textarea').forEach(field => {
-      state.formData[field.id] = field.value;
-    });
-    containerEl.innerHTML = `
-      <div class="cfg-wrapper">
-        <div class="cfg-main">
-          ${renderProgressBar()}
-          ${renderCurrentStep()}
-          ${renderNavigation()}
-        </div>
-        ${renderSummaryPanel()}
-      </div>
-    `;
-
-    containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]), .cfg-form textarea').forEach(field => {
-      field.value = state.formData[field.id] || '';
-    });
+    rememberForm();
+    const previous = lastRenderedStep;
+    containerEl.innerHTML = '<div class="cfg-shell"><div class="cfg-main">' + renderProgress() + '<div class="cfg-stage" aria-live="polite">' + renderStep() + '</div>' + renderNavigation() + '</div>' + renderSummary() + '</div>' + renderMobileDock();
+    restoreForm();
     bindEvents();
-    if (previousStep !== null && previousStep !== state.currentStep) CogitUI.focusHeading(containerEl.querySelector('.cfg-step'));
-    else if (focusIndex >= 0) {
-      const target = (focusKey && document.getElementById(focusKey)) || containerEl.querySelectorAll('button, input, textarea, a')[focusIndex];
-      target?.focus({preventScroll: true});
+    if (previous !== null && previous !== state.currentStep) {
+      animateStage();
+      const heading = containerEl.querySelector('.cfg-step-title');
+      if (heading) { heading.setAttribute('tabindex','-1'); heading.focus({preventScroll:true}); }
     }
     lastRenderedStep = state.currentStep;
   }
-
-  function renderProgressBar() {
-    const steps = ['Soluções', isPresencaDigitalOnly() ? 'Modelo' : 'Nível', 'Adicionais', 'Estimativa'];
-    return `
-      <div class="cfg-progress">
-        <div class="cfg-progress-bar">
-          <div class="cfg-progress-fill" style="width: ${(state.currentStep / state.totalSteps) * 100}%"></div>
-        </div>
-        <div class="cfg-progress-steps">
-          ${steps.map((label, i) => `
-            <span class="cfg-progress-step ${i + 1 === state.currentStep ? 'is-active' : ''} ${i + 1 < state.currentStep ? 'is-done' : ''}">${i + 1}<span class="sr-only">: ${label}${i + 1 === state.currentStep ? ', etapa atual' : ''}</span></span>
-          `).join('')}
-        </div>
-        <span class="cfg-progress-label">${state.currentStep} de ${state.totalSteps}</span>
-      </div>
-    `;
+  function animateStage() {
+    if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const stage = containerEl.querySelector('.cfg-stage');
+    if (!stage || !stage.animate) return;
+    stage.animate([
+      {opacity:.45,clipPath:transitionDirection > 0 ? 'inset(0 0 0 8% round 18px)' : 'inset(0 8% 0 0 round 18px)',transform:'translateX(' + transitionDirection * 12 + 'px)'},
+      {opacity:1,clipPath:'inset(0 0 0 0 round 18px)',transform:'translateX(0)'}
+    ],{duration:430,easing:'cubic-bezier(.16,1,.3,1)'});
   }
-
-  function renderCurrentStep() {
-    switch (state.currentStep) {
-      case 1: return renderStep1();
-      case 2: return renderStep2();
-      case 3: return renderStep3();
-      case 4: return renderStep4();
-      default: return '';
+  function renderProgress() {
+    const percent = (state.currentStep - 1) / (state.totalSteps - 1) * 100;
+    return '<div class="cfg-progress" aria-label="Progresso do configurador"><div class="cfg-progress-copy"><span>Etapa ' + state.currentStep + ' de ' + state.totalSteps + '</span><strong>' + STEP_LABELS[state.currentStep - 1] + '</strong></div><div class="cfg-progress-track" aria-hidden="true"><span style="width:' + percent + '%"></span></div><ol class="cfg-progress-list">' + STEP_LABELS.map((label,index) => {
+      const number = index + 1;
+      return '<li class="' + (number === state.currentStep ? 'is-active' : number < state.currentStep ? 'is-done' : '') + '"><span>' + (number < state.currentStep ? '✓' : number) + '</span><small>' + label + '</small></li>';
+    }).join('') + '</ol></div>';
+  }
+  function renderStep() {
+    if (state.currentStep === 1) return renderObjectives();
+    if (state.currentStep === 2) return renderSolutions();
+    if (state.currentStep === 3) return renderFormats();
+    if (state.currentStep === 4) return renderAddons();
+    return renderFinal();
+  }
+  function heading(eyebrow,title,text) {
+    return '<div class="cfg-step-heading"><span class="cfg-eyebrow">' + eyebrow + '</span><h2 class="cfg-step-title">' + title + '</h2><p>' + text + '</p></div>';
+  }
+  function renderObjectives() {
+    return '<section class="cfg-step" data-step="1">' + heading('Comece pelo resultado','O que você quer alcançar?','Escolha uma ou mais opções. Você poderá ajustar tudo nas próximas etapas.') + '<div class="cfg-objectives-grid">' + OBJECTIVES.map(objective => {
+      const selected = state.selectedObjectives.includes(objective.id);
+      return '<button class="cfg-objective-card ' + (selected ? 'is-selected' : '') + '" type="button" data-objective-id="' + objective.id + '" aria-pressed="' + selected + '">' + icon(objective.icon) + '<span class="cfg-choice-copy"><strong>' + objective.name + '</strong><small>' + objective.description + '</small></span><span class="cfg-check" aria-hidden="true">✓</span></button>';
+    }).join('') + '</div><p class="cfg-inline-note"><span aria-hidden="true">◎</span> Não é necessário conhecer termos técnicos. As recomendações são baseadas no objetivo selecionado.</p></section>';
+  }
+  function solutionDescription(id) {
+    return ({
+      'site-institucional':'Presença completa para apresentar empresa, serviços e diferenciais.',
+      'landing-page':'Página direta para campanhas, ofertas e captação de contatos.',
+      'automacao':'Fluxos que conectam ferramentas e reduzem tarefas manuais.',
+      'sistema':'Software pensado para as regras e rotinas da sua operação.',
+      'saas':'Produto digital recorrente, preparado para usuários e escala.',
+      'mvp':'Primeira versão funcional para validar uma ideia com agilidade.',
+      'plataforma':'Ambiente digital que reúne usuários, recursos e processos.'
+    })[id] || 'Solução definida depois de entendermos sua necessidade.';
+  }
+  function renderSolutions() {
+    const recommended = recommendedIds();
+    const unsureOnly = state.selectedObjectives.includes('nao-sei') && !recommended.length;
+    let services = configuratorData.services.slice().sort((a,b) => Number(recommended.includes(b.id)) - Number(recommended.includes(a.id)));
+    if (!state.showAllServices && !unsureOnly) services = services.filter(service => recommended.includes(service.id) || getEntry(service.id));
+    return '<section class="cfg-step" data-step="2">' + heading('Recomendação guiada','Escolha o que fará parte da solução',unsureOnly ? 'Explore as possibilidades ou selecione “Outras soluções” para receber orientação.' : 'Selecionamos os caminhos mais coerentes com o que você quer alcançar.') + '<div class="cfg-services-v2-grid">' + services.map(service => {
+      const selected = !!getEntry(service.id);
+      return '<button class="cfg-solution-card ' + (selected ? 'is-selected' : '') + '" type="button" data-service-id="' + service.id + '" aria-pressed="' + selected + '"><span class="cfg-solution-top">' + icon(service.icon) + (recommended.includes(service.id) ? '<span class="cfg-recommended">Recomendado</span>' : '') + '</span><span class="cfg-choice-copy"><strong>' + service.name + '</strong><small>' + (service.description || solutionDescription(service.id)) + '</small></span><span class="cfg-solution-bottom"><span>' + serviceHint(service) + '</span><span class="cfg-add-label">' + (selected ? 'Adicionado ✓' : 'Adicionar +') + '</span></span></button>';
+    }).join('') + '</div>' + (!state.showAllServices && !unsureOnly ? '<button class="cfg-text-action" type="button" id="cfg-show-all">Ver todas as soluções <span aria-hidden="true">↓</span></button>' : '') + '</section>';
+  }
+  function levelPrice(level) {
+    return ['analysis','custom'].includes(level.priceType) || level.price == null ? 'Sob análise' : (level.priceType === 'from' ? 'A partir de ' : '') + money(level.price);
+  }
+  function renderModel(entry,modelId,name,description) {
+    const selected = entry.modelId === modelId;
+    return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '"><span class="cfg-model-radio" aria-hidden="true"></span><span><strong>' + name + '</strong><small>' + description + '</small></span></button>';
+  }
+  function renderConfiguration(entry,index) {
+    const service = getService(entry.serviceId);
+    if (!service) return '';
+    let controls = '';
+    if (isPresence(service.id)) {
+      controls += '<div class="cfg-control-group"><span class="cfg-control-label">Modelo</span><div class="cfg-model-toggle">' + renderModel(entry,'modelos-prontos','Modelo pronto','Mais rápido, com estrutura validada e sua identidade.') + renderModel(entry,'sob-medida','Sob medida','Estrutura e experiência desenhadas para o seu contexto.') + '</div></div>';
     }
-  }
-
-  // ── Step 1: Service Selection ──
-  function renderStep1() {
-    const services = configuratorData.services;
-
-    // Map configurator IDs to servicesData IDs to centralize pricing
-    const serviceIdMap = {
-      'site-institucional': 'sites-institucionais',
-      'landing-page': 'landing-pages',
-      'portfolio': 'modelos-prontos',
-      'automacao': 'automacao',
-      'sistema': 'sistemas',
-      'saas': 'saas',
-      'mvp': 'mvp',
-      'plataforma': 'plataformas',
-      'inteligencia-artificial': 'inteligencia-artificial',
-      'consultoria': 'consultoria'
-    };
-
-    return `
-      <div class="cfg-step" data-step="1">
-        <h3 class="cfg-step-title">O que você precisa construir?</h3>
-        <p class="cfg-step-subtitle">Selecione um ou mais serviços.</p>
-        <div class="cfg-services-grid">
-          ${services.map(service => {
-            const isSelected = state.selectedServices.some(s => s.serviceId === service.id);
-            const sourceData = servicesData.find(s => s.id === serviceIdMap[service.id]);
-            const priceText = sourceData && sourceData.basePrice ? `A partir de R$ ${sourceData.basePrice.toLocaleString('pt-BR')}` : 'Sob análise';
-            
-            return `
-              <button class="cfg-service-card ${isSelected ? 'is-selected' : ''}" data-service-id="${service.id}" type="button" aria-pressed="${isSelected}">
-                <div class="cfg-service-card-icon">${ICONS[service.icon] || ''}</div>
-                <span class="cfg-service-card-name">${service.name}</span>
-                <span class="cfg-service-card-price-hint">${priceText}</span>
-                <div class="cfg-service-card-check">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-              </button>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  // ── Step 2: Level Selection (serviços comuns) ou Modelo (presença digital) ──
-  function renderStep2() {
-    // Se todos os serviços selecionados são de presença digital → nova tela de escolha de modelo
-    if (isPresencaDigitalOnly()) {
-      return renderStep2Modelo();
+    const showLevels = service.hasLevels && (!isPresence(service.id) || entry.modelId === 'modelos-prontos');
+    if (showLevels) {
+      controls += '<div class="cfg-control-group"><span class="cfg-control-label">' + (isPresence(service.id) ? 'Escopo inicial' : 'Nível de complexidade') + '</span><div class="cfg-levels-v2">' + service.levels.map(level => {
+        const selected = entry.levelId === level.id;
+        return '<button type="button" class="cfg-level-v2 ' + (selected ? 'is-selected' : '') + '" data-level-service="' + service.id + '" data-level-id="' + level.id + '" aria-pressed="' + selected + '"><span><strong>' + level.name + '</strong><small>' + level.description + '</small></span><span class="cfg-level-price">' + levelPrice(level) + '</span></button>';
+      }).join('') + '</div></div>';
+    } else if (!service.hasLevels && !isPresence(service.id)) {
+      controls += '<div class="cfg-diagnosis-box"><span>Diagnóstico orientado</span><p>A COGIT valida regras, integrações e prioridades antes de confirmar escopo e investimento.</p></div>';
+    } else if (isPresence(service.id) && entry.modelId === 'sob-medida') {
+      controls += '<div class="cfg-diagnosis-box"><span>Projeto personalizado</span><p>O investimento será validado depois de entendermos estrutura, conteúdo e diferenciais.</p></div>';
+    } else if (isPresence(service.id) && entry.modelId === 'modelos-prontos' && !service.hasLevels) {
+      controls += '<div class="cfg-diagnosis-box is-ready"><span>Estrutura pronta para personalizar</span><p>Identidade visual, conteúdo e informações do seu negócio serão aplicados ao modelo.</p></div>';
     }
-
-    // Fluxo original para demais serviços (inalterado)
-    const servicesWithDetails = state.selectedServices.map(sel => {
-      const serviceData = configuratorData.services.find(s => s.id === sel.serviceId);
-      return { ...sel, data: serviceData };
+    return '<article class="cfg-config-block" style="--cfg-index:' + index + '"><header><span class="cfg-config-number">' + String(index + 1).padStart(2,'0') + '</span><div>' + icon(service.icon) + '<h3>' + service.name + '</h3></div><button type="button" class="cfg-remove-service" data-remove-service="' + service.id + '" aria-label="Remover ' + esc(service.name) + '">Remover</button></header>' + controls + '</article>';
+  }
+  function renderFormats() {
+    return '<section class="cfg-step" data-step="3">' + heading('Formato e profundidade','Como você quer começar?','Cada parte da solução pode ter um formato diferente.') + '<div class="cfg-config-list">' + state.selectedServices.map(renderConfiguration).join('') + '</div></section>';
+  }
+  function renderAddon(addon) {
+    const selected = state.selectedAddons.find(item => item.addonId === addon.id);
+    const price = ['custom','analysis'].includes(addon.priceType) || addon.price == null ? 'Sob análise' : (addon.priceType === 'from' ? 'A partir de ' : '+ ') + money(addon.price);
+    return '<div class="cfg-addon-v2 ' + (selected ? 'is-selected' : '') + '"><button type="button" class="cfg-addon-select" data-addon-id="' + addon.id + '" aria-pressed="' + !!selected + '"><span class="cfg-check" aria-hidden="true">✓</span><span><strong>' + addon.name + '</strong><small>' + price + '</small></span></button>' + (selected && addon.allowQuantity ? '<div class="cfg-quantity"><button type="button" data-addon-action="minus" data-addon-id="' + addon.id + '" aria-label="Diminuir quantidade">−</button><span aria-live="polite">' + (selected.quantity || 1) + '</span><button type="button" data-addon-action="plus" data-addon-id="' + addon.id + '" aria-label="Aumentar quantidade">+</button></div>' : '') + '</div>';
+  }
+  function renderAddons() {
+    const allowed = allowedAddons();
+    const groups = ADDON_GROUPS.map(group => {
+      const addons = group.items.map(getAddon).filter(addon => addon && allowed.has(addon.id));
+      return addons.length ? '<section class="cfg-addon-group"><header><h3>' + group.name + '</h3><p>' + group.description + '</p></header><div class="cfg-addons-v2-grid">' + addons.map(renderAddon).join('') + '</div></section>' : '';
+    }).join('');
+    return '<section class="cfg-step" data-step="4">' + heading('Deixe a solução mais completa','Quer adicionar algo?','Mostramos apenas complementos compatíveis. Esta etapa é opcional.') + (groups || '<div class="cfg-empty-state"><strong>Sua seleção já está completa.</strong><p>Não há complementos necessários para esta combinação.</p></div>') + '</section>';
+  }
+  function field(id,name,label,type,placeholder,required,autocomplete,maxlength) {
+    return '<div class="form-group"><label class="form-label" for="' + id + '">' + label + (required ? ' <span class="required">*</span>' : '') + '</label><input class="form-input" type="' + type + '" id="' + id + '" name="' + name + '" autocomplete="' + autocomplete + '" maxlength="' + maxlength + '" placeholder="' + placeholder + '" ' + (required ? 'required' : '') + '></div>';
+  }
+  function renderFinal() {
+    const needsValidation = calculateTotal().type !== 'fixed';
+    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída','Sua solução está pronta para avançar.',needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'A equipe confirma os detalhes e orienta os próximos passos para a contratação.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Integrações e necessidades específicas podem alterar a estimativa.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica da configuração com a COGIT.' : 'Confirmação da configuração e orientação para contratação.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Enviar minha configuração</h3><p>Preencha seus dados para preparar a mensagem. Nada é enviado sem sua confirmação.</p></div><div class="cfg-form-grid">' + field('cfg-name','name','Nome','text','Seu nome',true,'name',120) + field('cfg-company','company','Empresa','text','Nome da empresa',false,'organization',160) + field('cfg-email','email','E-mail','email','seu@email.com',true,'email',254) + field('cfg-whatsapp','whatsapp','WhatsApp','tel','(00) 00000-0000',true,'tel',16) + '<div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto?</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div>' + (typeof CogitPrivacy !== 'undefined' ? CogitPrivacy.formMarkup('cfg-contact-consent') : '') + '<p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">' + (needsValidation ? 'Enviar para validação técnica' : 'Avançar com esta solução') + ' <span aria-hidden="true">→</span></button><a class="cfg-whatsapp-link" href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" id="cfg-whatsapp-direct">Conversar apenas sobre a configuração</a></form></section>';
+  }
+  function entryPrice(entry) {
+    if (entry.modelId === 'sob-medida' || ['custom','analysis'].includes(entry.priceType)) return 'Análise';
+    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price);
+  }
+  function summaryService(entry) {
+    const service = getService(entry.serviceId);
+    if (!service) return '';
+    const detail = [];
+    if (entry.modelId) detail.push(entry.modelId === 'modelos-prontos' ? 'Modelo pronto' : 'Sob medida');
+    if (entry.levelName) detail.push(entry.levelName);
+    return '<div><span><strong>' + service.name + '</strong><small>' + (detail.length ? detail.join(' · ') : 'A configurar') + '</small></span><em>' + entryPrice(entry) + '</em></div>';
+  }
+  function summaryAddon(entry) {
+    const quantity = entry.quantity && entry.quantity > 1 ? ' × ' + entry.quantity : '';
+    const price = ['custom','analysis'].includes(entry.priceType) ? 'Análise' : '+ ' + money(Number(entry.price) * (entry.quantity || 1));
+    return '<div><span><strong>' + entry.name + quantity + '</strong></span><em>' + price + '</em></div>';
+  }
+  function renderSummary() {
+    const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
+    return '<aside class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Estimativa sem compromisso</small></div><div class="cfg-summary-security"><span aria-hidden="true">◇</span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></aside>';
+  }
+  function configurationComplete() {
+    return state.selectedServices.every(entry => {
+      const service = getService(entry.serviceId);
+      if (!service) return false;
+      if (isPresence(service.id)) {
+        if (!entry.modelId) return false;
+        return !(entry.modelId === 'modelos-prontos' && service.hasLevels && !entry.levelId);
+      }
+      return !service.hasLevels || !!entry.levelId;
     });
-
-    return `
-      <div class="cfg-step" data-step="2">
-        <h3 class="cfg-step-title">Escolha o nível</h3>
-        <p class="cfg-step-subtitle">Para cada solução, selecione o nível de complexidade.</p>
-        <div class="cfg-levels-list">
-          ${servicesWithDetails.map(s => {
-            if (!s.data) return '';
-            if (s.data.hasLevels) {
-              return `
-                <div class="cfg-level-group">
-                  <h4 class="cfg-level-group-title">
-                    <span class="cfg-level-group-icon">${ICONS[s.data.icon] || ''}</span>
-                    ${s.data.name}
-                  </h4>
-                  <div class="cfg-level-options">
-                    ${s.data.levels.map(level => {
-                      const isSelected = s.levelId === level.id;
-                      return `
-                        <button class="cfg-level-card ${isSelected ? 'is-selected' : ''}" data-service-id="${s.serviceId}" data-level-id="${level.id}" type="button" aria-pressed="${isSelected}">
-                          <div class="cfg-level-card-header">
-                            <span class="cfg-level-card-name">${level.name}</span>
-                            <div class="cfg-level-card-radio ${isSelected ? 'is-checked' : ''}"></div>
-                          </div>
-                          <p class="cfg-level-card-desc">${level.description}</p>
-                          <div class="cfg-level-card-price">${getPriceDisplay(level.priceType, level.price)}</div>
-                          ${level.priceType === 'analysis' ? '<span class="cfg-level-diagnosis-link">Necessita diagnóstico técnico</span>' : ''}
-                        </button>
-                      `;
-                    }).join('')}
-                  </div>
-                </div>
-              `;
-            } else {
-              return `
-                <div class="cfg-level-group cfg-level-single">
-                  <h4 class="cfg-level-group-title">
-                    <span class="cfg-level-group-icon">${ICONS[s.data.icon] || ''}</span>
-                    ${s.data.name}
-                  </h4>
-                  <p class="cfg-level-single-desc">${s.data.description}</p>
-                  <div class="cfg-level-card-price">${getPriceDisplay(s.data.priceType, s.data.price)}</div>
-                </div>
-              `;
-            }
-          }).join('')}
-        </div>
-      </div>
-    `;
   }
-
-  // ── Step 2 Alternativo: Escolha de Modelo (Presença Digital) ──
-  function renderStep2Modelo() {
-    const modeloProntos   = state.solutionModel === 'modelos-prontos';
-    const modeloSobMedida = state.solutionModel === 'sob-medida';
-
-    // Ícone de relâmpago para Modelos Prontos
-    const iconZap = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
-    // Ícone de compass/design para Sob Medida
-    const iconDesign = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`;
-
-    const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>`;
-
-    return `
-      <div class="cfg-step" data-step="2-modelo">
-        <h3 class="cfg-step-title">Como você deseja construir sua solução?</h3>
-        <p class="cfg-step-subtitle">Escolha o modelo ideal para o seu projeto.</p>
-
-        <div class="cfg-modelo-grid">
-
-          <!-- Card 01: Modelos Prontos -->
-          <button
-            class="cfg-modelo-card ${modeloProntos ? 'is-selected' : ''}"
-            data-modelo-id="modelos-prontos" aria-pressed="${modeloProntos}"
-            type="button"
-            id="cfg-modelo-prontos"
-          >
-            <div class="cfg-modelo-card-header">
-              <div class="cfg-modelo-card-icon cfg-modelo-icon-zap">${iconZap}</div>
-              <div class="cfg-level-card-radio ${modeloProntos ? 'is-checked' : ''}"></div>
-            </div>
-            <h4 class="cfg-modelo-card-title">Modelos Prontos</h4>
-            <p class="cfg-modelo-card-desc">
-              Escolha uma estrutura já desenvolvida pela COGIT e personalize com sua identidade visual, conteúdo e informações do seu negócio.
-            </p>
-            <ul class="cfg-modelo-features">
-              <li>${checkIcon}<span>Mais rápido</span></li>
-              <li>${checkIcon}<span>Melhor custo-benefício</span></li>
-              <li>${checkIcon}<span>Ideal para colocar sua presença digital no ar</span></li>
-            </ul>
-          </button>
-
-          <!-- Card 02: Modelos Sob Medida -->
-          <button
-            class="cfg-modelo-card ${modeloSobMedida ? 'is-selected' : ''}"
-            data-modelo-id="sob-medida" aria-pressed="${modeloSobMedida}"
-            type="button"
-            id="cfg-modelo-sob-medida"
-          >
-            <div class="cfg-modelo-card-header">
-              <div class="cfg-modelo-card-icon cfg-modelo-icon-design">${iconDesign}</div>
-              <div class="cfg-level-card-radio ${modeloSobMedida ? 'is-checked' : ''}"></div>
-            </div>
-            <h4 class="cfg-modelo-card-title">Modelos Sob Medida</h4>
-            <p class="cfg-modelo-card-desc">
-              Construímos uma solução totalmente personalizada, pensada para suas necessidades, objetivos e diferenciais.
-            </p>
-            <ul class="cfg-modelo-features">
-              <li>${checkIcon}<span>Design exclusivo</span></li>
-              <li>${checkIcon}<span>Estrutura personalizada</span></li>
-              <li>${checkIcon}<span>Maior nível de estratégia e desenvolvimento</span></li>
-            </ul>
-          </button>
-
-        </div>
-      </div>
-    `;
+  function canAdvance() {
+    if (state.currentStep === 1) return state.selectedObjectives.length > 0;
+    if (state.currentStep === 2) return state.selectedServices.length > 0;
+    if (state.currentStep === 3) return configurationComplete();
+    return state.currentStep < state.totalSteps;
   }
-
-  // ── Step 3: Addons ──
-  function renderStep3() {
-    // Determine allowed addons based on selected services
-    const allowedAddonIds = new Set();
-    state.selectedServices.forEach(s => {
-      const sData = configuratorData.services.find(srv => srv.id === s.serviceId);
-      if (sData && sData.allowedAddons) {
-        sData.allowedAddons.forEach(id => allowedAddonIds.add(id));
-      }
-    });
-
-    // Handle "Automação" condition
-    const hasAutomationService = state.selectedServices.some(s => s.serviceId === 'automacao');
-    
-    let filteredAddons = configuratorData.addons.filter(a => allowedAddonIds.has(a.id));
-    if (hasAutomationService) {
-      filteredAddons = filteredAddons.filter(a => a.id !== 'automacao-extra');
-    }
-
-    if (filteredAddons.length === 0) {
-      return `
-        <div class="cfg-step" data-step="3">
-          <h3 class="cfg-step-title">Tudo certo!</h3>
-          <p class="cfg-step-subtitle">As soluções selecionadas não exigem adicionais nesta etapa. Clique em continuar.</p>
-        </div>
-      `;
-    }
-
-    return `
-      <div class="cfg-step" data-step="3">
-        <h3 class="cfg-step-title">Quer adicionar algo?</h3>
-        <p class="cfg-step-subtitle">Selecione funcionalidades adicionais de acordo com a sua necessidade (opcional).</p>
-        <div class="cfg-addons-grid">
-          ${filteredAddons.map(addon => {
-            const selectedItem = state.selectedAddons.find(a => a.addonId === addon.id);
-            const isSelected = !!selectedItem;
-            
-            let quantityControls = '';
-            if (addon.allowQuantity && isSelected) {
-              const qty = selectedItem.quantity || 1;
-              quantityControls = `
-                <div class="cfg-addon-quantity">
-                  <button type="button" class="cfg-addon-qty-btn" aria-label="Diminuir quantidade de ${addon.name}" data-addon-action="minus" data-addon-id="${addon.id}">-</button>
-                  <span class="cfg-addon-qty-val" aria-live="polite" aria-atomic="true">${qty}</span>
-                  <button type="button" class="cfg-addon-qty-btn" aria-label="Aumentar quantidade de ${addon.name}" data-addon-action="plus" data-addon-id="${addon.id}">+</button>
-                </div>
-              `;
-            }
-
-            return `
-              <div class="cfg-addon-card ${isSelected ? 'is-selected' : ''}" data-addon-id="${addon.id}">
-                <button type="button" class="cfg-addon-select" data-addon-id="${addon.id}" aria-pressed="${isSelected}"><span class="cfg-addon-card-check" aria-hidden="true">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-                <span class="cfg-addon-card-name">${addon.name}</span></button>
-                ${quantityControls}
-                ${!quantityControls ? `<span class="cfg-addon-card-price">${getAddonPriceDisplay(addon.priceType, addon.price)}</span>` : ''}
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    `;
+  function nextLabel() {
+    return ({1:'Ver recomendações',2:'Configurar solução',3:'Escolher complementos',4:'Revisar solução'})[state.currentStep] || 'Continuar';
   }
-
-  // ── Step 4: Summary + Form ──
-  function renderStep4() {
-    state.isComplex = checkComplexity();
-    const total = calculateTotal();
-
-    let estimateHTML = '';
-
-    if (state.isComplex) {
-      estimateHTML = `
-        <div class="cfg-estimate cfg-estimate-custom">
-          <h4>Projeto personalizado</h4>
-          <p>Essa combinação exige avaliação técnica para estimarmos corretamente escopo, prazo e investimento.</p>
-        </div>
-      `;
-    } else if (total) {
-      switch (total.type) {
-        case 'fixed':
-        case 'partial':
-          estimateHTML = `
-            <div class="cfg-estimate">
-              <span class="cfg-estimate-label">Total estimado</span>
-              <span class="cfg-estimate-value">R$ ${total.value.toLocaleString('pt-BR')}</span>
-              ${total.type === 'partial' ? '<p class="cfg-estimate-note" style="color: var(--purple); font-weight: bold;">+ Itens que precisam de análise técnica</p>' : ''}
-              <p class="cfg-estimate-note" style="margin-top: 8px;">Com base no escopo essencial das opções selecionadas.</p>
-            </div>
-          `;
-          break;
-        case 'custom':
-        case 'analysis':
-          estimateHTML = `
-            <div class="cfg-estimate cfg-estimate-custom">
-              <h4>Projeto personalizado</h4>
-              <p>Os serviços selecionados exigem avaliação técnica para definir investimento.</p>
-            </div>
-          `;
-          break;
-        case 'placeholder':
-          estimateHTML = `
-            <div class="cfg-estimate">
-              <span class="cfg-estimate-label">Estimativa inicial</span>
-              <span class="cfg-estimate-value cfg-estimate-placeholder">Valores serão definidos</span>
-              <p class="cfg-estimate-note">Os valores estão sendo configurados pela COGIT.</p>
-            </div>
-          `;
-          break;
-      }
-    }
-
-    return `
-      <div class="cfg-step" data-step="4">
-        <h3 class="cfg-step-title">Sua estimativa está pronta.</h3>
-
-        <div class="cfg-result">
-          <div class="cfg-result-items">
-            <h4 class="cfg-result-section-title">Soluções</h4>
-            ${state.selectedServices.map(s => {
-              const sData = configuratorData.services.find(srv => srv.id === s.serviceId);
-              return `
-                <div class="cfg-result-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                  <span class="cfg-result-item-name">${sData ? sData.name : s.serviceId}</span>
-                  <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-                    <span style="font-size: 13px; color: var(--text-secondary);">${s.levelName || 'Escopo base'}</span>
-                    <span class="cfg-result-item-price">${s.priceType === 'analysis' || s.priceType === 'custom' ? 'Sob análise' : (s.price != null ? `R$ ${s.price.toLocaleString('pt-BR')}` : 'A definir')}</span>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-
-            ${state.selectedAddons.length > 0 ? `
-              <h4 class="cfg-result-section-title" style="margin-top: var(--space-6);">Adicionais</h4>
-              ${state.selectedAddons.map(a => {
-                const isCustom = a.priceType === 'analysis' || a.priceType === 'custom';
-                const priceLabel = isCustom ? 'Sob análise' : (a.price != null ? `+ R$ ${(a.price * (a.quantity || 1)).toLocaleString('pt-BR')}` : 'A definir');
-                const qtyLabel = a.quantity && a.quantity > 1 ? ` × ${a.quantity}` : '';
-                return `
-                <div class="cfg-result-item">
-                  <span class="cfg-result-item-name" style="font-weight: normal;">${a.name}${qtyLabel}</span>
-                  <span class="cfg-result-item-price" style="font-size: 13px;">${priceLabel}</span>
-                </div>
-                `;
-              }).join('')}
-            ` : ''}
-          </div>
-
-          ${estimateHTML}
-
-          ${state.solutionModel ? `
-            <div class="cfg-result-modelo-badge">
-              <span class="cfg-result-modelo-label">Modelo escolhido</span>
-              <span class="cfg-result-modelo-value">${state.solutionModel === 'modelos-prontos' ? '⚡ Modelos Prontos' : '◉ Modelos Sob Medida'}</span>
-            </div>
-          ` : ''}
-
-          <p class="cfg-transparency-note">Esta estimativa considera o escopo base das opções selecionadas. O investimento final poderá variar conforme complexidade, integrações, regras de negócio e necessidades específicas.</p>
-        </div>
-
-        <!-- Configuration Form -->
-        <form class="cfg-form" id="cfg-contact-form" novalidate>
-          <h4 class="cfg-form-title">Quero conversar sobre este projeto</h4>
-          <div class="cfg-form-grid">
-            <div class="form-group">
-              <label class="form-label" for="cfg-name">Nome <span class="required">*</span></label>
-              <input class="form-input" type="text" id="cfg-name" name="name" autocomplete="name" maxlength="120" placeholder="Seu nome" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="cfg-company">Empresa</label>
-              <input class="form-input" type="text" id="cfg-company" name="company" autocomplete="organization" maxlength="160" placeholder="Nome da empresa">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="cfg-email">E-mail <span class="required">*</span></label>
-              <input class="form-input" type="email" id="cfg-email" name="email" autocomplete="email" maxlength="254" placeholder="seu@email.com" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="cfg-whatsapp">WhatsApp <span class="required">*</span></label>
-              <input class="form-input" type="tel" id="cfg-whatsapp" name="whatsapp" autocomplete="tel" maxlength="16" placeholder="(00) 00000-0000" required>
-            </div>
-            <div class="form-group full-width">
-              <label class="form-label" for="cfg-notes">Conte algum detalhe importante sobre seu projeto</label>
-              <textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Informações adicionais sobre o projeto..." rows="3"></textarea>
-            </div>
-          </div>
-          ${CogitPrivacy.formMarkup('cfg-contact-consent')}
-          <p class="cfg-transparency-note">Seus dados só serão compartilhados quando você continuar e enviar a mensagem no WhatsApp. Recusar cookies opcionais não impede o contato.</p>
-          <p id="cfg-contact-status" class="form-status" role="status"></p>
-          <button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">
-            Preparar mensagem no WhatsApp →
-          </button>
-          
-          <div style="text-align: center; margin-top: 16px;">
-            <span style="font-size: 13px; color: var(--text-tertiary);">ou</span>
-          </div>
-
-          <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" class="cfg-advanced-link" id="cfg-whatsapp-direct" style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #25D366;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.571c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Conversar apenas sobre a configuração
-          </a>
-        </form>
-      </div>
-    `;
-  }
-
-  // ── Summary Panel ──
-  function renderSummaryPanel() {
-    if (state.selectedServices.length === 0 && state.currentStep < 4) {
-      return '<div class="cfg-summary cfg-summary-empty"><p>Selecione serviços para ver o resumo.</p></div>';
-    }
-
-    if (state.currentStep === 4) return ''; // Already shown inline
-
-    const total = calculateTotal();
-    state.isComplex = checkComplexity();
-
-    let totalHTML = '';
-    let additionalInfo = '';
-
-    if (state.isComplex) {
-      totalHTML = '<span class="cfg-summary-total-value" style="font-size: 20px;">Projeto personalizado</span>';
-    } else if (total) {
-      switch (total.type) {
-        case 'fixed':
-        case 'partial':
-          totalHTML = `<span class="cfg-summary-total-value">R$ ${total.value.toLocaleString('pt-BR')}</span>`;
-          if (total.type === 'partial') {
-             additionalInfo = '<div style="font-size: 11px; color: var(--purple); font-weight: bold; margin-top: 4px;">+ Necessidades sob análise</div>';
-          }
-          break;
-        case 'analysis':
-        case 'custom':
-          totalHTML = '<span class="cfg-summary-total-value">Sob análise</span>';
-          break;
-        case 'placeholder':
-          totalHTML = '<span class="cfg-summary-total-value">A definir</span>';
-          break;
-      }
-    }
-
-    return `
-      <div class="cfg-summary">
-        <h4 class="cfg-summary-title">Sua solução</h4>
-        <div class="cfg-summary-items">
-          ${state.selectedServices.map(s => {
-            const sData = configuratorData.services.find(srv => srv.id === s.serviceId);
-            const isCustom = s.priceType === 'analysis' || s.priceType === 'custom';
-            return `
-              <div class="cfg-summary-item">
-                <div class="cfg-summary-item-row">
-                  <span>${sData ? sData.name : s.serviceId}</span>
-                </div>
-                ${sData && sData.hasLevels ? `
-                  <div class="cfg-summary-item-level">
-                    <span>${s.levelName || 'Escopo base'}</span>
-                    <span>${isCustom ? 'Sob análise' : (s.price != null ? `R$ ${s.price.toLocaleString('pt-BR')}` : '—')}</span>
-                  </div>
-                ` : `
-                  <div class="cfg-summary-item-level">
-                    <span>Escopo base</span>
-                    <span>${isCustom ? 'Sob análise' : (s.price != null ? `R$ ${s.price.toLocaleString('pt-BR')}` : '—')}</span>
-                  </div>
-                `}
-              </div>
-            `;
-          }).join('')}
-          ${state.selectedAddons.map(a => {
-            const isCustom = a.priceType === 'analysis' || a.priceType === 'custom';
-            const qtyLabel = a.quantity && a.quantity > 1 ? ` × ${a.quantity}` : '';
-            return `
-              <div class="cfg-summary-item cfg-summary-addon">
-                <div class="cfg-summary-item-row">
-                  <span>${a.name}${qtyLabel}</span>
-                  <span>${isCustom ? 'Sob análise' : (a.price != null ? `+ R$ ${(a.price * (a.quantity || 1)).toLocaleString('pt-BR')}` : '—')}</span>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-        <div class="cfg-summary-total">
-          <span class="cfg-summary-total-label">Estimativa Inicial</span>
-          ${totalHTML}
-          ${additionalInfo}
-          ${state.solutionModel ? `
-            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle)">
-              <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Modelo</div>
-              <div style="font-size: 13px; color: var(--purple); font-weight: 600;">${state.solutionModel === 'modelos-prontos' ? '⚡ Modelos Prontos' : '◉ Modelos Sob Medida'}</div>
-            </div>
-          ` : ''}
-        </div>
-      </div>
-    `;
-  }
-
-  // ── Navigation ──
   function renderNavigation() {
-    const canGoBack = state.currentStep > 1;
-    const canGoNext = state.currentStep < state.totalSteps;
-
-    let nextDisabled = false;
-
-    // Etapa 1: deve ter pelo menos 1 serviço selecionado
-    if (state.currentStep === 1 && state.selectedServices.length === 0) {
-      nextDisabled = true;
-    }
-
-    // Etapa 2 de presença digital: deve ter modelo selecionado
-    if (state.currentStep === 2 && isPresencaDigitalOnly() && !state.solutionModel) {
-      nextDisabled = true;
-    }
-
-    return `
-      <div class="cfg-nav">
-        ${canGoBack ? `<button class="btn btn-secondary-dark cfg-nav-btn cfg-nav-back" type="button" id="cfg-back">← Voltar</button>` : '<div></div>'}
-        ${canGoNext ? `<button class="btn btn-primary cfg-nav-btn cfg-nav-next ${nextDisabled ? 'is-disabled' : ''}" type="button" id="cfg-next" ${nextDisabled ? 'disabled' : ''}>Continuar →</button>` : ''}
-      </div>
-    `;
+    const back = state.currentStep > 1;
+    const next = state.currentStep < state.totalSteps;
+    return '<div class="cfg-nav-v2">' + (back ? '<button class="btn cfg-back-v2" type="button" id="cfg-back"><span aria-hidden="true">←</span> Voltar</button>' : '<span></span>') + (next ? '<button class="btn btn-primary cfg-next-v2" type="button" id="cfg-next" ' + (!canAdvance() ? 'disabled' : '') + '>' + nextLabel() + ' <span aria-hidden="true">→</span></button>' : '') + '</div>';
   }
-
-  // ── Event Binding ──
+  function renderMobileDock() {
+    return state.currentStep >= state.totalSteps ? '' : '<div class="cfg-mobile-dock"><span><small>Estimativa</small><strong>' + estimate(true) + '</strong></span><button type="button" data-mobile-next ' + (!canAdvance() ? 'disabled' : '') + '>' + nextLabel() + ' <span aria-hidden="true">→</span></button></div>';
+  }
   function bindEvents() {
-    // Service selection (Step 1)
-    containerEl.querySelectorAll('.cfg-service-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const serviceId = card.dataset.serviceId;
-        toggleService(serviceId);
-      });
-    });
-
-    // Level selection (Step 2 — fluxo original)
-    containerEl.querySelectorAll('.cfg-level-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const serviceId = card.dataset.serviceId;
-        const levelId = card.dataset.levelId;
-        selectLevel(serviceId, levelId);
-      });
-    });
-
-    // Modelo selection (Step 2 — presença digital)
-    containerEl.querySelectorAll('.cfg-modelo-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const modeloId = card.dataset.modeloId;
-        selectSolutionModel(modeloId);
-      });
-    });
-
-    // Addon selection (Step 3)
-    containerEl.querySelectorAll('.cfg-addon-select').forEach(card => {
-      card.addEventListener('click', () => {
-        const addonId = card.dataset.addonId;
-        toggleAddon(addonId);
-      });
-    });
-
-    // Navigation
-    const backBtn = document.getElementById('cfg-back');
-    const nextBtn = document.getElementById('cfg-next');
-    if (backBtn) backBtn.addEventListener('click', goBack);
-    if (nextBtn) nextBtn.addEventListener('click', goNext);
-
-    // Addon quantity
-    containerEl.querySelectorAll('.cfg-addon-qty-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // prevent card toggle
-        const addonId = btn.dataset.addonId;
-        const action = btn.dataset.addonAction;
-        updateAddonQuantity(addonId, action);
-      });
-    });
-
-    // Submit
-    document.getElementById('cfg-contact-form')?.addEventListener('submit', submitConfiguration);
-
-    // WhatsApp Direct
-    const whatsappDirectBtn = document.getElementById('cfg-whatsapp-direct');
-    if (whatsappDirectBtn) {
-      whatsappDirectBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        openWhatsAppDirect();
-      });
-    }
-
-    // WhatsApp mask for configurator form
-    const cfgWhatsapp = document.getElementById('cfg-whatsapp');
-    if (cfgWhatsapp) {
-      cfgWhatsapp.addEventListener('input', (e) => {
-        e.target.value = CogitUI.formatPhone(e.target.value);
-        e.target.setCustomValidity('');
-      });
-    }
+    containerEl.querySelectorAll('[data-objective-id]').forEach(button => button.addEventListener('click',() => toggleObjective(button.dataset.objectiveId)));
+    containerEl.querySelectorAll('[data-service-id]').forEach(button => button.addEventListener('click',() => toggleService(button.dataset.serviceId)));
+    containerEl.querySelectorAll('[data-remove-service]').forEach(button => button.addEventListener('click',() => toggleService(button.dataset.removeService)));
+    containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click',() => selectSolutionModel(button.dataset.modelId,button.dataset.modelService)));
+    containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click',() => selectLevel(button.dataset.levelService,button.dataset.levelId)));
+    containerEl.querySelectorAll('.cfg-addon-select').forEach(button => button.addEventListener('click',() => toggleAddon(button.dataset.addonId)));
+    containerEl.querySelectorAll('[data-addon-action]').forEach(button => button.addEventListener('click',() => updateAddonQuantity(button.dataset.addonId,button.dataset.addonAction)));
+    document.getElementById('cfg-show-all')?.addEventListener('click',() => { state.showAllServices = true; render(); });
+    document.getElementById('cfg-back')?.addEventListener('click',goBack);
+    document.getElementById('cfg-next')?.addEventListener('click',goNext);
+    containerEl.querySelector('[data-mobile-next]')?.addEventListener('click',goNext);
+    document.getElementById('cfg-contact-form')?.addEventListener('submit',submitConfiguration);
+    document.getElementById('cfg-whatsapp-direct')?.addEventListener('click',event => { event.preventDefault(); openWhatsAppDirect(); });
+    const whatsapp = document.getElementById('cfg-whatsapp');
+    if (whatsapp) whatsapp.addEventListener('input',event => { event.target.value = CogitUI.formatPhone(event.target.value); event.target.setCustomValidity(''); });
   }
-
-  // ── Actions ──
-
-  function toggleService(serviceId) {
-    const existing = state.selectedServices.findIndex(s => s.serviceId === serviceId);
-    if (existing >= 0) {
-      state.selectedServices.splice(existing, 1);
-      trackEvent('configurator_deselect', serviceId);
+  function toggleObjective(id) {
+    const index = state.selectedObjectives.indexOf(id);
+    if (index >= 0) state.selectedObjectives.splice(index,1); else state.selectedObjectives.push(id);
+    state.showAllServices = false;
+    track('configurator_objective',id);
+    render();
+  }
+  function toggleService(id) {
+    const index = state.selectedServices.findIndex(entry => entry.serviceId === id);
+    if (index >= 0) {
+      state.selectedServices.splice(index,1);
+      track('configurator_deselect',id);
     } else {
-      const serviceData = configuratorData.services.find(s => s.id === serviceId);
-      const entry = {
-        serviceId,
-        levelId: null,
-        levelName: null,
-        price: serviceData.hasLevels ? null : serviceData.price,
-        priceType: serviceData.hasLevels ? null : serviceData.priceType
-      };
-
-      // Auto-select first level if has levels
-      if (serviceData.hasLevels && serviceData.levels.length > 0) {
-        const firstLevel = serviceData.levels[0];
-        entry.levelId = firstLevel.id;
-        entry.levelName = firstLevel.name;
-        entry.price = firstLevel.price;
-        entry.priceType = firstLevel.priceType;
-      }
-
-      state.selectedServices.push(entry);
-      trackEvent('configurator_select', serviceId);
+      const service = getService(id);
+      if (!service) return;
+      state.selectedServices.push({serviceId:id,modelId:null,levelId:null,levelName:null,price:service.hasLevels ? null : service.price,priceType:service.hasLevels ? null : service.priceType});
+      track('configurator_select',id);
     }
-
-    // Resetar modelo ao mudar seleção de serviço (pode mudar o contexto de presença digital)
-    const allowed = new Set(state.selectedServices.flatMap(service => configuratorData.services.find(item => item.id === service.serviceId)?.allowedAddons || []));
-    if (state.selectedServices.some(service => service.serviceId === 'automacao')) allowed.delete('automacao-extra');
+    const allowed = allowedAddons();
     state.selectedAddons = state.selectedAddons.filter(addon => allowed.has(addon.addonId));
-    state.solutionModel = null;
     render();
   }
-
-  function selectSolutionModel(modeloId) {
-    state.solutionModel = modeloId;
-    trackEvent('configurator_modelo', modeloId);
+  function selectSolutionModel(modelId,serviceId) {
+    const targets = serviceId ? state.selectedServices.filter(entry => entry.serviceId === serviceId) : state.selectedServices.filter(entry => isPresence(entry.serviceId));
+    targets.forEach(entry => {
+      const service = getService(entry.serviceId);
+      entry.modelId = modelId;
+      entry.levelId = null;
+      entry.levelName = null;
+      if (modelId === 'sob-medida') { entry.price = null; entry.priceType = 'custom'; }
+      else if (!service.hasLevels) { entry.price = service.price; entry.priceType = service.priceType; }
+      else { entry.price = null; entry.priceType = null; }
+    });
+    track('configurator_model',(serviceId || 'presence') + ':' + modelId);
     render();
   }
-
-  function selectLevel(serviceId, levelId) {
-    const entry = state.selectedServices.find(s => s.serviceId === serviceId);
-    if (!entry) return;
-
-    const serviceData = configuratorData.services.find(s => s.id === serviceId);
-    if (!serviceData || !serviceData.hasLevels) return;
-
-    const level = serviceData.levels.find(l => l.id === levelId);
-    if (!level) return;
-
+  function selectLevel(serviceId,levelId) {
+    const entry = getEntry(serviceId);
+    const service = getService(serviceId);
+    const level = service && service.levels && service.levels.find(item => item.id === levelId);
+    if (!entry || !level) return;
     entry.levelId = level.id;
     entry.levelName = level.name;
     entry.price = level.price;
     entry.priceType = level.priceType;
-
-    trackEvent('configurator_level', `${serviceId}:${levelId}`);
+    track('configurator_level',serviceId + ':' + levelId);
     render();
   }
-
-  function toggleAddon(addonId) {
-    const existing = state.selectedAddons.findIndex(a => a.addonId === addonId);
-    if (existing >= 0) {
-      state.selectedAddons.splice(existing, 1);
-    } else {
-      const addonData = configuratorData.addons.find(a => a.id === addonId);
-      if (addonData) {
-        state.selectedAddons.push({
-          addonId: addonData.id,
-          name: addonData.name,
-          price: addonData.price,
-          priceType: addonData.priceType,
-          quantity: addonData.allowQuantity ? 1 : null
-        });
-      }
+  function toggleAddon(id) {
+    const index = state.selectedAddons.findIndex(entry => entry.addonId === id);
+    if (index >= 0) state.selectedAddons.splice(index,1);
+    else {
+      const addon = getAddon(id);
+      if (!addon) return;
+      state.selectedAddons.push({addonId:addon.id,name:addon.name,price:addon.price,priceType:addon.priceType,quantity:addon.allowQuantity ? 1 : null});
     }
     render();
   }
-
-  function updateAddonQuantity(addonId, action) {
-    const addon = state.selectedAddons.find(a => a.addonId === addonId);
+  function updateAddonQuantity(id,action) {
+    const addon = state.selectedAddons.find(entry => entry.addonId === id);
     if (!addon || addon.quantity == null) return;
-
-    if (action === 'plus') {
-      addon.quantity = Math.min(99, addon.quantity + 1);
-    } else if (action === 'minus') {
-      if (addon.quantity > 1) {
-        addon.quantity--;
-      } else {
-        // Remove addon if minus at 1
-        const index = state.selectedAddons.indexOf(addon);
-        state.selectedAddons.splice(index, 1);
-      }
-    }
+    if (action === 'plus') addon.quantity = Math.min(99,addon.quantity + 1);
+    else if (addon.quantity > 1) addon.quantity -= 1;
+    else state.selectedAddons = state.selectedAddons.filter(entry => entry.addonId !== id);
     render();
   }
-
   function goNext() {
-    if (state.currentStep === 1 && state.selectedServices.length === 0) return;
-
-    // Etapa 2 de presença digital: não avançar sem modelo selecionado
-    if (state.currentStep === 2 && isPresencaDigitalOnly() && !state.solutionModel) return;
-
-    // Etapa 1 → determinar próxima etapa
-    if (state.currentStep === 1) {
-      // Se presença digital: sempre vai para Step 2 (escolha de modelo)
-      if (isPresencaDigitalOnly()) {
-        state.currentStep = 2;
-        trackEvent('configurator_step', 'step_2_modelo');
-        render();
-        scrollToConfigurator();
-        return;
-      }
-
-      // Demais serviços: pular Step 2 se nenhum tem níveis
-      const hasLeveledServices = state.selectedServices.some(s => {
-        const data = configuratorData.services.find(srv => srv.id === s.serviceId);
-        return data && data.hasLevels;
-      });
-      if (!hasLeveledServices) {
-        state.currentStep = 3; // Skip to addons
-        trackEvent('configurator_step', 'step_3');
-        render();
-        scrollToConfigurator();
-        return;
-      }
-    }
-
-    if (state.currentStep < state.totalSteps) {
-      state.currentStep++;
-      trackEvent('configurator_step', `step_${state.currentStep}`);
-      render();
-      scrollToConfigurator();
-    }
-  }
-
-  function goBack() {
-    if (state.currentStep > 1) {
-      // Se na etapa 3 e todos os serviços são presença digital → voltar para etapa 2 (modelo)
-      if (state.currentStep === 3 && isPresencaDigitalOnly()) {
-        state.currentStep = 2;
-        render();
-        scrollToConfigurator();
-        return;
-      }
-
-      // Se na etapa 3 e nenhum serviço comum tem níveis → voltar para etapa 1
-      if (state.currentStep === 3) {
-        const hasLeveledServices = state.selectedServices.some(s => {
-          const data = configuratorData.services.find(srv => srv.id === s.serviceId);
-          return data && data.hasLevels;
-        });
-        if (!hasLeveledServices) {
-          state.currentStep = 1;
-          render();
-          scrollToConfigurator();
-          return;
-        }
-      }
-      state.currentStep--;
-      render();
-      scrollToConfigurator();
-    }
-  }
-
-  function scrollToConfigurator() {
-    const el = document.getElementById('configurator');
-    if (el) {
-      const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
-      const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
-      window.scrollTo({ top, behavior: CogitUI.motion() });
-    }
-  }
-
-  function openWhatsAppDirect(contact = null) {
-    const phone = "5517981568889";
-    let message = "Olá! Montei uma configuração no site da COGIT e gostaria de conversar sobre o projeto.\n\n";
-    
-    if (state.selectedServices.length > 0) {
-      message += "*Soluções:*\n";
-      state.selectedServices.forEach(s => {
-        const sData = configuratorData.services.find(srv => srv.id === s.serviceId);
-        const name = sData ? sData.name : s.serviceId;
-        const level = s.levelName ? ` ${s.levelName}` : '';
-        const price = s.priceType === 'analysis' || s.priceType === 'custom' ? 'Sob análise' : (s.price != null ? `R$ ${s.price.toLocaleString('pt-BR')}` : 'A definir');
-        message += `- ${name}${level} — ${price}\n`;
-      });
-
-      // Incluir modelo escolhido se presença digital
-      if (state.solutionModel) {
-        const modeloLabel = state.solutionModel === 'modelos-prontos' ? 'Modelos Prontos' : 'Modelos Sob Medida';
-        message += `*Modelo escolhido:* ${modeloLabel}\n`;
-      }
-
-      message += "\n";
-    }
-
-    if (state.selectedAddons.length > 0) {
-      message += "*Adicionais:*\n";
-      state.selectedAddons.forEach(a => {
-        const price = a.priceType === 'analysis' || a.priceType === 'custom' ? 'Sob análise' : (a.price != null ? `R$ ${(a.price * (a.quantity || 1)).toLocaleString('pt-BR')}` : 'A definir');
-        const qtyLabel = a.quantity && a.quantity > 1 ? ` (${a.quantity}x)` : '';
-        message += `- ${a.name}${qtyLabel} — ${price}\n`;
-      });
-      message += "\n";
-    }
-
-    const total = calculateTotal();
-    if (state.isComplex) {
-      message += "*Estimativa inicial apresentada:* Projeto personalizado (Sob análise)\n";
-    } else if (total) {
-      if (total.type === 'fixed') {
-        message += `*Estimativa inicial apresentada:* R$ ${total.value.toLocaleString('pt-BR')}\n`;
-      } else if (total.type === 'partial') {
-        message += `*Estimativa inicial apresentada:* R$ ${total.value.toLocaleString('pt-BR')} + itens sob análise\n`;
-      } else if (total.type === 'custom' || total.type === 'analysis') {
-        message += `*Estimativa inicial apresentada:* Sob análise\n`;
-      }
-    }
-
-    if (contact) {
-      message += `\n*Nome:* ${contact.name}\n*Empresa:* ${contact.company || 'Não informada'}\n*E-mail:* ${contact.email}\n*WhatsApp:* ${contact.whatsapp}\n*Contexto:* ${contact.notes || 'Não informado'}\n\n${CogitPrivacy.consentReceipt()}`;
-    }
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
-  }
-
-  function submitConfiguration(event) {
-    event.preventDefault();
-    const form = document.getElementById('cfg-contact-form');
-    const phone = document.getElementById('cfg-whatsapp');
-    const validPhone = /^\d{10,11}$/.test(phone.value.replace(/\D/g, ''));
-    phone.setCustomValidity(validPhone ? '' : 'Informe um telefone com DDD e 10 ou 11 dígitos.');
-    const name = document.getElementById('cfg-name');
-    name.setCustomValidity(name.value.trim() ? '' : 'Informe seu nome.');
-    name.addEventListener('input', () => name.setCustomValidity(''), {once: true});
-    // Native validation plus an explicit, separate contact authorization.
-    for (const field of form.querySelectorAll('input:not([type="checkbox"]), textarea')) {
-      field.setAttribute('aria-invalid', String(!field.checkValidity()));
-      if (!field.reportValidity()) return;
-    }
-    if (!CogitPrivacy.authorize(form)) return;
-    const contact = Object.fromEntries(['name', 'company', 'email', 'whatsapp', 'notes'].map(key => [key, document.getElementById('cfg-' + key).value.trim()]));
-    openWhatsAppDirect(contact);
-    document.getElementById('cfg-contact-status').textContent = 'Mensagem preparada. Revise e envie no WhatsApp para a Cogit receber sua solicitação. Se a janela não abriu, permita pop-ups deste site e tente novamente.';
-    trackEvent('configurator_completed', `services:${state.selectedServices.length},addons:${state.selectedAddons.length}`);
-  }
-
-  function reset() {
-    state.currentStep = 1;
-    state.selectedServices = [];
-    state.selectedAddons = [];
-    state.solutionModel = null;
-    state.isComplex = false;
-    state.formData = {};
-    render();
-  }
-
-  function preselectAndScroll(servicesArray) {
-    if (!containerEl || !servicesArray || servicesArray.length === 0) return;
-
-    // Reset current state
-    state.selectedServices = [];
-    state.selectedAddons = [];
-    state.solutionModel = null;
-    state.isComplex = false;
-    state.formData = {};
-    
-    // Auto-select the provided services
-    Array.from(new Set(servicesArray)).forEach(serviceId => {
-      const serviceData = configuratorData.services.find(s => s.id === serviceId);
-      if (serviceData) {
-        const entry = {
-          serviceId,
-          levelId: null,
-          levelName: null,
-          price: serviceData.hasLevels ? null : serviceData.price,
-          priceType: serviceData.hasLevels ? null : serviceData.priceType
-        };
-
-        if (serviceData.hasLevels && serviceData.levels.length > 0) {
-          const firstLevel = serviceData.levels[0];
-          entry.levelId = firstLevel.id;
-          entry.levelName = firstLevel.name;
-          entry.price = firstLevel.price;
-          entry.priceType = firstLevel.priceType;
-        }
-
-        state.selectedServices.push(entry);
-      }
-    });
-
-    if (!state.selectedServices.length) { state.currentStep = 1; render(); return; }
-
-    // Advance to the appropriate step
-    if (isPresencaDigitalOnly()) {
-      // Presença digital → Step 2 (escolha de modelo)
-      state.currentStep = 2;
-    } else {
-      // Demais serviços: Step 2 se algum tem níveis, caso contrário Step 3
-      const hasLeveledServices = state.selectedServices.some(s => {
-        const data = configuratorData.services.find(srv => srv.id === s.serviceId);
-        return data && data.hasLevels;
-      });
-      state.currentStep = hasLeveledServices ? 2 : 3;
-    }
-
+    if (!canAdvance() || state.currentStep >= state.totalSteps) return;
+    state.currentStep += 1;
+    transitionDirection = 1;
+    track('configurator_step','step_' + state.currentStep);
     render();
     scrollToConfigurator();
   }
-
-  // ── Init ──
+  function goBack() {
+    if (state.currentStep <= 1) return;
+    state.currentStep -= 1;
+    transitionDirection = -1;
+    render();
+    scrollToConfigurator();
+  }
+  function scrollToConfigurator() {
+    const target = document.getElementById('configurator');
+    if (!target) return;
+    const header = document.querySelector('.header');
+    const offset = header ? header.offsetHeight + 14 : 84;
+    const behavior = typeof CogitUI !== 'undefined' && CogitUI.motion ? CogitUI.motion() : 'smooth';
+    window.scrollTo({top:target.getBoundingClientRect().top + window.scrollY - offset,behavior});
+  }
+  function openWhatsAppDirect(contact) {
+    const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
+    let message = 'Olá! Montei uma solução no site da COGIT e gostaria de avançar.\\n\\n';
+    if (objectives.length) message += '*Objetivos:*\\n' + objectives.map(item => '- ' + item.name).join('\\n') + '\\n\\n';
+    message += '*Soluções:*\\n';
+    state.selectedServices.forEach(entry => {
+      const service = getService(entry.serviceId);
+      const detail = [];
+      if (entry.modelId) detail.push(entry.modelId === 'modelos-prontos' ? 'Modelo pronto' : 'Sob medida');
+      if (entry.levelName) detail.push(entry.levelName);
+      message += '- ' + (service ? service.name : entry.serviceId) + (detail.length ? ' — ' + detail.join(' / ') : '') + '\\n';
+    });
+    if (state.selectedAddons.length) {
+      message += '\\n*Complementos:*\\n';
+      state.selectedAddons.forEach(entry => { message += '- ' + entry.name + (entry.quantity > 1 ? ' (' + entry.quantity + 'x)' : '') + '\\n'; });
+    }
+    message += '\\n*Estimativa apresentada:* ' + estimate(false) + '\\n';
+    if (contact) {
+      message += '\\n*Nome:* ' + contact.name + '\\n*Empresa:* ' + (contact.company || 'Não informada') + '\\n*E-mail:* ' + contact.email + '\\n*WhatsApp:* ' + contact.whatsapp + '\\n*Contexto:* ' + (contact.notes || 'Não informado');
+      if (typeof CogitPrivacy !== 'undefined') message += '\\n\\n' + CogitPrivacy.consentReceipt();
+    }
+    window.open('https://wa.me/5517981568889?text=' + encodeURIComponent(message),'_blank','noopener,noreferrer');
+  }
+  function submitConfiguration(event) {
+    event.preventDefault();
+    const form = document.getElementById('cfg-contact-form');
+    const name = document.getElementById('cfg-name');
+    const phone = document.getElementById('cfg-whatsapp');
+    name.setCustomValidity(name.value.trim() ? '' : 'Informe seu nome.');
+    phone.setCustomValidity(/^\d{10,11}$/.test(phone.value.replace(/\D/g,'')) ? '' : 'Informe um telefone com DDD e 10 ou 11 dígitos.');
+    for (const field of form.querySelectorAll('input:not([type="checkbox"]),textarea')) {
+      field.setAttribute('aria-invalid',String(!field.checkValidity()));
+      if (!field.reportValidity()) return;
+    }
+    if (typeof CogitPrivacy !== 'undefined' && !CogitPrivacy.authorize(form)) return;
+    const contact = {name:name.value.trim(),company:document.getElementById('cfg-company').value.trim(),email:document.getElementById('cfg-email').value.trim(),whatsapp:phone.value.trim(),notes:document.getElementById('cfg-notes').value.trim()};
+    openWhatsAppDirect(contact);
+    document.getElementById('cfg-contact-status').textContent = 'Mensagem preparada. Revise e envie no WhatsApp para concluir.';
+    track('configurator_completed','services:' + state.selectedServices.length + ',addons:' + state.selectedAddons.length);
+  }
+  function reset() {
+    Object.assign(state,{currentStep:1,selectedObjectives:[],selectedServices:[],selectedAddons:[],showAllServices:false,isComplex:false,formData:{}});
+    render();
+  }
+  function preselectAndScroll(servicesArray) {
+    if (!containerEl || !Array.isArray(servicesArray)) return;
+    state.selectedServices = [];
+    Array.from(new Set(servicesArray)).forEach(id => {
+      const service = getService(id);
+      if (service) state.selectedServices.push({serviceId:id,modelId:null,levelId:null,levelName:null,price:service.hasLevels ? null : service.price,priceType:service.hasLevels ? null : service.priceType});
+    });
+    state.currentStep = state.selectedServices.length ? 3 : 1;
+    render();
+    if (state.selectedServices.length) scrollToConfigurator();
+  }
   function init() {
     containerEl = document.getElementById('configurator-app');
     if (!containerEl) return;
-
-    trackEvent('configurator_open', 'loaded');
-
-    // Check URL params first
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlProblem = urlParams.get('problem');
-    const urlServices = urlParams.get('services');
-    let preselectStr = urlServices;
-
-    if (!preselectStr && urlProblem && typeof problemFlowsData !== 'undefined') {
-      const problem = problemFlowsData.find(p => p.id === urlProblem);
-      if (problem && problem.preselect) {
-        preselectStr = problem.preselect.join(',');
-      }
+    track('configurator_open','guided_v2');
+    const params = new URLSearchParams(window.location.search);
+    let services = params.get('services');
+    const problem = params.get('problem');
+    if (!services && problem && typeof problemFlowsData !== 'undefined') {
+      const flow = problemFlowsData.find(item => item.id === problem);
+      if (flow && flow.preselect) services = flow.preselect.join(',');
     }
-
-    if (preselectStr) {
-      const servicesArray = preselectStr.split(',').map(s => s.trim()).filter(Boolean);
-      if (servicesArray.length > 0) {
-        preselectAndScroll(servicesArray);
-        return;
-      }
-    }
-
+    if (services) { preselectAndScroll(services.split(',').map(item => item.trim()).filter(Boolean)); return; }
     render();
   }
-
   return { init, reset, preselectAndScroll };
-
 })();
-
-
-function initConfigurator() {
-  ConfiguratorApp.init();
-}
+function initConfigurator() { ConfiguratorApp.init(); }
