@@ -11,6 +11,7 @@ Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em H
 - Fontes Inter e Manrope locais, sem conexão com Google Fonts durante a navegação.
 - Dados de formulário sem gravação em sessionStorage ou console. Texto livre protegido contra interpretação como HTML.
 - Contato pelo WhatsApp com mensagem preparada após autorização. A confirmação de recebimento que existia sem envio foi corrigida.
+- Página de contato transformada em uma central de conversa, com WhatsApp, e-mail, formulário breve e dúvidas gerais, sem repetir o configurador.
 
 ## Usar os arquivos
 
@@ -39,7 +40,8 @@ Os atalhos `npm run dev` e `npm run check` executam esses mesmos comandos.
 - `js/analytics.js`: carregamento da análise somente após consentimento.
 - `js/components.js`: diagnóstico da página inicial e diálogo de modelos.
 - `js/configurator.js`: estimativa, adicionais e mensagem do configurador.
-- `js/form.js`: diagnóstico completo da página de contato.
+- `js/form.js`: fluxo legado de diagnóstico mantido para compatibilidade com as demais páginas.
+- `js/contact-page.js`: contexto de origem, contador e preparação segura da mensagem da nova página de contato.
 - `js/utils.js`: escape de texto, telefone, movimento reduzido e foco.
 - `docs/RELATORIO.md`: achados, alterações, testes e limites da entrega.
 

@@ -1,75 +1,50 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="icon" type="image/png" href="assets/images/cmk.png">
-  
-  <!-- SEO -->
-  <title>COGIT Diagnostic | Configure sua Solução Digital</title>
-  <meta name="description" content="Antes de construir, entendemos o problema. Configure sua solução digital com a COGIT em menos de 1 minuto.">
+  <title>Contato | Converse com a COGIT</title>
+  <meta name="description" content="Converse com a COGIT sobre seu desafio, ideia ou projeto digital. Fale diretamente pelo WhatsApp, e-mail ou envie uma mensagem breve.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://cmkcogit.com.br/contato.html">
-  <meta name="google-site-verification" content="apyGZn_n0cNmR54QFrc57Rayr2e5JjtxGEyn695sO28" />
-
-  <!-- Open Graph -->
+  <meta name="google-site-verification" content="apyGZn_n0cNmR54QFrc57Rayr2e5JjtxGEyn695sO28">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="COGIT Diagnostic | Configure sua Solução Digital">
-  <meta property="og:description" content="Antes de construir, entendemos o problema. Configure sua solução digital com a COGIT.">
+  <meta property="og:title" content="Contato | Converse com a COGIT">
+  <meta property="og:description" content="Conte o que precisa avançar. A COGIT ajuda a transformar desafios e ideias em soluções digitais viáveis.">
   <meta property="og:url" content="https://cmkcogit.com.br/contato.html">
   <meta property="og:site_name" content="CMKCOGIT">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
-
-  <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="COGIT Diagnostic | Configure sua Solução Digital">
-  <meta name="twitter:description" content="Antes de construir, entendemos o problema. Configure sua solução digital com a COGIT.">
+  <meta name="twitter:title" content="Contato | Converse com a COGIT">
+  <meta name="twitter:description" content="Conte o que precisa avançar. A COGIT ajuda a estruturar o próximo passo.">
   <meta name="twitter:image" content="https://cmkcogit.com.br/assets/images/og-image.png">
-
-  <!-- Fonts -->
-
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Schema.org -->
+  <link rel="stylesheet" href="css/contact-page.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "CMKCOGIT",
-    "alternateName": "COGIT",
-    "url": "https://cmkcogit.com.br",
-    "logo": "https://cmkcogit.com.br/assets/images/logo-white.png",
-    "email": "contato@cmkcogit.com.br",
-    "telephone": "+55-17-98156-8889",
-    "description": "Desenvolvimento de software e soluções digitais sob medida.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "São José do Rio Preto",
-      "addressRegion": "SP",
-      "addressCountry": "BR"
-    },
-    "sameAs": [
-      "https://www.instagram.com/cmkcogit",
-      "https://www.linkedin.com/in/cmkcogit"
-    ]
+    "@type": "ContactPage",
+    "name": "Contato COGIT",
+    "url": "https://cmkcogit.com.br/contato.html",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "CMKCOGIT",
+      "url": "https://cmkcogit.com.br",
+      "email": "contato@cmkcogit.com.br",
+      "telephone": "+55-17-98156-8889",
+      "address": {"@type": "PostalAddress", "addressLocality": "São José do Rio Preto", "addressRegion": "SP", "addressCountry": "BR"}
+    }
   }
   </script>
 </head>
-<body>
+<body class="contact-page">
   <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
-
-  <!-- ═══════════════════════════════════════
-       HEADER
-       ═══════════════════════════════════════ -->
-  <header class="header" id="header" role="banner">
+  <header class="header header-solid" id="header" role="banner">
     <div class="header-inner">
-      <a href="index.html" class="logo" aria-label="CMKCOGIT - Página inicial">
-        <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img">
-      </a>
-
+      <a href="index.html" class="logo" aria-label="CMKCOGIT - Página inicial"><img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img"></a>
       <nav class="nav" role="navigation" aria-label="Menu principal">
         <a href="index.html" class="nav-link">Página inicial</a>
         <a href="solucoes/index.html" class="nav-link">Soluções &amp; investimentos</a>
@@ -77,490 +52,135 @@
         <a href="como-trabalhamos.html" class="nav-link">Como trabalhamos</a>
         <a href="sobre.html" class="nav-link">Sobre &amp; projetos</a>
       </nav>
-
-      <a href="contato.html" class="btn btn-primary btn-sm header-cta">Fale sobre seu projeto</a>
-
-      <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
-        <span></span><span></span><span></span>
-      </button>
+      <a href="#contato-form" class="btn btn-primary btn-sm header-cta">Iniciar conversa</a>
+      <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
     </div>
   </header>
-
   <div class="menu-overlay" id="menu-overlay" aria-hidden="true"></div>
-
-  <!-- Mobile Menu Drawer -->
   <nav class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menu mobile">
-    <!-- Header: CMK Symbol + Close Button -->
     <div class="mobile-menu-header">
-      <a href="index.html" class="mobile-menu-brand" aria-label="CMK COGIT - Página inicial">
-        <img src="assets/images/cmk.png" alt="Símbolo CMK" class="mobile-menu-symbol">
-      </a>
-      <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fechar menu">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <a href="index.html" class="mobile-menu-brand" aria-label="CMK COGIT - Página inicial"><img src="assets/images/cmk.png" alt="Símbolo CMK" class="mobile-menu-symbol"></a>
+      <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fechar menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
-
-    <!-- Navigation Body -->
     <div class="mobile-menu-body">
       <ul class="mobile-nav-list">
-        <!-- 1. Início -->
-        <li class="mobile-nav-item" style="--item-index: 1;">
-          <a href="index.html" class="mobile-nav-link">
-            <span class="mobile-nav-text">Início</span>
-            <span class="mobile-nav-arrow">→</span>
-          </a>
-        </li>
-
-        <!-- 2. Soluções (Accordion) -->
-        <li class="mobile-nav-item mobile-nav-accordion" style="--item-index: 2;">
-          <button class="mobile-nav-link mobile-accordion-trigger" type="button" aria-expanded="false">
-            <span class="mobile-nav-text">Soluções e investimentos</span>
-            <svg class="mobile-accordion-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
+        <li class="mobile-nav-item" style="--item-index:1;"><a href="index.html" class="mobile-nav-link"><span class="mobile-nav-text">Início</span><span class="mobile-nav-arrow">→</span></a></li>
+        <li class="mobile-nav-item mobile-nav-accordion" style="--item-index:2;">
+          <button class="mobile-nav-link mobile-accordion-trigger" type="button" aria-expanded="false"><span class="mobile-nav-text">Soluções e investimentos</span><svg class="mobile-accordion-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
           <div class="mobile-submenu">
-            <a href="solucoes/sites-institucionais.html" class="mobile-sublink">
-              <span class="mobile-sublink-dot"></span>
-              <div class="mobile-sublink-info">
-                <span class="mobile-sublink-title">Sites Institucionais</span>
-                <span class="mobile-sublink-desc">Presença digital e autoridade</span>
-              </div>
-            </a>
-            <a href="solucoes/landing-pages.html" class="mobile-sublink">
-              <span class="mobile-sublink-dot"></span>
-              <div class="mobile-sublink-info">
-                <span class="mobile-sublink-title">Landing Pages</span>
-                <span class="mobile-sublink-desc">Alta conversão para campanhas</span>
-              </div>
-            </a>
-            <a href="solucoes/sistemas-personalizados.html" class="mobile-sublink">
-              <span class="mobile-sublink-dot"></span>
-              <div class="mobile-sublink-info">
-                <span class="mobile-sublink-title">Sistemas Personalizados</span>
-                <span class="mobile-sublink-desc">Software sob medida e ERPs</span>
-              </div>
-            </a>
-            <a href="solucoes/automacoes-e-integracoes.html" class="mobile-sublink">
-              <span class="mobile-sublink-dot"></span>
-              <div class="mobile-sublink-info">
-                <span class="mobile-sublink-title">Automações</span>
-                <span class="mobile-sublink-desc">Integrações de APIs e processos</span>
-              </div>
-            </a>
+            <a href="solucoes/sites-institucionais.html" class="mobile-sublink"><span class="mobile-sublink-dot"></span><span class="mobile-sublink-info"><span class="mobile-sublink-title">Sites Institucionais</span><span class="mobile-sublink-desc">Presença digital e autoridade</span></span></a>
+            <a href="solucoes/landing-pages.html" class="mobile-sublink"><span class="mobile-sublink-dot"></span><span class="mobile-sublink-info"><span class="mobile-sublink-title">Landing Pages</span><span class="mobile-sublink-desc">Alta conversão para campanhas</span></span></a>
+            <a href="solucoes/sistemas-personalizados.html" class="mobile-sublink"><span class="mobile-sublink-dot"></span><span class="mobile-sublink-info"><span class="mobile-sublink-title">Sistemas Personalizados</span><span class="mobile-sublink-desc">Software sob medida e ERPs</span></span></a>
+            <a href="solucoes/automacoes-e-integracoes.html" class="mobile-sublink"><span class="mobile-sublink-dot"></span><span class="mobile-sublink-info"><span class="mobile-sublink-title">Automações</span><span class="mobile-sublink-desc">Integrações de APIs e processos</span></span></a>
           </div>
         </li>
-
-        <!-- 3. Como trabalhamos -->
-        <li class="mobile-nav-item" style="--item-index: 3;">
-          <a href="como-trabalhamos.html" class="mobile-nav-link">
-            <span class="mobile-nav-text">Como trabalhamos</span>
-            <span class="mobile-nav-arrow">→</span>
-          </a>
-        </li>
-
-        <!-- 6. Sobre a CMK -->
-        <li class="mobile-nav-item" style="--item-index: 6;">
-          <a href="sobre.html" class="mobile-nav-link">
-            <span class="mobile-nav-text">Sobre &amp; projetos</span>
-            <span class="mobile-nav-arrow">→</span>
-          </a>
-        </li>
+        <li class="mobile-nav-item" style="--item-index:3;"><a href="monte-sua-solucao.html" class="mobile-nav-link"><span class="mobile-nav-text">Monte sua solução</span><span class="mobile-nav-arrow">→</span></a></li>
+        <li class="mobile-nav-item" style="--item-index:4;"><a href="como-trabalhamos.html" class="mobile-nav-link"><span class="mobile-nav-text">Como trabalhamos</span><span class="mobile-nav-arrow">→</span></a></li>
+        <li class="mobile-nav-item" style="--item-index:5;"><a href="sobre.html" class="mobile-nav-link"><span class="mobile-nav-text">Sobre &amp; projetos</span><span class="mobile-nav-arrow">→</span></a></li>
       </ul>
     </div>
-
-    <!-- Fixed CTA Footer -->
-    <div class="mobile-menu-footer">
-      <a href="contato.html" class="btn btn-primary btn-mobile-cta">
-        <span>Quero construir meu projeto</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </a>
-      <div class="mobile-menu-badge">
-        <span>CMK COGIT • Tecnologia sob medida</span>
-      </div>
-    </div>
+    <div class="mobile-menu-footer"><a href="#contato-form" class="btn btn-primary btn-mobile-cta"><span>Iniciar conversa</span><span aria-hidden="true">→</span></a><div class="mobile-menu-badge"><span>CMK COGIT • Tecnologia sob medida</span></div></div>
   </nav>
 
-  <main id="main-content" role="main">
-    
-    <!-- ═══════════════════════════════════════
-         HERO DA PÁGINA
-         ═══════════════════════════════════════ -->
-    <section class="solution-hero">
-      <div class="hero-bg-grid"></div>
-      <div class="hero-bg-gradient"></div>
-      <div class="container">
-        <span class="section-label">COGIT DIAGNOSTIC</span>
-        <h1>Configure sua solução.</h1>
-        <p>Selecione os serviços que precisar e a COGIT identifica o melhor caminho para sua evolução digital.</p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════
-         COGIT DIAGNOSTIC — CONFIGURADOR
-         ═══════════════════════════════════════ -->
-    <section class="cogit-diag-section" id="diagnostic-experience">
-      <div class="container cogit-diag-container">
-
-        <!-- ── TELA INICIAL ── -->
-        <div id="diag-intro-screen" class="diag-intro-screen" style="display:none;"><!-- hidden, jump straight to form --></div>
-
-        <!-- ── RESULTADO FINAL ── -->
-        <div id="diag-result-screen" class="diag-result-screen">
-          
-          <div class="diag-result-header">
-            <div class="diag-result-badge">✓ DIAGNÓSTICO CONCLUÍDO</div>
-            <h2 class="diag-result-title">Análise Estratégica COGIT</h2>
-            <p class="form-notice">Recomendação automática baseada nas suas escolhas. A equipe receberá suas informações somente quando você enviar a mensagem no WhatsApp.</p>
-            <p class="diag-result-quote">"A COGIT começa pela compreensão do problema. A tecnologia vem depois."</p>
-          </div>
-
-          <div class="diag-insights-grid">
-            <div class="diag-insight-card">
-              <div class="diag-insight-label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20"/><path d="M2 12h20"/></svg>
-                Seu Cenário
-              </div>
-              <div class="diag-insight-value" id="res-challenge-title">Presença Digital</div>
-              <div class="diag-insight-desc" id="res-scenario-desc">Análise gerada com base nas suas escolhas.</div>
-            </div>
-
-            <div class="diag-insight-card">
-              <div class="diag-insight-label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                Oportunidade Identificada
-              </div>
-              <div class="diag-insight-value" id="res-opportunity-title">Geração de Leads</div>
-              <div class="diag-insight-desc" id="res-opportunity-desc">Oportunidade comercial principal para o seu perfil.</div>
-            </div>
-
-            <div class="diag-insight-card is-highlight">
-              <div class="diag-insight-label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                Direção Recomendada
-              </div>
-              <div class="diag-insight-value" id="res-solution-title">Landing Page de Alta Conversão</div>
-              <div class="diag-insight-desc" id="res-solution-desc">Solução técnica recomendada para seu momento.</div>
-            </div>
-          </div>
-
-          <div class="diag-pipeline-wrapper">
-            <div class="diag-pipeline-title">Metodologia de Entrega COGIT</div>
-            <div class="diag-pipeline-steps">
-              <div class="diag-pipeline-step is-active">
-                <div class="diag-pipeline-num">1</div>
-                <div class="diag-pipeline-name">Problema</div>
-                <div class="diag-pipeline-sub">Entendimento real</div>
-              </div>
-              <div class="diag-pipeline-step is-active">
-                <div class="diag-pipeline-num">2</div>
-                <div class="diag-pipeline-name">Estratégia</div>
-                <div class="diag-pipeline-sub">Arquitetura de valor</div>
-              </div>
-              <div class="diag-pipeline-step is-active">
-                <div class="diag-pipeline-num">3</div>
-                <div class="diag-pipeline-name">Solução</div>
-                <div class="diag-pipeline-sub">Desenho técnico</div>
-              </div>
-              <div class="diag-pipeline-step is-active">
-                <div class="diag-pipeline-num">4</div>
-                <div class="diag-pipeline-name">Construção</div>
-                <div class="diag-pipeline-sub">Código & escala</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="diag-result-actions">
-            <a href="#" id="res-whatsapp-cta" class="diag-whatsapp-btn" target="_blank" rel="noopener noreferrer">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.571c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              Receber orientação da COGIT →
+  <main id="main-content">
+    <section class="contact-hero" aria-labelledby="contact-title">
+      <div class="contact-grid-bg" aria-hidden="true"></div>
+      <div class="contact-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="container contact-hero-grid">
+        <div class="contact-hero-copy" data-contact-reveal>
+          <span class="section-label">CONTATO COGIT</span>
+          <h1 id="contact-title">Uma boa solução começa com uma boa conversa.</h1>
+          <p class="contact-hero-lead">Conte o que precisa avançar — um desafio, uma ideia ou um processo que hoje atrasa o seu negócio. Nós ajudamos a estruturar o próximo passo.</p>
+          <div class="contact-trust-row" aria-label="Como será o contato"><span><i aria-hidden="true"></i> Conversa direta</span><span><i aria-hidden="true"></i> Sem compromisso</span><span><i aria-hidden="true"></i> Sem linguagem complicada</span></div>
+        </div>
+        <div class="contact-channel-panel" data-contact-reveal>
+          <div class="contact-panel-heading"><span class="contact-panel-kicker">ESCOLHA O CANAL</span><h2>Como prefere conversar?</h2><p>Você fala diretamente com a COGIT, sem precisar configurar uma solução novamente.</p></div>
+          <div class="contact-channel-list">
+            <a class="contact-channel is-primary" href="https://wa.me/5517981568889?text=Ol%C3%A1%2C%20COGIT.%20Quero%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener noreferrer" data-contact-channel="whatsapp">
+              <span class="contact-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.571c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479s1.065 2.875 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"></path></svg></span>
+              <span class="contact-channel-copy"><strong>Conversar no WhatsApp</strong><small>Para começar agora de forma rápida</small></span><span class="contact-channel-arrow" aria-hidden="true">↗</span>
             </a>
-            <button type="button" class="diag-reset-btn" id="diag-reset-btn">Refazer diagnóstico</button>
+            <a class="contact-channel" href="mailto:contato@cmkcogit.com.br?subject=Quero%20conversar%20sobre%20um%20projeto" data-contact-channel="email"><span class="contact-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"></path><path d="m22 6-10 7L2 6"></path></svg></span><span class="contact-channel-copy"><strong>Enviar um e-mail</strong><small>contato@cmkcogit.com.br</small></span><span class="contact-channel-arrow" aria-hidden="true">→</span></a>
           </div>
-
+          <div class="contact-panel-note"><span aria-hidden="true">●</span> São José do Rio Preto, SP · Atendimento remoto</div>
         </div>
-
-        <!-- ── CONFIGURADOR LAYOUT (left + right panel) ── -->
-        <div class="cogit-diag-layout" id="diag-configurator-layout">
-
-          <!-- LEFT: Main Card with Steps -->
-          <div class="cogit-diag-card" id="diag-main-card">
-            
-            <!-- Progress Header (4 Steps) -->
-            <div class="diag-progress-header" id="diag-progress-header">
-              <div class="diag-progress-step-labels" id="diag-step-labels">
-                <!-- Rendered by JS -->
-              </div>
-              <div class="diag-progress-bar">
-                <div class="diag-progress-fill" id="diag-progress-fill"></div>
-              </div>
-            </div>
-
-            <form id="cogit-diagnostic-form" novalidate>
-
-              <!-- ══════════════════════
-                   ETAPA 1: ESCOLHA SUA SOLUÇÃO
-                   ══════════════════════ -->
-              <div class="diag-step is-active" data-step="1" id="diag-step-1">
-                <div class="diag-step-head">
-                  <h2>O que você precisa construir?</h2>
-                  <p>Selecione um ou mais serviços. Você está construindo sua solução digital.</p>
-                </div>
-
-                <div class="diag-services-grid" id="diag-services-grid">
-                  <!-- Rendered by form.js -->
-                </div>
-
-                <!-- Context message após seleção -->
-                <div class="diag-selection-context" id="diag-selection-context">
-                  <div class="diag-selection-context-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                  </div>
-                  <div class="diag-selection-context-text" id="diag-selection-context-text">
-                    Você está combinando soluções para sua empresa.
-                  </div>
-                </div>
-
-                <div class="diag-actions" style="justify-content: flex-end;">
-                  <button type="button" class="btn btn-primary diag-btn-next" id="diag-next-1" data-next="2" disabled>
-                    Definir objetivo →
-                  </button>
-                </div>
-              </div>
-
-              <!-- ══════════════════════
-                   ETAPA 2: OBJETIVO ESTRATÉGICO (DINÂMICO)
-                   ══════════════════════ -->
-              <div class="diag-step" data-step="2" id="diag-step-2">
-                <div class="diag-step-head">
-                  <h2 id="diag-step2-title">Qual é a prioridade estratégica?</h2>
-                  <p id="diag-step2-subtitle">O que trará maior retorno imediato para sua empresa?</p>
-                </div>
-
-                <div class="diag-options-stack" id="diag-step2-options">
-                  <!-- Rendered dynamically by JS based on Step 1 selection -->
-                </div>
-
-                <div class="diag-actions">
-                  <button type="button" class="diag-btn-prev" data-prev="1">← Voltar</button>
-                  <button type="button" class="btn btn-primary diag-btn-next" data-next="3">
-                    Contar seu cenário →
-                  </button>
-                </div>
-              </div>
-
-              <!-- ══════════════════════
-                   ETAPA 3: CONTEXTO + DADOS
-                   ══════════════════════ -->
-              <div class="diag-step" data-step="3" id="diag-step-3">
-                <div class="diag-step-head">
-                  <h2>Existe algo sobre seu cenário que devemos considerar?</h2>
-                  <p>Compartilhe brevemente a situação atual da empresa, ideias ou restrições.</p>
-                </div>
-
-                <div class="form-group full-width" style="margin-bottom: var(--space-6);">
-                  <label class="form-label" for="diag-context-desc">Contexto adicional (opcional)</label>
-                  <textarea class="form-textarea" id="diag-context-desc" maxlength="2000" name="context" placeholder="Conte brevemente sobre sua situação atual, desafios ou objetivos..." rows="3"></textarea>
-                </div>
-
-                <div class="diag-step-section-label">Como a equipe pode entrar em contato?</div>
-                <div class="form-grid">
-                  <div class="form-group">
-                    <label class="form-label" for="diag-name">Seu Nome <span class="required">*</span></label>
-                    <input class="form-input" type="text" id="diag-name" maxlength="120" name="name" placeholder="Seu nome" required autocomplete="name">
-                    <span class="form-error"></span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="diag-company">Empresa</label>
-                    <input class="form-input" type="text" id="diag-company" maxlength="160" name="company" placeholder="Nome da empresa" autocomplete="organization">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="diag-whatsapp">WhatsApp <span class="required">*</span></label>
-                    <input class="form-input" type="tel" id="diag-whatsapp" maxlength="16" name="whatsapp" placeholder="(00) 00000-0000" required autocomplete="tel">
-                    <span class="form-error"></span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="diag-email">E-mail <span class="required">*</span></label>
-                    <input class="form-input" type="email" id="diag-email" maxlength="254" name="email" placeholder="seu@email.com" required autocomplete="email">
-                    <span class="form-error"></span>
-                  </div>
-                </div>
-
-                <div class="diag-actions">
-                  <button type="button" class="diag-btn-prev" data-prev="2">← Voltar</button>
-                  <button type="submit" class="btn btn-primary btn-lg" id="diag-submit-btn" style="padding: 14px 28px;">
-                    Preparar recomendação e mensagem →
-                  </button>
-                </div>
-              </div>
-
-            </form>
-          </div>
-
-          <!-- RIGHT: Summary Panel -->
-          <aside class="cogit-diag-summary-panel" id="diag-summary-panel" aria-label="Resumo da sua solução">
-            
-            <div class="diag-panel-title">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-              Sua Solução
-            </div>
-
-            <!-- Empty State -->
-            <div class="diag-panel-empty" id="diag-panel-empty">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-              <p>Selecione serviços para visualizar sua solução.</p>
-            </div>
-
-            <!-- Items List -->
-            <div class="diag-panel-items" id="diag-panel-items" style="display:none;"></div>
-
-            <!-- Combo Insight Message -->
-            <div class="diag-panel-combo-msg" id="diag-panel-combo-msg"></div>
-
-            <!-- Estimate -->
-            <div class="diag-panel-estimate" id="diag-panel-estimate" style="display:none;">
-              <div class="diag-panel-estimate-label">Estimativa inicial</div>
-              <div class="diag-panel-estimate-value" id="diag-panel-estimate-val">—</div>
-              <div class="diag-panel-estimate-note">Base no escopo essencial selecionado</div>
-            </div>
-
-            <!-- Panel CTA -->
-            <div class="diag-panel-cta" id="diag-panel-cta" style="display:none;">
-              <button type="button" class="btn btn-primary" id="diag-panel-cta-btn">
-                Continuar com esta solução →
-              </button>
-              <p style="font-size: 11px; color: var(--text-tertiary); text-align: center; font-family: var(--font-heading);">
-                Levará ao próximo passo do diagnóstico
-              </p>
-            </div>
-
-          </aside>
-
-        </div>
-
       </div>
     </section>
-  <noscript><p class="container form-notice">Ative o JavaScript para usar os diagnósticos e o menu interativo. Para falar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
+
+    <section class="contact-form-section" id="contato-form" aria-labelledby="form-title">
+      <div class="container contact-form-layout">
+        <div class="contact-form-intro" data-contact-reveal>
+          <span class="section-label">CONTE O ESSENCIAL</span>
+          <h2 id="form-title">Não precisa escrever um briefing.</h2>
+          <p>Explique com suas palavras o que está acontecendo e onde você quer chegar. A primeira conversa existe justamente para organizar isso.</p>
+          <ol class="contact-steps">
+            <li><span>01</span><div><strong>Você conta o contexto</strong><small>O problema, a ideia ou o momento do negócio.</small></div></li>
+            <li><span>02</span><div><strong>Nós entendemos a prioridade</strong><small>Sem exigir que você já saiba a tecnologia.</small></div></li>
+            <li><span>03</span><div><strong>Definimos o próximo passo</strong><small>Uma orientação clara para avançar.</small></div></li>
+          </ol>
+          <a class="contact-configurator-link" href="monte-sua-solucao.html"><span><strong>Já quer combinar serviços e estimar?</strong><small>Use o Monte sua solução.</small></span><span aria-hidden="true">→</span></a>
+        </div>
+        <div class="contact-form-card" data-contact-reveal>
+          <div class="contact-form-card-head"><span>Mensagem breve</span><small>Leva cerca de 1 minuto</small></div>
+          <p class="contact-context" id="contact-context" hidden></p>
+          <form id="contact-conversation-form" novalidate>
+            <div class="contact-field-row">
+              <div class="contact-field"><label for="contact-name">Seu nome</label><input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Como podemos chamar você?" required maxlength="80"></div>
+              <div class="contact-field"><label for="contact-company">Empresa <span>(opcional)</span></label><input id="contact-company" name="company" type="text" autocomplete="organization" placeholder="Nome da empresa" maxlength="100"></div>
+            </div>
+            <div class="contact-field"><label for="contact-return">Seu WhatsApp ou e-mail</label><input id="contact-return" name="return" type="text" autocomplete="email" placeholder="Onde prefere receber nosso retorno?" required maxlength="120"></div>
+            <div class="contact-field"><div class="contact-label-line"><label for="contact-message">O que você precisa resolver?</label><span id="contact-message-count">0/500</span></div><textarea id="contact-message" name="message" rows="6" placeholder="Ex.: hoje fazemos esse processo manualmente e queremos ganhar tempo..." required minlength="12" maxlength="500"></textarea></div>
+            <div class="privacy-field">
+              <label class="privacy-label" for="contact-auth"><input id="contact-auth" type="checkbox" data-contact-consent required aria-describedby="contact-auth-error contact-submit-note"><span>Li os <a href="termos-de-uso.html" target="_blank" rel="noopener noreferrer">Termos de Uso</a> e autorizo o uso dos dados informados para a COGIT responder à minha solicitação, conforme a <a href="privacidade.html" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.</span></label>
+              <p class="consent-error" id="contact-auth-error" aria-live="polite" hidden>Autorize o contato para compartilhar estas informações.</p>
+            </div>
+            <button class="btn btn-primary contact-submit" type="submit">Preparar mensagem no WhatsApp <span aria-hidden="true">→</span></button>
+            <p class="contact-submit-note" id="contact-submit-note">Nada é enviado automaticamente. Você revisa e confirma a mensagem no WhatsApp.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-faq-section" id="duvidas" aria-labelledby="faq-title">
+      <div class="container contact-faq-layout">
+        <div class="contact-faq-heading" data-contact-reveal><span class="section-label">DÚVIDAS GERAIS</span><h2 id="faq-title">Talvez a resposta que falta esteja aqui.</h2><p>Reunimos as dúvidas mais comuns antes de uma primeira conversa.</p><a href="mailto:contato@cmkcogit.com.br?subject=Tenho%20uma%20d%C3%BAvida" class="contact-text-link">Minha dúvida é outra <span aria-hidden="true">↗</span></a></div>
+        <div class="contact-faq-list" data-contact-reveal>
+          <details class="contact-faq-item"><summary><span>Preciso saber exatamente qual solução quero?</span><i aria-hidden="true"></i></summary><div><p>Não. Você pode chegar apenas com um problema, uma ideia ou um objetivo. A COGIT ajuda a entender o cenário e estruturar a solução adequada antes do desenvolvimento.</p></div></details>
+          <details class="contact-faq-item"><summary><span>Qual é a diferença entre esta página e “Monte sua solução”?</span><i aria-hidden="true"></i></summary><div><p>Aqui o foco é conversar diretamente e tirar dúvidas. No configurador, você combina serviços, objetivos e recursos para receber uma estimativa inicial mais estruturada.</p></div></details>
+          <details class="contact-faq-item"><summary><span>A COGIT atende pequenas empresas e profissionais autônomos?</span><i aria-hidden="true"></i></summary><div><p>Sim. A solução é dimensionada conforme o momento, a prioridade e a realidade de cada negócio — de uma presença digital inicial a plataformas e sistemas mais complexos.</p></div></details>
+          <details class="contact-faq-item"><summary><span>Como funciona a primeira conversa?</span><i aria-hidden="true"></i></summary><div><p>Começamos entendendo o problema, o contexto e o resultado esperado. Depois indicamos o próximo passo mais coerente, sem compromisso de contratação.</p></div></details>
+          <details class="contact-faq-item"><summary><span>Quanto custa e quanto tempo leva um projeto?</span><i aria-hidden="true"></i></summary><div><p>O investimento e o prazo dependem do escopo e da complexidade. Você pode consultar faixas iniciais em Soluções &amp; investimentos ou montar uma estimativa no configurador.</p></div></details>
+          <details class="contact-faq-item"><summary><span>A COGIT também evolui projetos que já existem?</span><i aria-hidden="true"></i></summary><div><p>Sim. Podemos avaliar uma operação, site, automação, sistema ou produto digital existente e estruturar melhorias de experiência, desempenho e evolução técnica.</p></div></details>
+        </div>
+      </div>
+    </section>
+    <noscript><p class="container form-notice">Para conversar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
   </main>
 
-  <!-- ═══════════════════════════════════════
-       FOOTER
-       ═══════════════════════════════════════ -->
   <footer class="footer" id="footer" role="contentinfo">
     <div class="container">
       <div class="footer-top">
-
         <div class="footer-brand">
-          <a href="index.html" class="logo" aria-label="CMKCOGIT" style="display: flex; align-items: center;">
-            <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img">
-          </a>
-          <p class="footer-tagline" style="font-size: var(--text-lg); margin-top: var(--space-4);">Pensamos antes de construir.</p>
-          <p class="footer-sub-tagline" style="font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: var(--space-4); text-transform: uppercase;">Pensar. Estruturar. Construir.</p>
-          <p class="footer-description">Tecnologia, estratégia e inovação para transformar problemas e ideias em soluções digitais que funcionam.</p>
-          <div class="footer-social" id="footer-social"></div>
+          <a href="index.html" class="logo" aria-label="CMKCOGIT" style="display:flex;align-items:center;"><img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img"></a>
+          <p class="footer-tagline" style="font-size:var(--text-lg);margin-top:var(--space-4);">Pensamos antes de construir.</p>
+          <p class="footer-sub-tagline" style="font-family:var(--font-heading);font-size:10px;letter-spacing:.1em;color:var(--text-tertiary);margin-bottom:var(--space-4);text-transform:uppercase;">Pensar. Estruturar. Construir.</p>
+          <p class="footer-description">Tecnologia, estratégia e inovação para transformar problemas e ideias em soluções digitais que funcionam.</p><div class="footer-social" id="footer-social"></div>
         </div>
-
-        <div class="footer-column">
-          <h4>Soluções e investimentos</h4>
-          <div class="footer-links">
-            <a href="solucoes/modelos-prontos.html">Modelos Prontos</a>
-            <a href="solucoes/modelos-sob-medida.html">Modelos Sob Medida</a>
-            <a href="solucoes/landing-pages.html">Landing Pages</a>
-            <a href="solucoes/sites-institucionais.html">Sites Institucionais</a>
-            <a href="solucoes/sistemas-personalizados.html">Sistemas Personalizados</a>
-            <a href="solucoes/saas-e-produtos-digitais.html">SaaS e MVPs</a>
-            <a href="solucoes/automacoes-e-integracoes.html">Automação e Integração</a>
-            <a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas e Outras</a>
-            <a href="solucoes/index.html">Soluções e investimentos</a>
-          </div>
-        </div>
-
-        <div class="footer-column">
-          <h4>Institucional</h4>
-          <div class="footer-links">
-            <a href="como-trabalhamos.html">Como trabalhamos</a>
-            <a href="monte-sua-solucao.html">Monte sua solução</a>
-            <a href="sobre.html">Sobre &amp; projetos</a>
-            <a href="contato.html">COGIT Diagnostic</a>
-          </div>
-        </div>
-
-        <div class="footer-column">
-          <h4>Canais Rápidos</h4>
-          <div class="footer-links">
-            <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer">Conversar no WhatsApp</a>
-            <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>
-            <a href="termos-de-uso.html">Termos de Uso</a>
-            <a href="privacidade.html">Política de Privacidade</a>
-          </div>
-        </div>
-
+        <div class="footer-column"><h4>Soluções e investimentos</h4><div class="footer-links"><a href="solucoes/modelos-prontos.html">Modelos Prontos</a><a href="solucoes/modelos-sob-medida.html">Modelos Sob Medida</a><a href="solucoes/landing-pages.html">Landing Pages</a><a href="solucoes/sites-institucionais.html">Sites Institucionais</a><a href="solucoes/sistemas-personalizados.html">Sistemas Personalizados</a><a href="solucoes/saas-e-produtos-digitais.html">SaaS e MVPs</a><a href="solucoes/automacoes-e-integracoes.html">Automação e Integração</a><a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas e Outras</a><a href="solucoes/index.html">Soluções e investimentos</a></div></div>
+        <div class="footer-column"><h4>Empresa</h4><div class="footer-links"><a href="sobre.html">Sobre &amp; projetos</a><a href="como-trabalhamos.html">Como trabalhamos</a><a href="monte-sua-solucao.html">Monte sua solução</a><a href="contato.html" aria-current="page">Contato</a></div></div>
+        <div class="footer-column"><h4>Contato</h4><div class="footer-links"><a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer">Conversar no WhatsApp</a><a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a><a href="termos-de-uso.html">Termos de Uso</a><a href="privacidade.html">Política de Privacidade</a></div></div>
       </div>
-
-      <div class="footer-bottom">
-        <p>&copy; COGIT — Todos os direitos reservados.</p>
-        <div class="footer-bottom-links">
-          <a href="privacidade.html">Política de Privacidade</a>
-          <a href="termos-de-uso.html">Termos de Uso</a>
-        </div>
-      </div>
+      <div class="footer-bottom"><p>&copy; COGIT — Todos os direitos reservados.</p><div class="footer-bottom-links"><a href="privacidade.html">Política de Privacidade</a><a href="termos-de-uso.html">Termos de Uso</a></div></div>
     </div>
   </footer>
-
-  <!-- CONTACT HUB -->
-  <div class="whatsapp-float contact-hub" id="whatsapp-float" aria-label="Central de Contatos" data-state="closed">
-    <div class="ch-channels" id="ch-channels">
-      <a href="https://www.instagram.com/cmkcogit" target="_blank" rel="noopener noreferrer" class="ch-channel" id="ch-instagram" aria-label="Instagram da COGIT">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-        <span class="ch-tooltip-channel">Instagram</span>
-      </a>
-      <a href="https://www.linkedin.com/in/cmkcogit" target="_blank" rel="noopener noreferrer" class="ch-channel" id="ch-linkedin" aria-label="LinkedIn da COGIT">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-        <span class="ch-tooltip-channel">LinkedIn</span>
-      </a>
-      <button class="ch-channel" id="ch-whatsapp" aria-label="Falar com a COGIT pelo WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51h-.571c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      </button>
-      <a href="mailto:contato@cmkcogit.com.br" class="ch-channel" id="ch-email" aria-label="Enviar e-mail para a COGIT">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-        <span class="ch-tooltip-channel">E-mail</span>
-      </a>
-    </div>
-    <div class="whatsapp-popup" id="whatsapp-popup">
-      <div class="whatsapp-popup-header" style="justify-content: space-between; align-items: flex-start; gap: 16px;">
-        <button class="ch-back-btn" id="ch-back-btn" aria-label="Voltar" style="color: var(--text-tertiary); font-size: 20px; transition: color 200ms ease;">←</button>
-        <span style="flex: 1; text-align: left; padding-top: 2px;">Vamos conversar sobre seu projeto?</span>
-        <button class="whatsapp-popup-close" id="whatsapp-popup-close" aria-label="Fechar" style="font-size: 24px;">×</button>
-      </div>
-      <div class="whatsapp-popup-options" id="whatsapp-popup-options"></div>
-    </div>
-    <button class="whatsapp-btn ch-trigger-btn" id="whatsapp-float-btn" aria-label="Abrir canais de contato">
-      <svg class="ch-icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-      <svg class="ch-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-    </button>
-    <span class="whatsapp-tooltip">Vamos conversar sobre seu projeto?</span>
-  </div>
-
-  <div class="mobile-fixed-cta" id="mobile-fixed-cta" aria-label="Ação rápida">
-    <a href="contato.html" class="btn btn-primary" id="mobile-fixed-cta-btn">Fale sobre seu projeto</a>
-  </div>
-
-  <!-- Scripts -->
   <script src="js/data.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/privacy.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/components.js"></script>
-  <script src="js/configurator.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/header.js"></script>
-  <script src="js/form.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/contact-page.js"></script>
 </body>
 </html>
