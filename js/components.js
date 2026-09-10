@@ -51,31 +51,31 @@ function renderHeroInteractive() {
 
   // ── Grid de Serviços com ícone + descrição + preço (Etapa 1) ──
   const SERVICES_GRID = [
-    { id: 'site-institucional', name: 'Site Institucional', desc: 'Presença completa com autoridade.', priceLabel: 'A partir de R$ 1.990', challenge: 'presenca',
+    { id: 'site-institucional', name: 'Site Institucional', desc: 'Apresente sua empresa e gere confiança.', priceLabel: 'A partir de R$ 1.990', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>'
     },
-    { id: 'landing-page', name: 'Landing Page', desc: 'Página estratégica para conversão.', priceLabel: 'A partir de R$ 990', challenge: 'presenca',
+    { id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'A partir de R$ 990', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
-    { id: 'portfolio', name: 'Portfólio', desc: 'Modelos de alta conversão.', priceLabel: 'A partir de R$ 790', challenge: 'presenca',
+    { id: 'portfolio', name: 'Portfólio', desc: 'Mostre trabalhos, serviços e resultados.', priceLabel: 'A partir de R$ 790', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
-    { id: 'automacao-svc', name: 'Automação', desc: 'Elimine tarefas e conecte ferramentas.', priceLabel: 'A partir de R$ 990', challenge: 'automacao',
+    { id: 'automacao-svc', name: 'Automação', desc: 'Elimine tarefas repetitivas e conecte ferramentas.', priceLabel: 'A partir de R$ 990', challenge: 'automacao',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><path d="M7 12h3M14 12h3M12 7v3M12 14v3"/></svg>'
     },
-    { id: 'sistema-svc', name: 'Sistema Web', desc: 'Software exclusivo para sua operação.', priceLabel: 'A partir de R$ 7.900', challenge: 'sistema',
+    { id: 'sistema-svc', name: 'Sistema Web', desc: 'Organize sua operação em um software próprio.', priceLabel: 'A partir de R$ 7.900', challenge: 'sistema',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M10 6h4M10 17h4M6 10v4M17 10v4"/></svg>'
     },
-    { id: 'saas-svc', name: 'SaaS', desc: 'Plataforma com multiusuários e assinatura.', priceLabel: 'A partir de R$ 14.900', challenge: 'produto',
+    { id: 'saas-svc', name: 'SaaS', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 14.900', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
     },
-    { id: 'mvp-svc', name: 'MVP', desc: 'Versão mínima para validar sua ideia.', priceLabel: 'A partir de R$ 9.900', challenge: 'produto',
+    { id: 'mvp-svc', name: 'MVP', desc: 'Valide sua ideia com uma primeira versão funcional.', priceLabel: 'A partir de R$ 9.900', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>'
     },
-    { id: 'plataforma-svc', name: 'Plataforma', desc: 'Infraestrutura digital escalável e robusta.', priceLabel: 'A partir de R$ 11.900', challenge: 'produto',
+    { id: 'plataforma-svc', name: 'Plataforma', desc: 'Conecte usuários, serviços e oportunidades.', priceLabel: 'A partir de R$ 11.900', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>'
     },
-    { id: 'outro-svc', name: 'Outra Solução', desc: 'IA, integrações, consultoria e projetos únicos.', priceLabel: 'Sob consulta', challenge: 'outro',
+    { id: 'outro-svc', name: 'Não sei ainda', desc: 'Receba orientação para encontrar o melhor começo.', priceLabel: 'Sob consulta', challenge: 'outro',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4z"/><path d="M14 4h6v6h-6z"/><path d="M14 14h6v6h-6z"/><path d="M4 14h6v6H4z"/><path d="M10 7h4M10 17h4M7 10v4M17 10v4"/></svg>'
     }
   ];
@@ -209,20 +209,56 @@ function renderHeroInteractive() {
     context: ''
   };
 
+  const heroSection = container.closest('.hero');
+  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function updateDiagnosticMode() {
+    const isActive = state.step > 0;
+    document.body.classList.toggle('is-hero-diagnostic-active', isActive);
+    if (heroSection) heroSection.classList.toggle('is-diagnostic-active', isActive);
+    container.dataset.step = String(state.step);
+  }
+
+  function focusDiagnosticViewport() {
+    const header = document.querySelector('.header, header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    const targetTop = Math.max(0, container.getBoundingClientRect().top + window.scrollY - headerHeight - 12);
+    window.scrollTo({ top: targetTop, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  }
+
+  function revealNextAction(action) {
+    if (!action || window.innerWidth > 680) return;
+    window.requestAnimationFrame(() => {
+      const rect = action.getBoundingClientRect();
+      const safeBottom = window.innerHeight - 18;
+      if (rect.bottom > safeBottom) {
+        window.scrollBy({ top: rect.bottom - safeBottom, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      }
+    });
+  }
+
   function transitionTo(renderFn, direction = 'next') {
     const wrapper = container.querySelector('.hero-step-wrapper');
     if (wrapper) {
       wrapper.classList.add(direction === 'next' ? 'is-fading-left' : 'is-fading-right');
       setTimeout(() => {
         renderFn();
+        updateDiagnosticMode();
         CogitUI.focusHeading(container);
         const nw = container.querySelector('.hero-step-wrapper');
         if (nw) {
           nw.classList.add(direction === 'next' ? 'is-entering-right' : 'is-entering-left');
           requestAnimationFrame(() => setTimeout(() => nw.classList.remove('is-entering-right', 'is-entering-left'), 30));
         }
-      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 150);
-    } else { renderFn(); CogitUI.focusHeading(container); }
+        requestAnimationFrame(() => requestAnimationFrame(focusDiagnosticViewport));
+        if (!prefersReducedMotion()) setTimeout(focusDiagnosticViewport, 320);
+      }, prefersReducedMotion() ? 0 : 180);
+    } else {
+      renderFn();
+      updateDiagnosticMode();
+      CogitUI.focusHeading(container);
+      requestAnimationFrame(focusDiagnosticViewport);
+    }
   }
 
   const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
@@ -251,11 +287,17 @@ function renderHeroInteractive() {
         <div class="hero-invite-content">
           <div class="hero-invite-text">
             <p class="hero-invite-eyebrow">COGIT DIAGNOSTIC</p>
-            <h2 class="hero-invite-title">Qual é o próximo passo digital da sua empresa?</h2>
+            <h2 class="hero-invite-title">Encontre o melhor caminho digital para sua empresa.</h2>
+            <p class="hero-invite-desc">Responda 3 perguntas e receba uma direção inicial para o seu momento.</p>
           </div>
-          <button type="button" class="btn-hero-montar btn-hero-start" id="hero-btn-start">
-            Iniciar diagnóstico <span>→</span>
+          <div class="hero-invite-path" aria-hidden="true">
+            <span>Pensar</span><i></i><span>Estruturar</span><i></i><span>Construir</span>
+            <b class="hero-invite-path-pulse"></b>
+          </div>
+          <button type="button" class="btn-hero-montar btn-hero-start" id="hero-btn-start" aria-describedby="hero-diagnostic-meta">
+            Descobrir minha solução <span>→</span>
           </button>
+          <p class="hero-invite-meta" id="hero-diagnostic-meta">Menos de 1 minuto <span>•</span> Sem cadastro <span>•</span> Resultado imediato</p>
         </div>
       </div>
     `;
@@ -278,6 +320,7 @@ function renderHeroInteractive() {
         </div>
         <div class="hero-svc-icon">${svc.iconSvg}</div>
         <span class="hero-svc-name">${svc.name}</span>
+        <span class="hero-svc-desc">${svc.desc}</span>
       </button>
     `).join('');
 
@@ -292,7 +335,7 @@ function renderHeroInteractive() {
             ${renderProgressDots(1, 3)}
           </div>
           <h2 class="hero-interactive-title">O que você precisa construir?</h2>
-          <p class="hero-interactive-desc">Selecione o serviço que representa melhor sua necessidade.</p>
+          <p class="hero-interactive-desc">Escolha uma opção. Se ainda não souber, nós orientamos você.</p>
         </div>
 
         <div class="hero-svc-grid" role="group" aria-label="Selecione um serviço">
@@ -322,6 +365,7 @@ function renderHeroInteractive() {
         card.classList.add('is-selected');
         card.setAttribute('aria-pressed', 'true');
         if (continueBtn) continueBtn.removeAttribute('disabled');
+        revealNextAction(continueBtn);
         if (typeof trackEvent === 'function') trackEvent('hero_service_selected', card.dataset.id);
       });
     });
@@ -408,6 +452,7 @@ function renderHeroInteractive() {
         card.classList.add('is-selected');
         card.setAttribute('aria-pressed', 'true');
         if (continueBtn) continueBtn.removeAttribute('disabled');
+        revealNextAction(continueBtn);
         if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', card.dataset.id);
       });
     });
@@ -503,6 +548,7 @@ function renderHeroInteractive() {
         card.querySelector('.hero-model-choice span').textContent = selected ? 'Selecionado' : 'Selecionar';
       });
       continueBtn.disabled = false;
+      revealNextAction(continueBtn);
       if (typeof trackEvent === 'function') trackEvent('hero_model_selected', id);
     }
     container.querySelectorAll('[name="hero-solution-model"]').forEach(input => {
@@ -606,6 +652,7 @@ function renderHeroInteractive() {
 
   // ── RESULTADO: Diagnóstico Consultivo ──
   function renderResult() {
+    state.step = 4;
     const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
     const objectives = getObjectives(state.selectedService);
     const objData = objectives.find(o => o.id === state.objective);
@@ -617,6 +664,16 @@ function renderHeroInteractive() {
     if (state.context && state.context.trim()) waMsg += `\n*Contexto:* ${state.context.trim()}`;
     waMsg += `\n\nGostaria de receber uma orientação técnica da equipe COGIT!`;
     const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(waMsg)}`;
+    const configuratorIds = {
+      'automacao-svc': 'automacao',
+      'sistema-svc': 'sistema',
+      'saas-svc': 'saas',
+      'mvp-svc': 'mvp',
+      'plataforma-svc': 'plataforma',
+      'outro-svc': 'outras-solucoes'
+    };
+    const configuratorService = configuratorIds[state.selectedService] || state.selectedService || '';
+    const configuratorLink = `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}`;
 
     container.innerHTML = `
       <div class="hero-step-wrapper hero-result-view">
@@ -628,7 +685,7 @@ function renderHeroInteractive() {
             </span>
           </div>
           <h2 class="hero-interactive-title">Entendemos seu cenário.</h2>
-          <p class="hero-interactive-desc">Identificamos uma possível direção para o seu momento.</p>
+          <p class="hero-interactive-desc">Esta é uma direção inicial para o seu momento.</p>
         </div>
 
         <div class="hero-result-card">
@@ -671,10 +728,10 @@ function renderHeroInteractive() {
         <div class="hero-summary-actions">
           <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" class="btn-hero-montar btn-hero-whatsapp" id="hero-btn-whatsapp">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-            Receber orientação da COGIT
+            Conversar com especialista
           </a>
           <div class="hero-summary-sub-actions">
-            <a href="contato.html?solucao=${encodeURIComponent(state.selectedService || '')}" class="hero-sub-link" id="hero-link-form">Ou preencher diagnóstico completo →</a>
+            <a href="${configuratorLink}" class="hero-sub-link" id="hero-link-form">Detalhar escopo e estimativa →</a>
             <button type="button" class="hero-btn-restart-flow" id="hero-btn-restart">← Refazer diagnóstico</button>
           </div>
         </div>
@@ -701,12 +758,14 @@ function renderHeroInteractive() {
   window.heroStartDiagnosis = function() {
     if (state.step === 0) {
       transitionTo(renderStep1, 'next');
+    } else {
+      focusDiagnosticViewport();
     }
-    container.scrollIntoView({ behavior: CogitUI.motion(), block: 'nearest' });
   };
 
   // Initial render
   renderStep0();
+  updateDiagnosticMode();
 }
 
 // ── PREVIEW DE MODELOS (MODAL SIMPLES) ──

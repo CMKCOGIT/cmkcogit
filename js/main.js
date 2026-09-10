@@ -176,14 +176,19 @@ function initMobileFixedCTA() {
   if (!mobileCta) return;
 
   function updateVisibility() {
-    const protectedAreas = ['contact', 'configurator', 'diagnostic-experience', 'footer'];
+    const protectedAreas = ['hero', 'contact', 'configurator', 'diagnostic-experience', 'footer'];
     const nearContent = protectedAreas.some(id => {
       const element = document.getElementById(id);
       if (!element) return false;
       const rect = element.getBoundingClientRect();
       return rect.top < window.innerHeight && rect.bottom > 0;
     });
-    const visible = window.matchMedia('(max-width: 992px)').matches && window.scrollY > 400 && !nearContent;
+    const isMobile = window.matchMedia('(max-width: 992px)').matches;
+    const hero = document.getElementById('hero');
+    const heroRect = hero ? hero.getBoundingClientRect() : null;
+    const heroInView = Boolean(heroRect && heroRect.top < window.innerHeight && heroRect.bottom > 0);
+    document.body.classList.toggle('is-hero-diagnostic-visible', isMobile && heroInView);
+    const visible = isMobile && window.scrollY > 400 && !nearContent;
     mobileCta.classList.toggle('is-visible', visible);
     mobileCta.inert = !visible;
     mobileCta.setAttribute('aria-hidden', String(!visible));
