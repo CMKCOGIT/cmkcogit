@@ -869,12 +869,14 @@
     margin-bottom: 6px;
   }
 
-  /* CTA Final */
+  /* CTA Final — full-width on mobile: no margin-inline, no border-radius.
+     The dark background must reach screen edges; content padding lives inside .container. */
   .cta-final {
-    padding: 36px 16px;
-    border-radius: 16px;
+    border-radius: 0;
+    margin-inline: 0;
+    padding-top: clamp(2.75rem, 6.5vw, 4rem);
+    padding-bottom: clamp(2.75rem, 6.5vw, 4rem);
     text-align: center;
-    margin-inline: 4px;
   }
 
   .cta-final h2 {
@@ -948,12 +950,10 @@
     justify-content: center;
   }
 
-  /* WhatsApp Floating Button */
+  /* WhatsApp Floating Button — wrapper is just a position anchor; size lives on .whatsapp-btn */
   .whatsapp-float {
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-    right: 14px;
-    width: 48px;
-    height: 48px;
+    right: calc(14px + env(safe-area-inset-right, 0px));
     z-index: var(--z-whatsapp);
   }
 
@@ -1033,15 +1033,6 @@
     bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
 
-  .cookie-banner-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .cookie-banner-actions {
-    width: 100%;
-    justify-content: center;
-  }
 
   .page-legal {
     padding-top: 100px;

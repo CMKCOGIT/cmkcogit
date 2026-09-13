@@ -4757,6 +4757,15 @@
   letter-spacing: var(--tracking-tight);
 }
 
+.page-legal-content h3 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+  letter-spacing: var(--tracking-tight);
+}
+
 .page-legal-content p {
   font-size: var(--text-base);
   color: var(--text-secondary);
@@ -4910,57 +4919,7 @@
 }
 
 
-/* ═══════════════════════════════════════
-   NEW: COOKIE CONSENT BANNER
-   ═══════════════════════════════════════ */
 
-.cookie-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-modal);
-  background: var(--ink);
-  color: var(--white);
-  padding: var(--space-4) var(--space-6);
-  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
-  transform: translateY(100%);
-  transition: transform 400ms var(--ease-out);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.cookie-banner.is-visible {
-  transform: translateY(0);
-}
-
-.cookie-banner-inner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
-  flex-wrap: wrap;
-}
-
-.cookie-banner p {
-  font-size: var(--text-sm);
-  color: var(--text-on-dark-secondary);
-  line-height: var(--leading-normal);
-  flex: 1;
-  min-width: 200px;
-}
-
-.cookie-banner a {
-  color: var(--lilac);
-  text-decoration: underline;
-}
-
-.cookie-banner-actions {
-  display: flex;
-  gap: var(--space-3);
-  flex-shrink: 0;
-}
 
 
 /* ═══════════════════════════════════════
