@@ -152,6 +152,26 @@ import {
         });
     });
 
+    const googleButton = document.querySelector('[data-google-login]');
+    const googleEnabled = import.meta.env.NEXT_PUBLIC_ENABLE_GOOGLE_AUTH === 'true';
+    if (googleButton && !googleEnabled) {
+        googleButton.hidden = true;
+        googleButton.previousElementSibling?.setAttribute('hidden', '');
+    }
+
+    googleButton?.addEventListener('click', async (event) => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        showFeedback('Abrindo o acesso com Google…', 'info');
+        try {
+            await loginComGoogle();
+        } catch (error) {
+            console.error('Falha no login com Google:', error);
+            showFeedback('Não foi possível iniciar o acesso com Google.', 'error');
+            button.disabled = false;
+        }
+    });
+
     if (mode === 'cadastro') {
         updatePasswordRules();
 
@@ -250,26 +270,6 @@ import {
             console.error('Falha no login WaveType:', error);
             showFeedback('E-mail ou senha incorretos.', 'error');
             setLoading(false);
-        }
-    });
-
-    const googleButton = document.querySelector('[data-google-login]');
-    const googleEnabled = import.meta.env.NEXT_PUBLIC_ENABLE_GOOGLE_AUTH === 'true';
-    if (googleButton && !googleEnabled) {
-        googleButton.hidden = true;
-        googleButton.previousElementSibling?.setAttribute('hidden', '');
-    }
-
-    googleButton?.addEventListener('click', async (event) => {
-        const button = event.currentTarget;
-        button.disabled = true;
-        showFeedback('Abrindo o acesso com Google…', 'info');
-        try {
-            await loginComGoogle();
-        } catch (error) {
-            console.error('Falha no login com Google:', error);
-            showFeedback('Não foi possível iniciar o acesso com Google.', 'error');
-            button.disabled = false;
         }
     });
 
