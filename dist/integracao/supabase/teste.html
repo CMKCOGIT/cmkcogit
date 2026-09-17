@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>WaveType - Teste de Funcionalidades</title>
+  <script type="module" crossorigin src="../../assets/integracao/supabase/teste.html-DXA5U5W7.js"></script>
+  <link rel="modulepreload" crossorigin href="../../assets/modulepreload-polyfill-B5Qt9EMX.js">
+</head>
+<body>
+
+<h1>WaveType — Página de teste (sem estilo, só funcionalidade)</h1>
+
+<!-- ============================================================ -->
+<!-- 1. CONEXÃO COM O SUPABASE                                     -->
+<!-- ============================================================ -->
+<h2>1. Conexão</h2>
+<p>
+  URL do projeto: <input id="cfg-url" size="50" placeholder="https://xxxx.supabase.co"><br>
+  Anon key: <input id="cfg-key" size="50" placeholder="chave anon (pública)"><br>
+  <button id="btn-conectar">Conectar</button>
+  <span id="status-conexao">(não conectado)</span>
+</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- 2. AUTENTICAÇÃO                                               -->
+<!-- ============================================================ -->
+<h2>2. Autenticação</h2>
+
+<h3>Cadastro</h3>
+<input id="cad-nome" placeholder="nome"><br>
+<input id="cad-email" placeholder="email"><br>
+<input id="cad-senha" type="password" placeholder="senha (min 8, letra+numero)"><br>
+<select id="cad-tipo">
+  <option value="aluno">aluno</option>
+  <option value="professor">professor</option>
+</select><br>
+<button id="btn-cadastrar">Cadastrar</button>
+
+<h3>Login com e-mail/senha</h3>
+<input id="login-email" placeholder="email"><br>
+<input id="login-senha" type="password" placeholder="senha"><br>
+<button id="btn-login">Entrar</button>
+
+<h3>Login com Google</h3>
+<button id="btn-login-google">Entrar com Google</button>
+
+<h3>Sessão</h3>
+<button id="btn-usuario-atual">Ver usuário atual</button>
+<button id="btn-logout">Sair</button>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- 3. TURMAS                                                     -->
+<!-- ============================================================ -->
+<h2>3. Turmas (professor cria, aluno entra com código)</h2>
+
+<h3>Criar turma (professor)</h3>
+<input id="turma-nome" placeholder="nome da turma"><br>
+<button id="btn-criar-turma">Criar turma</button>
+
+<h3>Entrar em turma (aluno)</h3>
+<input id="turma-codigo" placeholder="código de convite"><br>
+<button id="btn-entrar-turma">Entrar</button>
+
+<h3>Minhas turmas</h3>
+<button id="btn-listar-turmas">Listar minhas turmas</button>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- 4. EXERCÍCIOS                                                 -->
+<!-- ============================================================ -->
+<h2>4. Exercícios</h2>
+
+<h3>Criar exercício (professor)</h3>
+<input id="ex-titulo" placeholder="título"><br>
+<textarea id="ex-texto" placeholder="texto de referência" rows="4" cols="50"></textarea><br>
+<input id="ex-tempo" type="number" placeholder="tempo limite (segundos)"><br>
+<input id="ex-turma-id" type="number" placeholder="turma_id (opcional)"><br>
+<button id="btn-criar-exercicio">Criar exercício</button>
+
+<h3>Listar exercícios</h3>
+<input id="listar-ex-turma-id" type="number" placeholder="turma_id (opcional, deixe vazio p/ todos)"><br>
+<button id="btn-listar-exercicios">Listar</button>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- 5. RESULTADOS                                                 -->
+<!-- ============================================================ -->
+<h2>5. Resultados</h2>
+
+<h3>Salvar resultado (aluno, após um treino)</h3>
+<input id="res-exercicio-id" type="number" placeholder="exercicio_id"><br>
+<input id="res-ppm" type="number" placeholder="ppm"><br>
+<input id="res-precisao" type="number" placeholder="precisão (0-100)"><br>
+<input id="res-acertos" type="number" placeholder="acertos"><br>
+<input id="res-erros" type="number" placeholder="erros"><br>
+<input id="res-tempo" type="number" placeholder="tempo (segundos)"><br>
+<button id="btn-salvar-resultado">Salvar resultado</button>
+
+<h3>Meus resultados</h3>
+<input id="listar-res-exercicio-id" type="number" placeholder="exercicio_id (opcional)"><br>
+<button id="btn-listar-resultados">Listar meus resultados</button>
+
+<h3>Ranking de um exercício</h3>
+<input id="ranking-exercicio-id" type="number" placeholder="exercicio_id"><br>
+<button id="btn-ranking">Ver ranking</button>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- LOG                                                           -->
+<!-- ============================================================ -->
+<h2>Resultado / Log</h2>
+<pre id="log" style="border:1px solid #000; padding:8px; height:300px; overflow:auto;"></pre>
+
+
+</body>
+</html>

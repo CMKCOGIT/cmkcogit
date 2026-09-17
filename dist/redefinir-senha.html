@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#315FD6">
+    <meta name="description" content="Defina uma nova senha para sua conta WaveType.">
+    <title>Nova senha | WaveType</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon-DL1LGllI.svg">
+    <script>document.documentElement.dataset.theme = localStorage.getItem('wavetype_theme') || 'light';</script>
+  <script type="module" crossorigin src="./assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+  <script type="module" crossorigin src="./assets/auth-BLvGfo5A.js"></script>
+  <script type="module" crossorigin src="./assets/auth-recovery-D6UOE695.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/platform-O1P8Uske.css">
+</head>
+<body>
+    <main class="auth-page">
+        <aside class="auth-aside">
+            <a href="index.html"><img class="auth-logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNTIwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDUyMCAxNDAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbGxlZGJ5PSJ0aXRsZSBkZXNjIj4NCiAgPHRpdGxlIGlkPSJ0aXRsZSI+TG9nb3RpcG8gY29sb3JpZG8gZW0gZnVuZG8gZXNjdXJvPC90aXRsZT4NCiAgPGRlc2MgaWQ9ImRlc2MiPkF0aXZvIG9maWNpYWwgZGEgaWRlbnRpZGFkZSB2aXN1YWwgV2F2ZVR5cGUuPC9kZXNjPg0KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyOCAzMikgc2NhbGUoMS4zMikiPg0KICA8cGF0aCBkPSJNOCA4IEwyMiA0OSBMMzYgMTEgTDUwIDQ4IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTVGRDYiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+DQogIDxwYXRoIGQ9Ik01MCA0OCBMNjUgNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkVDQUI2IiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPg0KDQogIDxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgcng9IjMiIGZpbGw9IiMzMTVGRDYiLz4NCiAgPHJlY3QgeD0iMTciIHk9IjQ0IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIzIiBmaWxsPSIjMzE1RkQ2Ii8+DQogIDxyZWN0IHg9IjMxIiB5PSI2IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIzIiBmaWxsPSIjMzE1RkQ2Ii8+DQogIDxyZWN0IHg9IjQ1IiB5PSI0MyIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMyIgZmlsbD0iIzMxNUZENiIvPg0KICA8cmVjdCB4PSI2MCIgeT0iMiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMyIgZmlsbD0iIzJFQ0FCNiIvPg0KICA8cmVjdCB4PSI3NyIgeT0iNCIgd2lkdGg9IjUiIGhlaWdodD0iNDYiIHJ4PSIyLjUiIGZpbGw9IiMyRUNBQjYiLz4NCjwvZz4NCiAgPHRleHQgeD0iMTY0IiB5PSI5MSIgZmlsbD0iI0YxRjVGRiIgZm9udC1mYW1pbHk9Ik1hbnJvcGUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUyIiBmb250LXdlaWdodD0iNzAwIiBsZXR0ZXItc3BhY2luZz0iLTEuMiI+V2F2ZVR5cGU8L3RleHQ+DQo8L3N2Zz4NCg==" alt="WaveType"></a>
+            <div class="auth-copy"><span class="eyebrow">Acesso protegido</span><h1>Crie uma senha<br>nova e segura.</h1><p>Depois da alteração, você poderá continuar normalmente na plataforma.</p></div>
+        </aside>
+        <section class="auth-main" aria-labelledby="new-password-title">
+            <div class="auth-card">
+                <h2 id="new-password-title">Definir nova senha</h2>
+                <p>Use oito caracteres ou mais, com pelo menos uma letra e um número.</p>
+                <form class="auth-form" data-auth-recovery="update" novalidate>
+                    <div class="field"><label for="new-password">Nova senha</label><div class="password-input"><input id="new-password" type="password" name="senha" autocomplete="new-password" minlength="8" maxlength="72" required><button class="password-toggle" type="button" data-password-toggle="new-password" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></div></div>
+                    <div class="field"><label for="new-password-confirmation">Confirmar nova senha</label><div class="password-input"><input id="new-password-confirmation" type="password" name="confirmar_senha" autocomplete="new-password" minlength="8" maxlength="72" required><button class="password-toggle" type="button" data-password-toggle="new-password-confirmation" aria-label="Mostrar confirmação de senha" aria-pressed="false">Mostrar</button></div></div>
+                    <button class="button auth-submit" type="submit"><span data-button-label>Salvar nova senha</span><span class="button-spinner" aria-hidden="true"></span></button>
+                    <p class="auth-feedback" data-form-feedback hidden role="status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
