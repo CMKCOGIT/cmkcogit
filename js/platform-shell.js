@@ -77,6 +77,20 @@ import { getUsuarioAtual, logout, observarAutenticacao } from '../integracao/sup
 
     document.body.classList.remove('auth-checking');
 
+    // Preenche qualquer elemento da página marcado com data-user-field
+    // com o dado real do usuário logado (nome completo, primeiro nome ou e-mail).
+    // Assim cada página HTML não precisa de script próprio para isso —
+    // basta usar <span data-user-field="primeiro-nome"></span> no HTML.
+    const primeiroNome = displayName.split(/\s+/).filter(Boolean)[0] || 'Usuário';
+    document.querySelectorAll('[data-user-field]').forEach((el) => {
+        const field = el.dataset.userField;
+        if (field === 'primeiro-nome') el.textContent = primeiroNome;
+        else if (field === 'nome') el.textContent = displayName;
+        else if (field === 'email') el.textContent = usuario.email || '';
+        // 'turma' fica de fora por enquanto: exige uma consulta a matriculas/turmas,
+        // que ainda não temos aqui. Ver observação abaixo.
+    });
+
     const sidebar = document.getElementById('app-sidebar');
     if (sidebar) {
         const nav = navByRole[role] || navByRole.aluno;
